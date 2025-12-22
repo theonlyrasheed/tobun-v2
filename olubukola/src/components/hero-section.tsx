@@ -1,8 +1,8 @@
 import { Link, useMatchRoute } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { ProjectTypeToggle } from './project-type-toggle'
+import type { FileRoutesByFullPath } from '@/routeTree.gen'
 import { FONTS } from '@/config/constants'
-import { FileRoutesByFullPath } from '@/routeTree.gen'
 
 interface HeroSectionProps {
   showBackButton?: boolean
