@@ -1,4 +1,9 @@
-import { ServiceType, GalleryFilter, YearRange, EventMonth } from './enums';
+import {
+  ServiceType,
+  GalleryFilter,
+  YearRange,
+  EventMonth,
+} from "@/utils/enums";
 
 export type { ServiceType, GalleryFilter, YearRange, EventMonth };
 

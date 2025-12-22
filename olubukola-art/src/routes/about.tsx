@@ -22,229 +22,234 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <Container size='full' maw={MAX_WIDTH} py={{ base: 30, md: 60 }}>
-      {/* Our Little Story */}
-      <Box className='relative'>
-        <Group justify='space-between' align='flex-start' wrap='nowrap'>
-          <Stack gap={6}>
-            <Text
-              className='font-playfair'
-              fz={{ base: 18, md: 20 }}
-              fw={400}
-              c='gray.7'
-              style={{ letterSpacing: "0.96px" }}
-            >
-              OUR LITTLE STORY
-            </Text>
-            <Title
-              order={1}
-              className='font-segoe'
-              fz={{ base: 28, md: 44 }}
-              fw={800}
-              style={{ letterSpacing: "1.2px" }}
-            >
-              Why Art and Why Not
-            </Title>
-          </Stack>
-
-          <Button
-            component={Link}
-            to='/'
-            color='dark'
-            radius='sm'
-            leftSection={<IconArrowLeft size={16} />}
-            className='shrink-0'
-          >
-            Back
-          </Button>
-        </Group>
-
-        <SimpleGrid
-          cols={{ base: 1, md: 2 }}
-          spacing={{ base: 30, md: 60 }}
-          mt={30}
-        >
-          <Box>
-            <Image
-              src='/images/paint-on-bg.png'
-              alt='Paint on background'
-              radius='sm'
-              w='100%'
-            />
-          </Box>
-
-          <Stack gap='md'>
-            <Text fz={14} c='dark.7' style={{ lineHeight: 1.8 }}>
-              Do you know that art is more than colors on a canvas or beads on a
-              thread. It’s a language of the soul, a mirror of our emotions, and
-              a bridge between hearts. It empowers us to see the world
-              differently, to process feelings we can’t always put into words,
-              and to connect with others in ways that go beyond conversation.
-              Engaging with art reshapes every aspect of life, especially in
-              the… It sharpens the mind, nurtures creativity, and inspires
-              problem-solving. It strengthens relationships, creating intimacy
-              through shared experiences. It reduces stress, lifts spirits, and
-              builds resilience by giving people the mental clarity and
-              confidence to thrive. In short, art doesn’t just decorate life; it
-              transforms it.
-            </Text>
-
-            <Text fz={14} c='dark.7' style={{ lineHeight: 1.8 }}>
-              At Olubukola Art, we believe that everyone deserves to experience
-              this power. Our sessions, workshops, and experiences are designed
-              to be more than entertainment; they are safe spaces where you can
-              explore, express, and grow. Here, you can reconnect with yourself,
-              bond with others, and discover the joy and healing that only art
-              can bring. With Olubukola Art, you don’t just witness creativity{" "}
-              <Text component='span' c='red.7' fw={700}>
-                YOU LIVE IT
-              </Text>
-              . You embrace it. You are empowered by it. And you do so in a
-              space where safety, respect, and authenticity are at the heart of
-              everything we do. Because true transformation through art happens
-              not just in the act of creation, but in the environment that
-              nurtures it, and that environment, that safe space, is ours.
-            </Text>
-          </Stack>
-        </SimpleGrid>
-      </Box>
-
-      <Divider my={{ base: 40, md: 60 }} color='gray.2' />
-
-      {/* Benefits / Core values */}
-      <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 35, md: 70 }}>
-        <Stack gap='xl'>
-          <Stack gap={6}>
-            <Text
-              className='font-playfair'
-              fz={{ base: 18, md: 20 }}
-              fw={400}
-              c='gray.7'
-              style={{ letterSpacing: "0.96px" }}
-            >
-              BENEFIT OF OUR SERVICE
-            </Text>
-            <Title
-              order={2}
-              className='font-segoe'
-              fz={{ base: 28, md: 44 }}
-              fw={800}
-              style={{ letterSpacing: "1.2px" }}
-            >
-              Our Core Values
-            </Title>
-          </Stack>
-
-          <Text fz={14} c='dark.7' style={{ lineHeight: 1.8, maxWidth: 560 }}>
-            We’re honored to have you with us. Our mission is simple: to deliver
-            meaningful experiences that foster connection, creativity, and
-            well-being. Every session, every moment, is crafted with care and
-            quality to ensure you leave feeling inspired, refreshed, and
-            connected. Thank you for trusting us to make your experience
-            unforgettable. We honor our core values, as well as our esteemed
-            customers.
-          </Text>
-
-          <Stack gap='lg' pt={{ base: 10, md: 20 }}>
-            <Title
-              order={3}
-              className='font-inter!'
-              fz={{ base: 28, md: 40 }}
-              fw={900}
-            >
-              Thank you for choosing us always
-            </Title>
-
-            <Box className='flex flex-wrap sm:flex-nowrap items-center justify-center mt-[10px]'>
-              <StatBadge value='600+' label='Customers' />
-              <StatBadge value='18+' label='Countries' />
-              <StatBadge value='34+' label='Commissions' />
-            </Box>
-
-            <Box className='flex justify-center -mt-8 md:-mt-14'>
-              <Image
-                src='/svgs/hand-with-love.svg'
-                alt='Hand with love'
-                h={210}
-                w='auto'
-                fit='contain'
-                className='opacity-90'
-              />
-            </Box>
-          </Stack>
-        </Stack>
-
+    <Stack gap={0}>
+      <Image src='/svgs/about-us-hero.svg' alt='About Hero' />
+      <Container size='full' maw={MAX_WIDTH} py={{ base: 30, md: 60 }}>
+        {/* Our Little Story */}
         <Box className='relative'>
-          {/* Background panel */}
-          <Box
-            className={clsx(
-              "relative sm:ml-auto rounded-2xl overflow-hidden min-h-[360px] p-10 flex justify-end items-center",
-              "w-full md:w-[70%]"
-            )}
-            style={{
-              backgroundImage: "url(/images/value-bg.jpg)",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            {/* light overlay so pills remain readable */}
-            <Box className='absolute inset-0 bg-white/30' />
+          <Group justify='space-between' align='flex-start' wrap='nowrap'>
+            <Stack gap={6}>
+              <Text
+                className='font-playfair'
+                fz={{ base: 18, md: 20 }}
+                fw={400}
+                c='gray.7'
+                style={{ letterSpacing: "0.96px" }}
+              >
+                OUR LITTLE STORY
+              </Text>
+              <Title
+                order={1}
+                className='font-segoe'
+                fz={{ base: 28, md: 44 }}
+                fw={800}
+                style={{ letterSpacing: "1.2px" }}
+              >
+                Why Art and Why Not
+              </Title>
+            </Stack>
 
-            <Stack
-              gap='md'
-              className='relative w-full sm:w-[65%] mx-auto md:mx-0 md:w-[70%]'
-              style={{ zIndex: 1 }}
+            <Button
+              component={Link}
+              to='/'
+              color='dark'
+              radius='sm'
+              leftSection={<IconArrowLeft size={16} />}
+              className='shrink-0'
             >
-              <ValuePill
-                label='Trustworthy'
-                className='bg-[#6d0f44] text-white'
+              Back
+            </Button>
+          </Group>
+
+          <SimpleGrid
+            cols={{ base: 1, md: 2 }}
+            spacing={{ base: 30, md: 60 }}
+            mt={30}
+          >
+            <Box>
+              <Image
+                src='/images/paint-on-bg.png'
+                alt='Paint on background'
+                radius='sm'
+                w='100%'
               />
-              <ValuePill
-                label='Attention to Details'
-                className='bg-[#d51f2b] text-white'
+            </Box>
+
+            <Stack gap='md'>
+              <Text fz={14} c='dark.7' style={{ lineHeight: 1.8 }}>
+                Do you know that art is more than colors on a canvas or beads on
+                a thread. It’s a language of the soul, a mirror of our emotions,
+                and a bridge between hearts. It empowers us to see the world
+                differently, to process feelings we can’t always put into words,
+                and to connect with others in ways that go beyond conversation.
+                Engaging with art reshapes every aspect of life, especially in
+                the… It sharpens the mind, nurtures creativity, and inspires
+                problem-solving. It strengthens relationships, creating intimacy
+                through shared experiences. It reduces stress, lifts spirits,
+                and builds resilience by giving people the mental clarity and
+                confidence to thrive. In short, art doesn’t just decorate life;
+                it transforms it.
+              </Text>
+
+              <Text fz={14} c='dark.7' style={{ lineHeight: 1.8 }}>
+                At Olubukola Art, we believe that everyone deserves to
+                experience this power. Our sessions, workshops, and experiences
+                are designed to be more than entertainment; they are safe spaces
+                where you can explore, express, and grow. Here, you can
+                reconnect with yourself, bond with others, and discover the joy
+                and healing that only art can bring. With Olubukola Art, you
+                don’t just witness creativity{" "}
+                <Text component='span' c='red.7' fw={700}>
+                  YOU LIVE IT
+                </Text>
+                . You embrace it. You are empowered by it. And you do so in a
+                space where safety, respect, and authenticity are at the heart
+                of everything we do. Because true transformation through art
+                happens not just in the act of creation, but in the environment
+                that nurtures it, and that environment, that safe space, is
+                ours.
+              </Text>
+            </Stack>
+          </SimpleGrid>
+        </Box>
+
+        <Divider my={{ base: 40, md: 60 }} color='gray.2' />
+
+        {/* Benefits / Core values */}
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 35, md: 70 }}>
+          <Stack gap='xl'>
+            <Stack gap={6}>
+              <Text
+                className='font-playfair'
+                fz={{ base: 18, md: 20 }}
+                fw={400}
+                c='gray.7'
+                style={{ letterSpacing: "0.96px" }}
+              >
+                BENEFIT OF OUR SERVICE
+              </Text>
+              <Title
+                order={2}
+                className='font-segoe'
+                fz={{ base: 28, md: 44 }}
+                fw={800}
+                style={{ letterSpacing: "1.2px" }}
+              >
+                Our Core Values
+              </Title>
+            </Stack>
+
+            <Text fz={14} c='dark.7' style={{ lineHeight: 1.8, maxWidth: 560 }}>
+              We’re honored to have you with us. Our mission is simple: to
+              deliver meaningful experiences that foster connection, creativity,
+              and well-being. Every session, every moment, is crafted with care
+              and quality to ensure you leave feeling inspired, refreshed, and
+              connected. Thank you for trusting us to make your experience
+              unforgettable. We honor our core values, as well as our esteemed
+              customers.
+            </Text>
+
+            <Stack gap='lg' pt={{ base: 10, md: 20 }}>
+              <Title
+                order={3}
+                className='font-inter!'
+                fz={{ base: 28, md: 40 }}
+                fw={900}
+              >
+                Thank you for choosing us always
+              </Title>
+
+              <Box className='flex flex-wrap sm:flex-nowrap items-center justify-center mt-[10px]'>
+                <StatBadge value='600+' label='Customers' />
+                <StatBadge value='18+' label='Countries' />
+                <StatBadge value='34+' label='Commissions' />
+              </Box>
+
+              <Box className='flex justify-center -mt-8 md:-mt-14'>
+                <Image
+                  src='/svgs/hand-with-love.svg'
+                  alt='Hand with love'
+                  h={210}
+                  w='auto'
+                  fit='contain'
+                  className='opacity-90'
+                />
+              </Box>
+            </Stack>
+          </Stack>
+
+          <Box className='relative'>
+            {/* Background panel */}
+            <Box
+              className={clsx(
+                "relative sm:ml-auto rounded-2xl overflow-hidden min-h-[360px] p-10 flex justify-end items-center",
+                "w-full md:w-[70%]"
+              )}
+              style={{
+                backgroundImage: "url(/images/value-bg.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              {/* light overlay so pills remain readable */}
+              <Box className='absolute inset-0 bg-white/30' />
+
+              <Stack
+                gap='md'
+                className='relative w-full sm:w-[65%] mx-auto md:mx-0 md:w-[70%]'
+                style={{ zIndex: 1 }}
+              >
+                <ValuePill
+                  label='Trustworthy'
+                  className='bg-[#6d0f44] text-white'
+                />
+                <ValuePill
+                  label='Attention to Details'
+                  className='bg-[#d51f2b] text-white'
+                />
+                <ValuePill
+                  label='Integrity'
+                  className='bg-[#4c2a7a] text-white'
+                />
+                <ValuePill
+                  label='Top-notch Work'
+                  className='bg-[#0b5a86] text-white'
+                />
+                <ValuePill
+                  label='Fast Deliveries'
+                  className='bg-[#8b8f14] text-white'
+                />
+              </Stack>
+            </Box>
+
+            {/* Cards (overlay on desktop, stacked on mobile) */}
+            <Stack
+              gap='lg'
+              className={clsx(
+                "mt-6 md:mt-0 md:absolute md:left-[28px] md:top-6",
+                "w-full md:w-[45%]"
+              )}
+            >
+              <ValueCard
+                number='01'
+                title='Quality Prints'
+                description='Crafted for clarity. Printed with quality'
               />
-              <ValuePill
-                label='Integrity'
-                className='bg-[#4c2a7a] text-white'
+              <ValueCard
+                number='02'
+                title='Expertly Created'
+                description='Where quality meets every detail'
               />
-              <ValuePill
-                label='Top-notch Work'
-                className='bg-[#0b5a86] text-white'
-              />
-              <ValuePill
-                label='Fast Deliveries'
-                className='bg-[#8b8f14] text-white'
+              <ValueCard
+                number='03'
+                title='Authenticity'
+                description='True to craft. True to quality.'
               />
             </Stack>
           </Box>
-
-          {/* Cards (overlay on desktop, stacked on mobile) */}
-          <Stack
-            gap='lg'
-            className={clsx(
-              "mt-6 md:mt-0 md:absolute md:left-[28px] md:top-6",
-              "w-full md:w-[45%]"
-            )}
-          >
-            <ValueCard
-              number='01'
-              title='Quality Prints'
-              description='Crafted for clarity. Printed with quality'
-            />
-            <ValueCard
-              number='02'
-              title='Expertly Created'
-              description='Where quality meets every detail'
-            />
-            <ValueCard
-              number='03'
-              title='Authenticity'
-              description='True to craft. True to quality.'
-            />
-          </Stack>
-        </Box>
-      </SimpleGrid>
-    </Container>
+        </SimpleGrid>
+      </Container>
+    </Stack>
   );
 }
 
