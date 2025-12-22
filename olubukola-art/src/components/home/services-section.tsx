@@ -16,7 +16,7 @@ export function ServicesSection() {
 
   return (
     <Container
-      size='full'
+      size="full"
       maw={MAX_WIDTH}
       pt={{
         base: 30,
@@ -27,24 +27,20 @@ export function ServicesSection() {
       }}
     >
       <SectionTitle
-        subtitle='WHY WE EXIST'
-        title='Our Services'
+        subtitle="WHY WE EXIST"
+        title="Our Services"
         id={PAGES.SERVICES}
       />
       <Box
         mt={30}
-        className='w-full gap-3 grid'
+        className="w-full gap-3 grid"
         style={{
           gridTemplateColumns: "repeat(auto-fill,minmax(min(300px,100%),1fr))",
           gridAutoRows: "1fr",
         }}
       >
         {services.map((service, idx) => (
-          <Box
-            key={service.id}
-            data-aos='fade-up'
-            data-aos-delay={Math.min(idx * 80, 400)}
-          >
+          <Box key={service.id} data-aos="fade-up" data-aos-delay={idx * 80}>
             <ServiceCard
               {...service}
               onBookService={(svc) => {

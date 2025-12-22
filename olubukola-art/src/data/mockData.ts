@@ -248,14 +248,6 @@ export const testimonials: TestimonialProps[] = [
     rating: 5,
     avatar: "/images/testimonials/avatar.jpg",
   },
-
-  {
-    id: "8",
-    name: "Adeola",
-    text: "Olubukola Art has a great workers. They are all so polite and kind. I love them",
-    rating: 5,
-    avatar: "/images/testimonials/avatar.jpg",
-  },
 ];
 
 export const events: EventProps[] = [

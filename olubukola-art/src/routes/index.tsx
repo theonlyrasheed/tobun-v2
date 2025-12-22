@@ -13,6 +13,7 @@ import { AdsSection } from "@/components/home/ads-section";
 import { TrustedCompaniesSection } from "@/components/home/trusted-companies-section";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   component: Home,
 });
 
