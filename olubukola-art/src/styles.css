@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Playball&family=Inter:wght@400;500;600;700&family=Playfair:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+@import "@mantine/core/styles.css";
+@import "@mantine/carousel/styles.css";
+@import "@mantine/dates/styles.css";
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  html,
+  body {
+    color: var(--mantine-color-gray-9);
+    background-color: var(--mantine-color-white);
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .using-mouse * {
+    outline: none !important;
+  }
+}
+
+@layer components {
+  .font-playball {
+    font-family: "Playball", cursive;
+  }
+
+  .font-playfair {
+    font-family: "Playfair", serif;
+  }
+
+  .font-segoe {
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  .font-poppins {
+    font-family:
+      "Poppins",
+      "Inter",
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      Arial,
+      sans-serif;
+  }
+
+  @keyframes ads-fade {
+    0% {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    12% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    33% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    45% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  .ads-fade .ads-fade-viewport {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .ads-fade .ads-fade-item {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    animation: ads-fade 8.4s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  @keyframes marquee-x {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee {
+    overflow: hidden;
+  }
+
+  .marquee-group {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-x 10s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
