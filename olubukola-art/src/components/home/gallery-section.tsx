@@ -250,9 +250,10 @@ const SimpleGalleryCard = ({ gallery, index }: GalleryCardProps) => (
     data-aos='fade-up'
     data-aos-delay={Math.min(index * 70, 420)}
   >
-    <Card.Section inheritPadding py='lg'>
+    <Card.Section inheritPadding py='lg' h='100%' flex={1}>
       <Box
         style={{
+          height: "100%",
           backgroundColor: "#f0f0f0",
           position: "relative",
         }}
@@ -260,6 +261,7 @@ const SimpleGalleryCard = ({ gallery, index }: GalleryCardProps) => (
         <Image
           src={gallery.image}
           w='100%'
+          h='100%'
           maw={520}
           mx='auto'
           alt={gallery.title}

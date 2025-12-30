@@ -25,6 +25,7 @@ export default defineType({
       title: 'Album',
       type: 'reference',
       to: [{type: 'gallery_album'}],
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'main_image',
