@@ -1,10 +1,12 @@
 import { Stack, Text, Title } from "@mantine/core";
+import clsx from "clsx";
 
 interface SectionTitleProps {
   subtitle: string;
   title: string;
   align?: "left" | "center" | "right";
   id?: string;
+  skeleton?: boolean;
 }
 
 export function SectionTitle({
@@ -12,6 +14,7 @@ export function SectionTitle({
   title,
   align = "left",
   id,
+  skeleton = false,
 }: SectionTitleProps) {
   return (
     <Stack
@@ -26,7 +29,7 @@ export function SectionTitle({
       id={id}
     >
       <Text
-        className='font-playfair'
+        className={clsx("font-playfair", { skeleton })}
         fz={{
           base: 20,
           md: 24,
@@ -39,7 +42,7 @@ export function SectionTitle({
       </Text>
       <Title
         order={2}
-        className='font-segoe'
+        className={clsx("font-segoe", { skeleton })}
         fz={{
           base: 24,
           md: 36,

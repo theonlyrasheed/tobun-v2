@@ -2,8 +2,8 @@ import {TagIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
-  name: 'artwork_category',
-  title: 'Artwork Category',
+  name: 'gallery_album',
+  title: 'Gallery Album',
   type: 'document',
   icon: TagIcon,
   fields: [
@@ -21,9 +21,10 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'text',
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      initialValue: false,
     }),
   ],
 })

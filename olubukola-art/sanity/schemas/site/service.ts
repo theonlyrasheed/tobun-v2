@@ -37,6 +37,22 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'hero_image',
+      title: 'Hero Image',
+      description:
+        'Optional image that will be used in the home page hero section. If not provided, the main image will be used.',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          validation: (rule) => rule.warning('Alt text is important for accessibility/SEO'),
+        }),
+      ],
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
@@ -44,31 +60,11 @@ export default defineType({
       validation: (rule) => rule.required().min(10),
     }),
     defineField({
-      name: 'enquiry_url',
-      title: '“Make Enquiry” link',
-      type: 'url',
-      description: 'Where the “Make Enquiry” button should go',
-      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
-    }),
-    defineField({
-      name: 'booking_url',
-      title: '“Book Service” link',
-      type: 'url',
-      description: 'Where the “Book Service” button should go',
-      validation: (rule) => rule.uri({scheme: ['http', 'https']}),
-    }),
-    defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
       description: 'Lower numbers show first',
       validation: (rule) => rule.min(0),
-    }),
-    defineField({
-      name: 'featured',
-      title: 'Featured',
-      type: 'boolean',
-      initialValue: true,
     }),
   ],
   preview: {

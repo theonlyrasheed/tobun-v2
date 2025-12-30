@@ -15,8 +15,8 @@ const GROUPED_TYPES = [
   'post',
   'author',
   'post_category',
-  'artwork',
-  'artwork_category',
+  'gallery',
+  'gallery_album',
   'event',
   'company',
   'testimonial',
@@ -59,13 +59,13 @@ export const deskStructure = (S: StructureBuilder) =>
             .title('Gallery')
             .items([
               S.listItem()
-                .title('Artworks')
+                .title('Gallery Items')
                 .icon(ImageIcon)
-                .child(S.documentTypeList('artwork').title('Artworks')),
+                .child(S.documentTypeList('gallery').title('Gallery Items')),
               S.listItem()
-                .title('Categories')
+                .title('Albums')
                 .icon(TagIcon)
-                .child(S.documentTypeList('artwork_category').title('Artwork Categories')),
+                .child(S.documentTypeList('gallery_album').title('Albums')),
             ]),
         ),
 

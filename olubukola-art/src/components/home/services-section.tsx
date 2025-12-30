@@ -1,22 +1,24 @@
 import { Box, Container } from "@mantine/core";
 import { SectionTitle } from "@/components/section-title";
 import { ServiceCard } from "@/components/service-card";
-import { services } from "@/data/mockData";
 import { MAX_WIDTH } from "@/utils/constants";
 import { BookingServiceModal } from "@/components/modals/booking-service";
 import { MakeEnquiryModal } from "@/components/modals/make-enquiry";
 import { useState } from "react";
-import type { ServiceCardProps } from "@/types";
 import { PAGES } from "@/utils/enums";
+import { useServices } from "@/builders";
+import type { Service } from "@/builders/client";
 
 export function ServicesSection() {
   const [bookingOpened, setBookingOpened] = useState(false);
   const [enquiryOpened, setEnquiryOpened] = useState(false);
-  const [selected, setSelected] = useState<ServiceCardProps | null>(null);
+  const [selected, setSelected] = useState<Service | null>(null);
+
+  const { data, isPlaceholderData } = useServices();
 
   return (
     <Container
-      size="full"
+      size='full'
       maw={MAX_WIDTH}
       pt={{
         base: 30,
@@ -25,29 +27,32 @@ export function ServicesSection() {
       pb={{
         base: 30,
       }}
+      hidden={!isPlaceholderData && !data?.length}
     >
       <SectionTitle
-        subtitle="WHY WE EXIST"
-        title="Our Services"
+        subtitle='WHY WE EXIST'
+        title='Our Services'
         id={PAGES.SERVICES}
+        skeleton={isPlaceholderData}
       />
       <Box
         mt={30}
-        className="w-full gap-3 grid"
+        className='w-full gap-3 grid'
         style={{
           gridTemplateColumns: "repeat(auto-fill,minmax(min(300px,100%),1fr))",
           gridAutoRows: "1fr",
         }}
       >
-        {services.map((service, idx) => (
-          <Box key={service.id} data-aos="fade-up" data-aos-delay={idx * 80}>
+        {data?.map((service, idx) => (
+          <Box key={service._id} data-aos='fade-up' data-aos-delay={idx * 80}>
             <ServiceCard
               {...service}
-              onBookService={(svc) => {
+              skeleton={isPlaceholderData}
+              onBookService={(svc: Service) => {
                 setSelected(svc);
                 setBookingOpened(true);
               }}
-              onMakeEnquiry={(svc) => {
+              onMakeEnquiry={(svc: Service) => {
                 setSelected(svc);
                 setEnquiryOpened(true);
               }}
@@ -59,8 +64,8 @@ export function ServicesSection() {
       <BookingServiceModal
         opened={bookingOpened}
         onClose={() => setBookingOpened(false)}
-        services={services}
-        defaultInterest={selected?.type ?? ""}
+        services={data ?? []}
+        defaultInterest={selected?.title}
       />
 
       <MakeEnquiryModal

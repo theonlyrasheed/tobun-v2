@@ -10,16 +10,28 @@ type Props = Omit<
   TabsProps,
   "children" | "defaultValue" | "variant" | "classNames"
 > & {
-  defaultValue: string;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string | null) => void;
   tabs: SectionTabItem[];
   children: ReactNode;
 };
 
-export function SectionTabs({ defaultValue, tabs, children, ...props }: Props) {
+export function SectionTabs({
+  defaultValue,
+  value,
+  onChange,
+  tabs,
+  children,
+  ...props
+}: Props) {
   return (
     <Tabs
       defaultValue={defaultValue}
-      variant='unstyled'
+      value={value}
+      onChange={onChange}
+      variant='pills'
+      color='dark'
       styles={{
         root: {
           width: "100%",
@@ -41,13 +53,6 @@ export function SectionTabs({ defaultValue, tabs, children, ...props }: Props) {
           fontWeight: 400,
           lineHeight: 1,
           textAlign: "center",
-          color: "var(--mantine-color-dark-8)",
-          backgrundColor: "transparent",
-          "&[data-active]": {
-            borderColor: "var(--mantine-color-dark-9)",
-            backgroundColor: "var(--mantine-color-dark-9) ",
-            color: "var(--mantine-color-white)",
-          },
         },
         tabLabel: {
           width: "100%",

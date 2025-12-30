@@ -36,11 +36,16 @@ export type Service = {
     alt: string
     _type: 'image'
   }
+  hero_image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
   description: string
-  enquiry_url?: string
-  booking_url?: string
   order?: number
-  featured?: boolean
 }
 
 export type SanityImageCrop = {
@@ -180,22 +185,15 @@ export type Event = {
   featured?: boolean
 }
 
-export type Artwork_categoryReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'artwork_category'
-}
-
-export type Artwork = {
+export type Gallery = {
   _id: string
-  _type: 'artwork'
+  _type: 'gallery'
   _createdAt: string
   _updatedAt: string
   _rev: string
   title: string
   slug: Slug
-  category?: Artwork_categoryReference
+  album?: Gallery_album
   main_image: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -230,15 +228,15 @@ export type Artwork = {
   featured?: boolean
 }
 
-export type Artwork_category = {
+export type Gallery_album = {
   _id: string
-  _type: 'artwork_category'
+  _type: 'gallery_album'
   _createdAt: string
   _updatedAt: string
   _rev: string
   title: string
   slug: Slug
-  description?: string
+  featured?: boolean
 }
 
 export type Post_category = {
@@ -455,9 +453,8 @@ export type AllSanitySchemaTypes =
   | Testimonial
   | Company
   | Event
-  | Artwork_categoryReference
-  | Artwork
-  | Artwork_category
+  | Gallery
+  | Gallery_album
   | Post_category
   | AuthorReference
   | Post_categoryReference

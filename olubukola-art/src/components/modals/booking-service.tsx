@@ -17,7 +17,7 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
 import { useEffect, useMemo } from "react";
-import type { ArtworkCardProps, ServiceCardProps } from "@/types";
+import type { GalleryCardProps, ServiceCardProps } from "@/types";
 
 export type BookingServiceFormValues = {
   firstName: string;
@@ -32,9 +32,9 @@ export type BookingServiceFormValues = {
 export type BookingServiceModalProps = {
   opened: boolean;
   onClose: () => void;
-  services: ServiceCardProps[] | ArtworkCardProps[];
-  defaultInterest?: ServiceCardProps["type"] | ArtworkCardProps["title"] | "";
-  modalType?: "service" | "artwork";
+  services: ServiceCardProps[] | GalleryCardProps[];
+  defaultInterest?: ServiceCardProps["title"] | GalleryCardProps["title"] | "";
+  modalType?: "service" | "gallery";
   onSubmit?: (values: BookingServiceFormValues) => void;
 };
 
@@ -51,8 +51,8 @@ export function BookingServiceModal({
       services.map((s) => ({
         value:
           modalType === "service"
-            ? (s as ServiceCardProps).type
-            : (s as ArtworkCardProps).title,
+            ? (s as ServiceCardProps).title
+            : (s as GalleryCardProps).title,
         label: s.title,
       })),
     [services, modalType]

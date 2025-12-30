@@ -1,6 +1,6 @@
 import {
   ServiceCardProps,
-  ArtworkCardProps,
+  GalleryCardProps,
   BlogPostProps,
   TestimonialProps,
   EventProps,
@@ -81,7 +81,7 @@ export const services: ServiceCardProps[] = [
   },
 ];
 
-export const artworks: ArtworkCardProps[] = [
+export const artworks: GalleryCardProps[] = [
   {
     id: "1",
     title: "Mr Little Germs",

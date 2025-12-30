@@ -2,8 +2,8 @@ import {ImageIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export default defineType({
-  name: 'artwork',
-  title: 'Artwork',
+  name: 'gallery',
+  title: 'Gallery',
   type: 'document',
   icon: ImageIcon,
   fields: [
@@ -21,10 +21,10 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
+      name: 'album',
+      title: 'Album',
       type: 'reference',
-      to: [{type: 'artwork_category'}],
+      to: [{type: 'gallery_album'}],
     }),
     defineField({
       name: 'main_image',

@@ -11,22 +11,19 @@ import { stats } from "@/data/mockData";
 
 import clsx from "clsx";
 import { MAX_WIDTH } from "@/utils/constants";
+import { useServices } from "@/builders/site/hooks";
+import { urlFor } from "@/utils/sanity";
 
 export function HeroSection() {
-  const categories = [
-    { label: "Visual Paintings", image: "/images/services/visual-art.jpg" },
-    { label: "Face Paintings", image: "/images/services/face-painting.jpg" },
-    { label: "Sip & Paintings", image: "/images/services/sip-paint.jpg" },
-    {
-      label: "Illustration Art Books",
-      image: "/images/services/illustration.png",
-    },
-    { label: "Food Artworks", image: "/images/services/food-art.jpg" },
-    { label: "Digital Artworks", image: "/images/services/digital-art.png" },
-    { label: "Bead Artworks", image: "/images/services/bead-art.jpg" },
-    { label: "Mural Artworks", image: "/images/services/visual-art.jpg" },
-    { label: "Gift Art Box", image: "/images/services/gift-box.jpg" },
-  ] as const;
+  const { data: services, isLoading } = useServices();
+
+  const categories =
+    services?.map((service) => ({
+      label: service.title,
+      image: service.hero_image
+        ? urlFor(service.hero_image)
+        : urlFor(service.image),
+    })) || [];
 
   return (
     <Box
@@ -138,17 +135,20 @@ export function HeroSection() {
               gridAutoRows: "1fr",
             }}
           >
-            {categories.map((category) => (
+            {categories.slice(0, 9).map((category) => (
               <Box
                 key={category.label}
-                className='flex flex-col h-full group relative aspect-square overflow-hidden rounded-lg border border-white/15 bg-white/5'
+                className={clsx(
+                  "flex flex-col h-full group relative aspect-square overflow-hidden rounded-lg border border-white/15 bg-white/5"
+                )}
               >
                 <Box
                   role='img'
                   aria-label={category.label}
                   className={clsx(
                     "absolute inset-0 bg-cover bg-center transition duration-200 ease-out transform-[scale(1)]",
-                    "filter-[saturate(1.08)_contrast(1.02)] group-hover:transform-[scale(1.03)] group-hover:filter-[saturate(1.16)_contrast(1.05)]"
+                    "filter-[saturate(1.08)_contrast(1.02)] group-hover:transform-[scale(1.03)] group-hover:filter-[saturate(1.16)_contrast(1.05)]",
+                    { skeleton: isLoading }
                   )}
                   style={{ backgroundImage: `url(${category.image})` }}
                 />
@@ -156,7 +156,8 @@ export function HeroSection() {
                   className={clsx(
                     "mt-auto font-segoe pointer-events-none relative z-10 mx-2.5 mb-2.5",
                     "rounded-[10px] border border-white/50 bg-black/20 px-3 py-2.5 text-center ",
-                    "text-sm tracking-[0.02em] text-white/95 backdrop-blur"
+                    "text-sm tracking-[0.02em] text-white/95 backdrop-blur",
+                    { skeleton: isLoading }
                   )}
                 >
                   {category.label}

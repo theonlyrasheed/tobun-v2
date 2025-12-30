@@ -12,13 +12,7 @@ export interface StatCardProps {
   label: string;
 }
 
-export interface ServiceCardProps {
-  id: string;
-  type: ServiceType;
-  title: string;
-  description: string;
-  image: string;
-}
+export type { Service as ServiceCardProps } from "@/builders";
 
 export interface ArtworkCardProps {
   id: string;
@@ -29,6 +23,7 @@ export interface ArtworkCardProps {
   size: { height: number; width: number };
   date: string;
   price: number;
+  availability: "available" | "sold" | "not_for_sale";
 }
 
 export interface BlogPostProps {

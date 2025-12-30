@@ -2,8 +2,8 @@ import author from './blog/author'
 import blockContent from './blog/block-content'
 import post from './blog/post'
 import postCategory from './blog/category'
-import artwork from './artwork'
-import artworkCategory from './artwork/category'
+import gallery from './gallery'
+import galleryAlbum from './gallery/albums'
 import company from './site/company'
 import event from './site/event'
 import faq from './site/faq'
@@ -17,9 +17,9 @@ export const schemas = [
   postCategory,
   blockContent,
 
-  // Artwork
-  artwork,
-  artworkCategory,
+  // Gallery
+  gallery,
+  galleryAlbum,
 
   // Site
   event,
