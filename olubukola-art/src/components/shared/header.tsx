@@ -19,7 +19,7 @@ export function Header() {
     { label: "Home", to: PAGES.HOME },
     { label: "About Us", to: PAGES.ABOUT },
     { label: "Services", to: PAGES.HOME, hash: PAGES.SERVICES },
-    { label: "Gallery", to: PAGES.HOME, hash: PAGES.GALLERY },
+    { label: "Gallery", to: PAGES.GALLERY },
     { label: "Blog", to: PAGES.HOME, hash: PAGES.BLOG },
     { label: "FAQs", to: PAGES.HOME, hash: PAGES.FAQS },
   ];

@@ -2,7 +2,7 @@ export enum PAGES {
   HOME = "/",
   ABOUT = "/about",
   SERVICES = "services",
-  GALLERY = "gallery",
+  GALLERY = "/gallery",
   BLOG = "blog",
   FAQS = "faqs",
 }

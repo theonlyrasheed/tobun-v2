@@ -333,6 +333,7 @@ function StatBadge({ value, label }: { value: string; label: string }) {
         <text
           fill='#111827'
           fontSize='12'
+          className='rotating'
           style={{
             letterSpacing: "6px",
           }}

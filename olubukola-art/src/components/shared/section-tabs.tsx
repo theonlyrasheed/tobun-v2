@@ -21,6 +21,9 @@ export function SectionTabs({ defaultValue, tabs, children, ...props }: Props) {
       defaultValue={defaultValue}
       variant='unstyled'
       styles={{
+        root: {
+          width: "100%",
+        },
         list: {
           justifyContent: "start",
           gap: 8,
@@ -39,10 +42,10 @@ export function SectionTabs({ defaultValue, tabs, children, ...props }: Props) {
           lineHeight: 1,
           textAlign: "center",
           color: "var(--mantine-color-dark-8)",
-          backgroundColor: "transparent",
-          "&[dataActive]": {
+          backgrundColor: "transparent",
+          "&[data-active]": {
             borderColor: "var(--mantine-color-dark-9)",
-            backgroundColor: "var(--mantine-color-dark-9)",
+            backgroundColor: "var(--mantine-color-dark-9) ",
             color: "var(--mantine-color-white)",
           },
         },

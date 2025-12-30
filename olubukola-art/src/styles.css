@@ -111,6 +111,58 @@
     }
   }
 
+  @keyframes skeleton {
+    0% {
+      background-position: 200%;
+    }
+    100% {
+      background-position: -150%;
+    }
+  }
+
+  @keyframes rotating {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .rotating {
+    animation: rotate-text 8s linear infinite;
+    transform-origin: 100px 100px; /* Center of the SVG (100, 100) */
+  }
+
+  @keyframes rotate-text {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .skeleton {
+    position: relative;
+    color: transparent !important;
+    background-color: var(--mantine-color-gray-3) !important;
+    background-image: linear-gradient(
+      to right,
+      transparent,
+      var(--mantine-color-gray-4) 40%,
+      transparent 60%
+    ) !important;
+    background-size: 200% 100% !important;
+    background-repeat: no-repeat !important;
+    animation: skeleton 1.25s cubic-bezier(0, 0, 1, 1) infinite;
+    border-radius: 0.25rem;
+  }
+
+  .skeleton > * {
+    visibility: hidden;
+  }
+
   .marquee {
     overflow: hidden;
   }
