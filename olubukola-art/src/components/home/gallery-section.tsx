@@ -22,6 +22,7 @@ import { urlFor } from "@/utils/sanity";
 import { BookingServiceModal } from "../modals/booking-service";
 import { MakeEnquiryModal } from "../modals/make-enquiry";
 import type { ArtworkCardProps } from "@/types";
+import clsx from "clsx";
 
 export const transformGalleryApi = (gallery: Gallery): ArtworkCardProps => {
   return {
@@ -52,8 +53,9 @@ export function GallerySection() {
   const [activeTab, setActiveTab] = useState("digital-artwork");
   const [title, setTitle] = useState("Gallery");
 
-  const { data: galleries } = useGalleries();
-  const { data: albums } = useAlbums();
+  const { data: galleries, isPlaceholderData: isGalleriesPlaceholder } =
+    useGalleries();
+  const { data: albums, isPlaceholderData: isAlbumsPlaceholder } = useAlbums();
 
   const featuredGalleries = galleries?.filter((gallery) => gallery.featured);
   const featuredAlbums = albums?.filter(
@@ -99,6 +101,9 @@ export function GallerySection() {
     }
   }, [tabs, activeTab, featuredAlbums]);
 
+  const isLoading = isGalleriesPlaceholder || isAlbumsPlaceholder;
+  const hasData = galleries?.length || albums?.length;
+
   return (
     <Container
       size='full'
@@ -110,11 +115,13 @@ export function GallerySection() {
       pb={{
         base: 30,
       }}
+      hidden={!isLoading && !hasData}
     >
       <SectionTitle
         subtitle='CURATED SELECTIONS'
         title={`Our ${title}`}
         id={PAGES.GALLERY}
+        skeleton={isLoading}
       />
 
       <SectionTabs
@@ -134,12 +141,18 @@ export function GallerySection() {
           >
             {getFilteredGalleries(activeTab).map((gallery, idx) =>
               isAvailable(gallery) ? (
-                <GalleryCard key={gallery.id} gallery={gallery} index={idx} />
+                <GalleryCard
+                  key={gallery.id}
+                  gallery={gallery}
+                  index={idx}
+                  skeleton={isLoading}
+                />
               ) : (
                 <SimpleGalleryCard
                   key={gallery.id}
                   gallery={gallery}
                   index={idx}
+                  skeleton={isLoading}
                 />
               )
             )}
@@ -149,6 +162,7 @@ export function GallerySection() {
               <ActionCard
                 onEnquiryClick={() => setEnquiryOpened(true)}
                 onBookingClick={() => setBookingOpened(true)}
+                skeleton={isLoading}
               />
             )}
           </SimpleGrid>
@@ -174,9 +188,10 @@ export function GallerySection() {
 interface GalleryCardProps {
   gallery: ArtworkCardProps;
   index: number;
+  skeleton: boolean;
 }
 
-const GalleryCard = ({ gallery, index }: GalleryCardProps) => (
+const GalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
   <Card
     key={gallery.id}
     shadow='none'
@@ -203,9 +218,10 @@ const GalleryCard = ({ gallery, index }: GalleryCardProps) => (
           alt={gallery.title}
           fit='cover'
           radius='sm'
+          className={clsx({ skeleton })}
         />
         <Text
-          className='font-playball'
+          className={clsx("font-playball", { skeleton })}
           fz={18}
           c='rgba(255, 255, 255, 0.67)'
           style={{
@@ -221,26 +237,31 @@ const GalleryCard = ({ gallery, index }: GalleryCardProps) => (
     </Card.Section>
 
     <Stack gap='xs' mt='md'>
-      <Title order={4} className='font-playfair' fz={24} fw={600}>
+      <Title
+        order={4}
+        className={clsx("font-playfair", { skeleton })}
+        fz={24}
+        fw={600}
+      >
         {gallery.title}
       </Title>
-      <Text fz={15} c='gray.6'>
+      <Text fz={15} c='gray.6' className={clsx({ skeleton })}>
         {gallery.description}
       </Text>
-      <Text fz={14} c='gray.7'>
+      <Text fz={14} c='gray.7' className={clsx({ skeleton })}>
         Size: {formatDimensions(gallery.size.height, gallery.size.width)}
       </Text>
-      <Text fz={14} c='gray.7'>
+      <Text fz={14} c='gray.7' className={clsx({ skeleton })}>
         Date: {gallery.date}
       </Text>
-      <Text fz={16} c='red.7' fw={700}>
+      <Text fz={16} c='red.7' fw={700} className={clsx({ skeleton })}>
         Prize: {formatPrice(gallery.price)}
       </Text>
     </Stack>
   </Card>
 );
 
-const SimpleGalleryCard = ({ gallery, index }: GalleryCardProps) => (
+const SimpleGalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
   <Card
     key={gallery.id}
     shadow='none'
@@ -257,6 +278,7 @@ const SimpleGalleryCard = ({ gallery, index }: GalleryCardProps) => (
           backgroundColor: "#f0f0f0",
           position: "relative",
         }}
+        className={clsx({ skeleton })}
       >
         <Image
           src={gallery.image}
@@ -276,9 +298,14 @@ const SimpleGalleryCard = ({ gallery, index }: GalleryCardProps) => (
 interface ActionCardProps {
   onEnquiryClick: () => void;
   onBookingClick: () => void;
+  skeleton: boolean;
 }
 
-const ActionCard = ({ onEnquiryClick, onBookingClick }: ActionCardProps) => (
+const ActionCard = ({
+  onEnquiryClick,
+  onBookingClick,
+  skeleton,
+}: ActionCardProps) => (
   <Card
     shadow='none'
     padding='lg'
@@ -295,6 +322,7 @@ const ActionCard = ({ onEnquiryClick, onBookingClick }: ActionCardProps) => (
         radius='sm'
         h={48}
         onClick={onEnquiryClick}
+        className={clsx({ skeleton })}
       >
         Make Enquiry
       </Button>
@@ -309,6 +337,7 @@ const ActionCard = ({ onEnquiryClick, onBookingClick }: ActionCardProps) => (
           root: { color: "var(--mantine-color-dark-9)" },
         }}
         onClick={onBookingClick}
+        className={clsx({ skeleton })}
       >
         Buy Art piece
       </Button>

@@ -4,25 +4,35 @@ import { MAX_WIDTH } from "@/utils/constants";
 import { Carousel } from "@mantine/carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useMemo, useState } from "react";
+import { useCompanies } from "@/builders";
+import { urlFor } from "@/utils/sanity";
+import type { Company } from "@/builders/client";
 
-const companies = [
-  {
-    name: "Leadway Assurance",
-    src: "/images/companies/leadway.png",
-  },
-  {
-    name: "FMC Abuja",
-    src: "/images/companies/fmc-abuja.png",
-  },
-];
+interface CompanyDisplay {
+  name: string;
+  src: string;
+}
+
+const transformCompanyApi = (company: Company): CompanyDisplay => ({
+  name: company.name,
+  src: company.logo?.asset
+    ? urlFor(company.logo.asset)
+    : "/images/companies/default.png",
+});
 
 export function TrustedCompaniesSection() {
-  // Duplicate items so looping feels continuous even with a small source list.
-  const slides = useMemo(
-    () =>
-      Array.from({ length: 10 }, (_, idx) => companies[idx % companies.length]),
-    []
-  );
+  const { data: companies, isPlaceholderData } = useCompanies();
+
+  const slides = useMemo(() => {
+    if (!companies || companies.length === 0) return [];
+
+    const transformedCompanies = companies.map(transformCompanyApi);
+    // Duplicate items so looping feels continuous even with a small source list.
+    return Array.from(
+      { length: 10 },
+      (_, idx) => transformedCompanies[idx % transformedCompanies.length]
+    );
+  }, [companies]);
 
   const [embla, setEmbla] = useState<EmblaCarouselType | null>(null);
   const [paused, setPaused] = useState(false);
@@ -38,10 +48,16 @@ export function TrustedCompaniesSection() {
   }, [embla, paused]);
 
   return (
-    <Container size='full' maw={MAX_WIDTH} pt={{ base: 30, md: 80 }}>
+    <Container
+      size='full'
+      maw={MAX_WIDTH}
+      pt={{ base: 30, md: 80 }}
+      hidden={!isPlaceholderData && !companies?.length}
+    >
       <SectionTitle
         subtitle='WHO WE WORK WITH'
         title='Trusted By Great- Companies'
+        skeleton={isPlaceholderData}
       />
 
       <Box

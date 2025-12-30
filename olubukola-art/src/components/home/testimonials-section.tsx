@@ -14,25 +14,49 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
-import { testimonials } from "@/data/mockData";
 import { MAX_WIDTH } from "@/utils/constants";
 import { Carousel } from "@mantine/carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useMemo, useState } from "react";
+import { useTestimonials } from "@/builders";
+import { urlFor } from "@/utils/sanity";
+
+import type { Testimonial } from "@/builders/client";
+import type { TestimonialProps } from "@/types";
+
+const transformTestimonialApi = (
+  testimonial: Testimonial
+): TestimonialProps => {
+  return {
+    id: testimonial._id,
+    name: testimonial.name,
+    text: testimonial.quote,
+    rating: testimonial.rating || 0,
+    avatar: testimonial.avatar?.asset
+      ? urlFor(testimonial.avatar.asset)
+      : "/images/testimonials/avatar.jpg",
+  };
+};
 
 export function TestimonialsSection() {
+  const { data: testimonials, isPlaceholderData } = useTestimonials();
+
   // "Big screens": 4 cols x 2 rows => 8 cards per "page"
   // "Small screens": 2 cols x 2 rows => 4 cards per "page"
   const isLgUp = useMediaQuery("(min-width: 64em)"); // ~1024px
   const perPage = isLgUp ? 8 : 3;
 
   const pages = useMemo(() => {
-    const chunks: (typeof testimonials)[] = [];
+    if (!testimonials) return [];
+
+    const chunks: TestimonialProps[][] = [];
     for (let i = 0; i < testimonials.length; i += perPage) {
-      chunks.push(testimonials.slice(i, i + perPage));
+      chunks.push(
+        testimonials.slice(i, i + perPage).map(transformTestimonialApi)
+      );
     }
     return chunks;
-  }, [perPage]);
+  }, [testimonials, perPage]);
 
   const [embla, setEmbla] = useState<EmblaCarouselType | null>(null);
   const [_, setActive] = useState(0);
@@ -58,10 +82,12 @@ export function TestimonialsSection() {
         base: 30,
         md: 100,
       }}
+      hidden={!isPlaceholderData && !testimonials?.length}
     >
       <SectionTitle
         subtitle='WHAT OUR CUSTOMER SAYS'
         title='Our Amazing Supporters'
+        skeleton={isPlaceholderData}
       />
 
       <Box
@@ -90,6 +116,7 @@ export function TestimonialsSection() {
             slideSize='100%'
             slideGap={20}
             onSlideChange={setActive}
+            mih={300}
           >
             {pages.map((pageItems, idx) => (
               <Carousel.Slide key={idx}>
@@ -112,6 +139,8 @@ export function TestimonialsSection() {
                         gap: 16,
                         minHeight: 210,
                       }}
+                      data-aos='fade-up'
+                      data-aos-delay={idx * 100}
                     >
                       <Stack gap='md' style={{ flex: 1 }} justify='center'>
                         <Text

@@ -41,10 +41,10 @@ export const SITE_QUERIES = {
     _id,
     _type,
     name,
-    role,
+    rating,
     company,
-    testimonial,
-    image {
+    quote,
+    avatar {
       asset->{
         _id,
         url

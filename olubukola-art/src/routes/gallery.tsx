@@ -9,16 +9,136 @@ import {
   Tabs,
 } from "@mantine/core";
 import { SectionTabs } from "@/components/shared/section-tabs";
-import { artworks } from "@/data/mockData";
 import { MAX_WIDTH } from "@/utils/constants";
 import { IconHeart } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
+import {
+  useGalleries,
+  useAlbums,
+  useGalleriesInfinite,
+  useGalleriesByAlbumInfinite,
+} from "@/builders";
+import { urlFor } from "@/utils/sanity";
+import type { Gallery } from "@/builders/client";
+import type { ArtworkCardProps } from "@/types";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+import PhotoSwipeLightbox from "photoswipe/lightbox";
+import "photoswipe/style.css";
+
+const transformGalleryApi = (gallery: Gallery): ArtworkCardProps => {
+  return {
+    id: gallery._id,
+    title: gallery.title,
+    description: gallery.excerpt || "---",
+    artist: "Olubukola's Art",
+    image: urlFor(gallery.main_image?.asset),
+    size: {
+      height: gallery.size?.heightCm || 0,
+      width: gallery.size?.widthCm || 0,
+    },
+    date: gallery.created_at
+      ? new Date(gallery.created_at).toLocaleDateString()
+      : "",
+    price: gallery.price?.amount || 0,
+    availability: gallery.availability,
+  };
+};
 
 export const Route = createFileRoute("/gallery")({
   component: GalleryPage,
+  ssr: true,
 });
 
 function GalleryPage() {
+  const { data: galleries, isPlaceholderData: isGalleriesPlaceholder } =
+    useGalleries();
+  const { data: albums, isPlaceholderData: isAlbumsPlaceholder } = useAlbums();
+  const [activeTab, setActiveTab] = useState("all");
+
+  const ITEMS_PER_PAGE = 12;
+  const isAllTab = activeTab === "all";
+
+  const isPlaceholderData = isGalleriesPlaceholder || isAlbumsPlaceholder;
+
+  const selectedAlbum = albums?.find(
+    (album) => album.slug.current === activeTab
+  );
+
+  // Use appropriate infinite query based on active tab
+  const infiniteQuery = isAllTab
+    ? useGalleriesInfinite(ITEMS_PER_PAGE)
+    : useGalleriesByAlbumInfinite(selectedAlbum?._id || "", ITEMS_PER_PAGE);
+
+  const {
+    data: infiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = infiniteQuery;
+
+  // Flatten the infinite query data and transform to ArtworkCardProps
+  const allArtworks =
+    infiniteData?.pages.flatMap((page) => page.data.map(transformGalleryApi)) ||
+    [];
+
+  // Initialize PhotoSwipe lightbox
+  useEffect(() => {
+    const lightboxInstance = new PhotoSwipeLightbox({
+      gallery: "#gallery-grid",
+      children: "a[data-pswp-src]",
+      pswpModule: () => import("photoswipe"),
+    });
+
+    lightboxInstance.init();
+
+    return () => {
+      lightboxInstance.destroy();
+    };
+  }, []);
+
+  // Load more function for infinite scroll
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Create tabs from albums that have associated galleries
+  const albumIdsWithGalleries = new Set(
+    galleries?.map((gallery) => gallery.album?._id).filter(Boolean) || []
+  );
+
+  const tabs = [
+    { value: "all", label: "All" },
+    ...(albums
+      ?.filter((album) => albumIdsWithGalleries.has(album._id))
+      .map((album) => ({
+        value: album.slug.current,
+        label: album.title,
+      })) || []),
+  ];
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  // Intersection observer for infinite scroll
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [loadMore]);
+
   return (
     <Stack gap={0} flex={1}>
       <Image src='/svgs/gallery-hero.svg' alt='Gallery Hero' />
@@ -27,25 +147,26 @@ function GalleryPage() {
         py={{ base: 30, md: 60 }}
         w={"100%"}
         maw={MAX_WIDTH}
+        hidden={!isPlaceholderData && !galleries?.length}
       >
         <Stack gap={0} mb={20}>
           <SectionTitle
             subtitle='OUR CREATIVE MEMORY'
             title='Welcome To Our Gallery'
+            skeleton={isPlaceholderData}
           />
         </Stack>
 
         <SectionTabs
+          value={activeTab}
+          onChange={(value) => setActiveTab(value || "all")}
           defaultValue='all'
-          tabs={[
-            { value: "all", label: "All" },
-            { value: "photography", label: "Photography" },
-            { value: "exhibition", label: "Exhibition" },
-            { value: "tutorials", label: "Tutorials" },
-          ]}
+          tabs={tabs}
+          mih={400}
         >
-          <Tabs.Panel value='all' pt='xl' className='w-full'>
+          <Tabs.Panel value={activeTab} pt='xl' className='w-full'>
             <Box
+              id='gallery-grid'
               className='w-full gap-3 grid'
               style={{
                 gridTemplateColumns:
@@ -53,7 +174,7 @@ function GalleryPage() {
                 gridAutoRows: "1fr",
               }}
             >
-              {artworks.map((artwork, idx) => (
+              {allArtworks.map((artwork, idx) => (
                 <Card
                   key={artwork.id}
                   shadow='none'
@@ -62,24 +183,40 @@ function GalleryPage() {
                   withBorder
                   data-aos='fade-up'
                   data-aos-delay={Math.min(idx * 70, 420)}
+                  data-aos-disabled={isPlaceholderData}
                 >
-                  <Card.Section inheritPadding py='lg'>
+                  <Card.Section inheritPadding py='lg' h={"100%"} flex={1}>
                     <Box
                       style={{
                         backgroundColor: "#f0f0f0",
                         position: "relative",
+                        height: "100%",
                       }}
                     >
-                      <Image
-                        src={artwork.image}
-                        w='100%'
-                        h={450}
-                        maw={520}
-                        mx='auto'
-                        alt={artwork.title}
-                        fit='cover'
-                        radius='sm'
-                      />
+                      <a
+                        href={artwork.image}
+                        data-pswp-src={artwork.image}
+                        data-pswp-width='600'
+                        data-pswp-height='800'
+                        target='_blank'
+                        rel='noopener'
+                        style={{
+                          cursor: "zoom-in",
+                          display: "block",
+                          height: "100%",
+                        }}
+                      >
+                        <Image
+                          src={artwork.image}
+                          w='100%'
+                          h={"100%"}
+                          maw={520}
+                          mx='auto'
+                          alt={artwork.title}
+                          fit='cover'
+                          radius='sm'
+                        />
+                      </a>
                       <ActionIcon
                         variant='transparent'
                         color='white'
@@ -98,6 +235,22 @@ function GalleryPage() {
                   </Card.Section>
                 </Card>
               ))}
+
+              {/* Infinite scroll trigger */}
+              {hasNextPage && (
+                <Box
+                  ref={loadMoreRef}
+                  className='col-span-full flex justify-center py-8'
+                >
+                  <Box className='text-center'>
+                    {isFetchingNextPage ? (
+                      <Box className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto' />
+                    ) : (
+                      <p className='text-gray-500'>Loading more...</p>
+                    )}
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Tabs.Panel>
         </SectionTabs>

@@ -14,19 +14,47 @@ import {
 import { ActionIcon } from "@mantine/core";
 import { IconBookmark, IconHeart } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
-import { blogPosts } from "@/data/mockData";
 import { formatReadTime } from "@/utils/formatters";
 import { SectionTabs } from "@/components/shared/section-tabs";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES } from "@/utils/enums";
+import { usePosts } from "@/builders";
+import { urlFor } from "@/utils/sanity";
+import type { Post } from "@/builders/client";
+import type { BlogPostProps } from "@/types";
+
+const transformPostApi = (post: Post): BlogPostProps => ({
+  id: post._id,
+  title: post.title,
+  excerpt: post.excerpt || "Read more about this post...",
+  image: post.main_image?.asset ? urlFor(post.main_image.asset) : "/images/blog/default.jpg",
+  date: post.published_at
+    ? new Date(post.published_at).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    : "Date not available",
+  readTime: 5, // Default read time since it's not in the schema
+});
 
 export function BlogSection() {
+  const { data: posts, isPlaceholderData } = usePosts();
+  const blogPosts = posts?.map(transformPostApi) || [];
+
   return (
-    <Container size='full' maw={MAX_WIDTH} py={100}>
+    <Container
+      size='full'
+      maw={MAX_WIDTH}
+      py={100}
+      hidden={!isPlaceholderData && !posts?.length}
+    >
       <SectionTitle
         subtitle='OUR TOPPEST ACHIEVEMENT GIST'
         title='Blog'
         id={PAGES.BLOG}
+        skeleton={isPlaceholderData}
       />
 
       <SectionTabs
