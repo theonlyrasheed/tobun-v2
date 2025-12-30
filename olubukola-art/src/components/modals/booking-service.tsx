@@ -17,7 +17,10 @@ import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
 import { useEffect, useMemo } from "react";
-import type { GalleryCardProps, ServiceCardProps } from "@/types";
+import type {
+  ArtworkCardProps as GalleryCardProps,
+  ServiceCardProps,
+} from "@/types";
 
 export type BookingServiceFormValues = {
   firstName: string;

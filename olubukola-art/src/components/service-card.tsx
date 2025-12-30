@@ -12,7 +12,6 @@ type ServiceCardComponentProps = ServiceCardProps & {
 
 export function ServiceCard(props: ServiceCardComponentProps) {
   const {
-    _id,
     title,
     description,
     image,

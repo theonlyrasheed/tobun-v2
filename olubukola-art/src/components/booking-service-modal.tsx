@@ -22,7 +22,7 @@ export type BookingServiceFormValues = {
   lastName: string;
   email: string;
   date: string;
-  interest: ServiceCardProps["type"] | "";
+  interest: ServiceCardProps["title"] | "";
   comments: string;
   agree: boolean;
 };
@@ -31,7 +31,7 @@ export type BookingServiceModalProps = {
   opened: boolean;
   onClose: () => void;
   services: ServiceCardProps[];
-  defaultInterest?: ServiceCardProps["type"] | "";
+  defaultInterest?: ServiceCardProps["title"] | "";
   onSubmit?: (values: BookingServiceFormValues) => void;
 };
 
@@ -47,7 +47,7 @@ export function BookingServiceModal({
   const interestOptions = useMemo(
     () =>
       services.map((s) => ({
-        value: s.type,
+        value: s.title,
         label: s.title,
       })),
     [services]
