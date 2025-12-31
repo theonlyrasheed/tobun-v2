@@ -2,6 +2,7 @@ import { Container, Group, Stack, Text, Divider } from "@mantine/core";
 import { IconBrandTiktok, IconBrandYoutube } from "@tabler/icons-react";
 import { MAX_WIDTH } from "@/utils/constants";
 import { Link } from "@tanstack/react-router";
+import { PAGES, SOCIAL_MEDIA } from "@/utils/enums";
 
 export function Footer() {
   return (
@@ -12,17 +13,46 @@ export function Footer() {
             {/* 4-column grid that actually spans the available width */}
             <div className='grid flex-1 grid-cols-1 gap-x-20 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
               <Stack gap='sm'>
-                <Text fz={18} fw={400} className='font-poppins' c='black'>
+                <Text
+                  component={Link}
+                  to={PAGES.HOME}
+                  hash={PAGES.CONTACT}
+                  fz={18}
+                  fw={400}
+                  className='font-poppins'
+                  c='black'
+                >
                   Help & Support
                 </Text>
                 <Stack gap={7}>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.CONTACT}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     Customer Care Support
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.FAQS}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     How to Customize Art
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.CONTACT}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     How do I partner with you
                   </Text>
                 </Stack>
@@ -33,13 +63,34 @@ export function Footer() {
                   Features
                 </Text>
                 <Stack gap={7}>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.GALLERY}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     Art
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.BLOG}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     Blog
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.SERVICES}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     Services
                   </Text>
                   <Text fz={14} c='dimmed' className='font-poppins'>
@@ -58,28 +109,57 @@ export function Footer() {
                     c='dimmed'
                     className='font-poppins'
                     component={Link}
-                    to='/about'
+                    to={PAGES.ABOUT}
                   >
                     About Us
                   </Text>
                   <Text fz={14} c='dimmed' className='font-poppins'>
                     Our Values
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component={Link}
+                    to={PAGES.HOME}
+                    hash={PAGES.SERVICES}
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins'
+                  >
                     What we do
                   </Text>
                 </Stack>
               </Stack>
 
               <Stack gap='sm'>
-                <Text fz={18} fw={400} className='font-poppins' c='black'>
+                <Text
+                  component={Link}
+                  to={PAGES.HOME}
+                  hash={PAGES.CONTACT}
+                  fz={18}
+                  fw={400}
+                  className='font-poppins'
+                  c='black'
+                >
                   Contact us
                 </Text>
                 <Stack gap={7}>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component='a'
+                    href={`mailto:${SOCIAL_MEDIA.EMAIL}`}
+                    target='_blank'
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins hover:text-purple-600 transition-colors'
+                  >
                     Olubukolaart@gmail.com
                   </Text>
-                  <Text fz={14} c='dimmed' className='font-poppins'>
+                  <Text
+                    component='a'
+                    href={`tel:${SOCIAL_MEDIA.PHONE}`}
+                    target='_blank'
+                    fz={14}
+                    c='dimmed'
+                    className='font-poppins hover:text-purple-600 transition-colors'
+                  >
                     +2348148148813
                   </Text>
                   <Text fz={14} c='dimmed' className='font-poppins'>
@@ -92,8 +172,12 @@ export function Footer() {
             {/* Social icons top-right (matches screenshot vibe) */}
             <Stack gap={10} align='flex-end'>
               <Group gap='md'>
-                <IconBrandYoutube size={20} />
-                <IconBrandTiktok size={20} />
+                <a href={SOCIAL_MEDIA.YOUTUBE} target='_blank'>
+                  <IconBrandYoutube size={20} />
+                </a>
+                <a href={SOCIAL_MEDIA.TIKTOK} target='_blank'>
+                  <IconBrandTiktok size={20} />
+                </a>
               </Group>
               <Divider w={64} color='gray.3' />
             </Stack>

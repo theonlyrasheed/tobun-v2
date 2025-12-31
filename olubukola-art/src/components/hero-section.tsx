@@ -13,6 +13,8 @@ import clsx from "clsx";
 import { MAX_WIDTH } from "@/utils/constants";
 import { useServices } from "@/builders/site/hooks";
 import { urlFor } from "@/utils/sanity";
+import { PAGES } from "@/utils/enums";
+import { Link } from "@tanstack/react-router";
 
 export function HeroSection() {
   const { data: services, isLoading } = useServices();
@@ -111,10 +113,20 @@ export function HeroSection() {
             </Box>
 
             <Group gap='sm' mt='xs' maw={400}>
-              <Button flex={1} size='lg' color='purple' radius='sm'>
+              <Button
+                component={Link}
+                to={PAGES.GALLERY}
+                flex={1}
+                size='lg'
+                color='purple'
+                radius='sm'
+              >
                 Browse Gallery
               </Button>
               <Button
+                component={Link}
+                to={PAGES.HOME}
+                hash={PAGES.SERVICES}
                 flex={1}
                 size='lg'
                 variant='subtle'

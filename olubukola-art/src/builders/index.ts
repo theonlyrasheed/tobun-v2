@@ -21,22 +21,3 @@ export {
   companyApi,
 } from "./site/api";
 export * from "./site/hooks";
-
-// Re-export types for convenience
-export type {
-  Gallery,
-  Gallery_album,
-  Post,
-  Author,
-  Post_category,
-  Service,
-  Testimonial,
-  Faq,
-  Event,
-  Company,
-  SanityImageAssetReference,
-  SanityImageHotspot,
-  SanityImageCrop,
-  Slug,
-  Block_content,
-} from "../../sanity/sanity.types";

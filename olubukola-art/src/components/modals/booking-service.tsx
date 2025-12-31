@@ -16,7 +16,10 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { sendBookingEmail } from "@/utils/send-booking";
 import type {
   ArtworkCardProps as GalleryCardProps,
   ServiceCardProps,
@@ -80,9 +83,40 @@ export function BookingServiceModal({
     }
   }, [defaultInterest, opened]);
 
-  const handleSubmit = form.onSubmit((vals) => {
-    onSubmit?.(vals);
-    onClose();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = form.onSubmit(async (vals) => {
+    setIsSubmitting(true);
+
+    try {
+      const result = await sendBookingEmail({ data: vals });
+
+      if (result.success) {
+        notifications.show({
+          title: "Booking Submitted Successfully!",
+          message: "We'll get back to you soon with more details.",
+          color: "green",
+          icon: <IconCheck size={18} />,
+          autoClose: 5000,
+        });
+
+        onSubmit?.(vals);
+        onClose();
+        form.reset();
+      } else {
+        throw new Error("Failed to send booking");
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Submission Failed",
+        message: "Please try again or contact us directly.",
+        color: "red",
+        icon: <IconX size={18} />,
+        autoClose: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   });
 
   return (
@@ -251,7 +285,8 @@ export function BookingServiceModal({
                 fullWidth
                 h={54}
                 radius={6}
-                disabled={!form.values.agree}
+                disabled={!form.values.agree || isSubmitting}
+                loading={isSubmitting}
                 type='submit'
                 className='font-playfair!'
                 styles={{
@@ -262,7 +297,7 @@ export function BookingServiceModal({
                   },
                 }}
               >
-                Submit booking
+                {isSubmitting ? "Sending..." : "Submit booking"}
               </Button>
             </Stack>
           </Box>

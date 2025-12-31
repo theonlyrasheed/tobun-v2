@@ -19,6 +19,7 @@ import {
 import { SectionTitle } from "@/components/section-title";
 import { Link } from "@tanstack/react-router";
 import { MAX_WIDTH } from "@/utils/constants";
+import { PAGES, SOCIAL_MEDIA } from "@/utils/enums";
 
 export function ContactSection() {
   return (
@@ -31,6 +32,7 @@ export function ContactSection() {
       }}
     >
       <SectionTitle
+        id={PAGES.CONTACT}
         subtitle='HAVE ENQUIRY, COMPLAIN, COMMISSION, SUGGESTION'
         title='Contact Us'
       />
@@ -83,7 +85,7 @@ export function ContactSection() {
               </Text>
               <Box
                 component={Link}
-                to='mailto:olubukolaart@gmail.com'
+                to={`mailto:${SOCIAL_MEDIA.EMAIL}`}
                 target='_blank'
                 rel='noreferrer'
                 px={14}
@@ -126,8 +128,12 @@ export function ContactSection() {
             </Group>
 
             <Group gap='sm' mt='auto'>
-              <IconBrandTiktok size={20} color='white' />
-              <IconBrandYoutube size={20} color='white' />
+              <a href={SOCIAL_MEDIA.TIKTOK} target='_blank'>
+                <IconBrandTiktok size={20} color='white' />
+              </a>
+              <a href={SOCIAL_MEDIA.YOUTUBE} target='_blank'>
+                <IconBrandYoutube size={20} color='white' />
+              </a>
             </Group>
           </Stack>
         </Paper>
@@ -184,8 +190,12 @@ export function ContactSection() {
             </Group>
 
             <Group gap='sm' mt='auto'>
-              <IconBrandTiktok size={20} color='white' />
-              <IconBrandYoutube size={20} color='white' />
+              <a href={SOCIAL_MEDIA.TIKTOK} target='_blank'>
+                <IconBrandTiktok size={20} color='white' />
+              </a>
+              <a href={SOCIAL_MEDIA.YOUTUBE} target='_blank'>
+                <IconBrandYoutube size={20} color='white' />
+              </a>
             </Group>
           </Stack>
         </Paper>

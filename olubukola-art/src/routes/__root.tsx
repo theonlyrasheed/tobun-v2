@@ -23,6 +23,7 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 
 import "aos/dist/aos.css";
+import { Notifications } from "@mantine/notifications";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -96,6 +97,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <MantineProvider theme={theme}>
+          <Notifications position='top-right' />
           <section className='relative flex min-h-screen flex-col'>
             <Header />
             <main className='z-10 bg-white sm:shadow-lg'>{children}</main>

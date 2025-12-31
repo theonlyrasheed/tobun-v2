@@ -5,6 +5,15 @@ export enum PAGES {
   GALLERY = "/gallery",
   BLOG = "blog",
   FAQS = "faqs",
+  CONTACT = "contact",
+}
+
+export enum SOCIAL_MEDIA {
+  YOUTUBE = "https://www.youtube.com/@olubukolaart",
+  TIKTOK = "https://www.tiktok.com/@olubukolaart",
+  LINKEDIN = "https://www.linkedin.com/in/olubukola-tobun-27747a318",
+  EMAIL = "olubukolaart@gmail.com",
+  PHONE = "+2348148148813",
 }
 
 export type ServiceType =

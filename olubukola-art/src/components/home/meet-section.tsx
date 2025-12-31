@@ -10,6 +10,7 @@ import {
 import { IconBrandLinkedin } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
 import { MAX_WIDTH } from "@/utils/constants";
+import { SOCIAL_MEDIA } from "@/utils/enums";
 
 export function MeetSection() {
   return (
@@ -72,7 +73,7 @@ export function MeetSection() {
 
           <Button
             component='a'
-            href='https://www.linkedin.com/in/olubukola-tobun-27747a318/'
+            href={SOCIAL_MEDIA.LINKEDIN}
             target='_blank'
             rel='noreferrer'
             radius='sm'
