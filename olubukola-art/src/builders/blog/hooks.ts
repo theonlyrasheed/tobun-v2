@@ -1,42 +1,68 @@
 import { useQuery } from "@tanstack/react-query";
-import { blogApi, authorApi, postCategoryApi } from "./api";
+import {
+  getAllPosts,
+  getPostBySlug,
+  getRecentPosts,
+  getPostsByCategory,
+  getPostsByAuthor,
+  getAllAuthors,
+  getAuthorBySlug,
+  getAllCategories,
+  getCategoryBySlug,
+} from "./server-fns";
+import { blogPosts, authors, postCategories } from "./placeholder";
 
 // Blog post hooks
 export const usePosts = () => {
   return useQuery({
     queryKey: ["posts"],
-    queryFn: blogApi.getAllPosts,
+    queryFn: getAllPosts,
+    placeholderData: blogPosts,
   });
 };
 
 export const usePost = (slug: string) => {
   return useQuery({
     queryKey: ["post", slug],
-    queryFn: () => blogApi.getPostBySlug(slug),
+    queryFn: () => getPostBySlug({ data: slug }),
     enabled: !!slug,
+    placeholderData: blogPosts.find((post) => post.slug === slug) || null,
   });
 };
 
 export const useRecentPosts = (limit: number = 6) => {
+  const recentPosts = blogPosts
+    .sort(
+      (a, b) =>
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    )
+    .slice(0, limit);
   return useQuery({
     queryKey: ["posts", "recent", limit],
-    queryFn: () => blogApi.getRecentPosts(limit),
+    queryFn: () => getRecentPosts({ data: limit }),
+    placeholderData: recentPosts,
   });
 };
 
 export const usePostsByCategory = (categoryId: string) => {
+  const categoryPosts = blogPosts.filter((post) =>
+    post.categories?.some((cat) => cat._id === categoryId)
+  );
   return useQuery({
     queryKey: ["posts", "category", categoryId],
-    queryFn: () => blogApi.getPostsByCategory(categoryId),
+    queryFn: () => getPostsByCategory({ data: categoryId }),
     enabled: !!categoryId,
+    placeholderData: categoryPosts,
   });
 };
 
 export const usePostsByAuthor = (authorId: string) => {
+  const authorPosts = blogPosts.filter((post) => post.author?._id === authorId);
   return useQuery({
     queryKey: ["posts", "author", authorId],
-    queryFn: () => blogApi.getPostsByAuthor(authorId),
+    queryFn: () => getPostsByAuthor({ data: authorId }),
     enabled: !!authorId,
+    placeholderData: authorPosts,
   });
 };
 
@@ -44,15 +70,17 @@ export const usePostsByAuthor = (authorId: string) => {
 export const useAuthors = () => {
   return useQuery({
     queryKey: ["authors"],
-    queryFn: authorApi.getAllAuthors,
+    queryFn: getAllAuthors,
+    placeholderData: authors,
   });
 };
 
 export const useAuthor = (slug: string) => {
   return useQuery({
     queryKey: ["author", slug],
-    queryFn: () => authorApi.getAuthorBySlug(slug),
+    queryFn: () => getAuthorBySlug({ data: slug }),
     enabled: !!slug,
+    placeholderData: authors.find((author) => author.slug === slug) || null,
   });
 };
 
@@ -60,14 +88,17 @@ export const useAuthor = (slug: string) => {
 export const usePostCategories = () => {
   return useQuery({
     queryKey: ["post-categories"],
-    queryFn: postCategoryApi.getAllCategories,
+    queryFn: getAllCategories,
+    placeholderData: postCategories,
   });
 };
 
 export const usePostCategory = (slug: string) => {
   return useQuery({
     queryKey: ["post-category", slug],
-    queryFn: () => postCategoryApi.getCategoryBySlug(slug),
+    queryFn: () => getCategoryBySlug({ data: slug }),
     enabled: !!slug,
+    placeholderData:
+      postCategories.find((category) => category._id === slug) || null,
   });
 };

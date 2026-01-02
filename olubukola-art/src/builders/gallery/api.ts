@@ -1,10 +1,30 @@
-import { type Gallery, type Gallery_album, sanityClient } from "../client";
-import { GALLERY_QUERIES, CATEGORY_QUERIES } from "./queries";
+import { sanityClient } from "../client";
+import {
+  AlbumsWithCountQueryResult,
+  AllGalleriesQueryResult,
+  AllGalleryAlbumsQueryResult,
+  AvailableGalleriesQueryResult,
+  FeaturedGalleriesQueryResult,
+  GalleriesByAlbumQueryResult,
+  GalleryAlbumBySlugQueryResult,
+  GalleryBySlugQueryResult,
+} from "../sanity.types";
+import {
+  allGalleriesQuery,
+  featuredGalleriesQuery,
+  galleryBySlugQuery,
+  galleriesByAlbumQuery,
+  allGalleryAlbumsQuery,
+  galleryAlbumBySlugQuery,
+  availableGalleriesQuery,
+  galleriesPaginatedQuery,
+  albumsWithCountQuery,
+} from "./queries";
 
 export const galleryApi = {
-  async getAllGalleries(): Promise<Gallery[]> {
+  async getAllGalleries(): Promise<AllGalleriesQueryResult> {
     try {
-      const galleries = await sanityClient.fetch(GALLERY_QUERIES.ALL_GALLERIES);
+      const galleries = await sanityClient.fetch(allGalleriesQuery);
       return galleries;
     } catch (error) {
       console.error("Error fetching all galleries:", error);
@@ -12,11 +32,9 @@ export const galleryApi = {
     }
   },
 
-  async getFeaturedGalleries(): Promise<Gallery[]> {
+  async getFeaturedGalleries(): Promise<FeaturedGalleriesQueryResult> {
     try {
-      const galleries = await sanityClient.fetch(
-        GALLERY_QUERIES.FEATURED_GALLERIES
-      );
+      const galleries = await sanityClient.fetch(featuredGalleriesQuery);
       return galleries;
     } catch (error) {
       console.error("Error fetching featured galleries:", error);
@@ -24,15 +42,11 @@ export const galleryApi = {
     }
   },
 
-  /**
-   * Get artwork by slug
-   */
-  async getGalleryBySlug(slug: string): Promise<Gallery | null> {
+  async getGalleryBySlug(slug: string): Promise<GalleryBySlugQueryResult> {
     try {
-      const gallery = await sanityClient.fetch(
-        GALLERY_QUERIES.GALLERY_BY_SLUG,
-        { slug }
-      );
+      const gallery = await sanityClient.fetch(galleryBySlugQuery, {
+        slug,
+      });
       return gallery;
     } catch (error) {
       console.error("Error fetching gallery by slug:", error);
@@ -40,15 +54,13 @@ export const galleryApi = {
     }
   },
 
-  /**
-   * Get artworks by category
-   */
-  async getGalleriesByAlbum(albumId: string): Promise<Gallery[]> {
+  async getGalleriesByAlbum(
+    albumId: string
+  ): Promise<GalleriesByAlbumQueryResult> {
     try {
-      const galleries = await sanityClient.fetch(
-        GALLERY_QUERIES.GALLERIES_BY_ALBUM,
-        { albumId }
-      );
+      const galleries = await sanityClient.fetch(galleriesByAlbumQuery, {
+        albumId,
+      });
       return galleries;
     } catch (error) {
       console.error("Error fetching galleries by album:", error);
@@ -56,44 +68,9 @@ export const galleryApi = {
     }
   },
 
-  /**
-   * Get available artworks (not sold)
-   */
-  async getAvailableGalleries(): Promise<Gallery[]> {
+  async getAvailableGalleries(): Promise<AvailableGalleriesQueryResult> {
     try {
-      const galleries = await sanityClient.fetch(
-        `*[_type == "gallery" && availability == "available"] | order(_createdAt desc) {
-          _id,
-          _type,
-          title,
-          slug,
-          excerpt,
-          availability,
-          featured,
-          created_at,
-          size,
-          price,
-          album->{
-            _id,
-            title,
-            slug,
-            featured
-          },
-          main_image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`
-      );
+      const galleries = await sanityClient.fetch(availableGalleriesQuery);
       return galleries;
     } catch (error) {
       console.error("Error fetching available galleries:", error);
@@ -101,47 +78,15 @@ export const galleryApi = {
     }
   },
 
-  /**
-   * Get artworks with pagination
-   */
   async getGalleriesPaginated(
     limit: number = 12,
     offset: number = 0
-  ): Promise<Gallery[]> {
+  ): Promise<AllGalleriesQueryResult> {
     try {
-      const galleries = await sanityClient.fetch(
-        `*[_type == "gallery"] | order(_createdAt desc) [${offset}...${offset + limit}] {
-          _id,
-          _type,
-          title,
-          slug,
-          excerpt,
-          availability,
-          featured,
-          created_at,
-          size,
-          price,
-          album->{
-            _id,
-            title,
-            slug,
-            featured
-          },
-          main_image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`
-      );
+      const galleries = await sanityClient.fetch(galleriesPaginatedQuery, {
+        limit,
+        offset,
+      });
       return galleries;
     } catch (error) {
       console.error("Error fetching paginated galleries:", error);
@@ -151,14 +96,9 @@ export const galleryApi = {
 };
 
 export const galleryAlbumApi = {
-  /**
-   * Get all artwork categories
-   */
-  async getAllGalleryAlbums(): Promise<Gallery_album[]> {
+  async getAllGalleryAlbums(): Promise<AllGalleryAlbumsQueryResult> {
     try {
-      const galleryAlbums = await sanityClient.fetch(
-        CATEGORY_QUERIES.ALL_GALLERY_ALBUMS
-      );
+      const galleryAlbums = await sanityClient.fetch(allGalleryAlbumsQuery);
       return galleryAlbums;
     } catch (error) {
       console.error("Error fetching gallery albums:", error);
@@ -166,15 +106,13 @@ export const galleryAlbumApi = {
     }
   },
 
-  /**
-   * Get category by slug
-   */
-  async getGalleryAlbumBySlug(slug: string): Promise<Gallery_album | null> {
+  async getGalleryAlbumBySlug(
+    slug: string
+  ): Promise<GalleryAlbumBySlugQueryResult> {
     try {
-      const galleryAlbum = await sanityClient.fetch(
-        CATEGORY_QUERIES.GALLERY_ALBUM_BY_SLUG,
-        { slug }
-      );
+      const galleryAlbum = await sanityClient.fetch(galleryAlbumBySlugQuery, {
+        slug,
+      });
       return galleryAlbum;
     } catch (error) {
       console.error("Error fetching gallery album by slug:", error);
@@ -182,22 +120,9 @@ export const galleryAlbumApi = {
     }
   },
 
-  /**
-   * Get category with artwork count
-   */
-  async getAlbumsWithCount(): Promise<
-    (Gallery_album & { galleryCount: number })[]
-  > {
+  async getAlbumsWithCount(): Promise<AlbumsWithCountQueryResult> {
     try {
-      const albums = await sanityClient.fetch(
-        `*[_type == "gallery_album"] | order(title asc) {
-          _id,
-          _type,
-          title,
-          slug,
-          "galleryCount": count(*[_type == "gallery" && references(^._id)])
-        }`
-      );
+      const albums = await sanityClient.fetch(albumsWithCountQuery);
       return albums;
     } catch (error) {
       console.error("Error fetching albums with count:", error);

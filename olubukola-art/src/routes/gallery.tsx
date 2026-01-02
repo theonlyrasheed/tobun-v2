@@ -18,29 +18,36 @@ import {
   useGalleriesInfinite,
   useGalleriesByAlbumInfinite,
 } from "@/builders";
-import { urlFor } from "@/utils/sanity";
-import type { Gallery } from "@/builders/client";
+import type {
+  AllGalleriesQueryResult,
+  AllGalleryAlbumsQueryResult,
+} from "@/builders/sanity.types";
 import type { ArtworkCardProps } from "@/types";
 import { useState, useEffect, useCallback, useRef } from "react";
 
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
 
-const transformGalleryApi = (gallery: Gallery): ArtworkCardProps => {
+const transformGalleryApi = (
+  gallery: AllGalleriesQueryResult[0]
+): ArtworkCardProps => {
   return {
     id: gallery._id,
     title: gallery.title,
     description: gallery.excerpt || "---",
     artist: "Olubukola's Art",
-    image: urlFor(gallery.main_image?.asset),
+    image: gallery.main_image?.url,
     size: {
-      height: gallery.size?.heightCm || 0,
-      width: gallery.size?.widthCm || 0,
+      height: 0,
+      width: 0,
     },
     date: gallery.created_at
       ? new Date(gallery.created_at).toLocaleDateString()
       : "",
-    price: gallery.price?.amount || 0,
+    price: {
+      currency: gallery.price?.currency ?? "NGN",
+      amount: gallery.price?.amount ?? 0,
+    },
     availability: gallery.availability,
   };
 };
@@ -62,7 +69,7 @@ function GalleryPage() {
   const isPlaceholderData = isGalleriesPlaceholder || isAlbumsPlaceholder;
 
   const selectedAlbum = albums?.find(
-    (album) => album.slug.current === activeTab
+    (album: AllGalleryAlbumsQueryResult[0]) => album.slug === activeTab
   );
 
   // Use appropriate infinite query based on active tab
@@ -104,19 +111,13 @@ function GalleryPage() {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Create tabs from albums that have associated galleries
-  const albumIdsWithGalleries = new Set(
-    galleries?.map((gallery) => gallery.album?._id).filter(Boolean) || []
-  );
-
+  // Create tabs from all albums
   const tabs = [
     { value: "all", label: "All" },
-    ...(albums
-      ?.filter((album) => albumIdsWithGalleries.has(album._id))
-      .map((album) => ({
-        value: album.slug.current,
-        label: album.title,
-      })) || []),
+    ...(albums?.map((album) => ({
+      value: album.slug,
+      label: album.title,
+    })) || []),
   ];
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -194,7 +195,7 @@ function GalleryPage() {
                       }}
                     >
                       <a
-                        href={artwork.image}
+                        href={artwork.image || undefined}
                         data-pswp-src={artwork.image}
                         data-pswp-width='600'
                         data-pswp-height='800'

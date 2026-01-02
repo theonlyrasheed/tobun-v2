@@ -1179,7 +1179,7 @@
           "type": "inline",
           "name": "gallery_album.reference"
         },
-        "optional": true
+        "optional": false
       },
       "main_image": {
         "type": "objectAttribute",
@@ -1531,6 +1531,14 @@
         "type": "objectAttribute",
         "value": {
           "type": "string"
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
         },
         "optional": true
       },

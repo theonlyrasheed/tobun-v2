@@ -16,29 +16,34 @@ import { formatDimensions, formatPrice } from "@/utils/formatters";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES } from "@/utils/enums";
 import { useEffect, useState } from "react";
-import { useGalleries, useAlbums } from "@/builders/gallery/hooks";
-import { Gallery } from "@/builders";
-import { urlFor } from "@/utils/sanity";
+import { useAlbums, useFeaturedGalleries } from "@/builders/gallery/hooks";
 import { BookingServiceModal } from "../modals/booking-service";
 import { MakeEnquiryModal } from "../modals/make-enquiry";
+import { FeaturedGalleriesQueryResult } from "@/builders/sanity.types";
+
 import type { ArtworkCardProps } from "@/types";
 import clsx from "clsx";
 
-export const transformGalleryApi = (gallery: Gallery): ArtworkCardProps => {
+const transformGalleryApi = (
+  gallery: FeaturedGalleriesQueryResult[0]
+): ArtworkCardProps => {
   return {
     id: gallery._id,
     title: gallery.title,
     description: gallery.excerpt || "---",
     artist: "Olubukola's Art",
-    image: urlFor(gallery.main_image?.asset),
+    image: gallery.main_image?.url,
     size: {
-      height: gallery.size?.heightCm || 0,
-      width: gallery.size?.widthCm || 0,
+      height: gallery.size?.height ?? 0,
+      width: gallery.size?.width ?? 0,
     },
     date: gallery.created_at
       ? new Date(gallery.created_at).toLocaleDateString()
       : "",
-    price: gallery.price?.amount || 0,
+    price: {
+      currency: gallery.price?.currency ?? "NGN",
+      amount: gallery.price?.amount ?? 0,
+    },
     availability: gallery.availability,
   };
 };
@@ -53,33 +58,31 @@ export function GallerySection() {
   const [activeTab, setActiveTab] = useState("digital-artwork");
   const [title, setTitle] = useState("Gallery");
 
-  const { data: galleries, isPlaceholderData: isGalleriesPlaceholder } =
-    useGalleries();
-  const { data: albums, isPlaceholderData: isAlbumsPlaceholder } = useAlbums();
+  const { data: galleries, isPlaceholderData } = useFeaturedGalleries();
+  const { data: albums } = useAlbums();
 
-  const featuredGalleries = galleries?.filter((gallery) => gallery.featured);
   const featuredAlbums = albums?.filter(
     (album) =>
       album.featured &&
-      featuredGalleries?.some((gallery) => gallery.album?._id === album._id)
+      galleries?.some((gallery) => gallery.album?.slug === album.slug)
   );
 
   const tabs = featuredAlbums?.map((album) => ({
-    value: album.slug.current,
+    value: album.slug,
     label: album.title,
   })) || [{ value: "all", label: "All" }];
 
   const getFilteredGalleries = (albumSlug: string): ArtworkCardProps[] => {
-    if (!featuredAlbums || !featuredGalleries) return [];
+    if (!featuredAlbums || !galleries) return [];
 
     const selectedAlbum = featuredAlbums.find(
-      (album) => album.slug.current === albumSlug
+      (album) => album.slug === albumSlug
     );
 
     if (!selectedAlbum) return [];
 
-    return featuredGalleries
-      .filter((gallery) => gallery.album?._id === selectedAlbum._id)
+    return galleries
+      ?.filter((gallery) => gallery.album?.slug === selectedAlbum?.slug)
       .map(transformGalleryApi);
   };
 
@@ -95,14 +98,11 @@ export function GallerySection() {
       setTitle("Gallery");
     } else {
       const selectedAlbum = featuredAlbums?.find(
-        (album) => album.slug.current === activeTab
+        (album) => album.slug === activeTab
       );
       setTitle(selectedAlbum?.title ?? "Gallery");
     }
   }, [tabs, activeTab, featuredAlbums]);
-
-  const isLoading = isGalleriesPlaceholder || isAlbumsPlaceholder;
-  const hasData = galleries?.length || albums?.length;
 
   return (
     <Container
@@ -115,13 +115,11 @@ export function GallerySection() {
       pb={{
         base: 30,
       }}
-      hidden={!isLoading && !hasData}
     >
       <SectionTitle
         subtitle='CURATED SELECTIONS'
         title={`Our ${title}`}
         id={PAGES.GALLERY}
-        skeleton={isLoading}
       />
 
       <SectionTabs
@@ -130,6 +128,7 @@ export function GallerySection() {
         mt={50}
         tabs={tabs}
         mih={400}
+        skeleton={isPlaceholderData}
       >
         <Tabs.Panel value={activeTab} pt='xl'>
           <SimpleGrid
@@ -145,14 +144,14 @@ export function GallerySection() {
                   key={gallery.id}
                   gallery={gallery}
                   index={idx}
-                  skeleton={isLoading}
+                  skeleton={isPlaceholderData}
                 />
               ) : (
                 <SimpleGalleryCard
                   key={gallery.id}
                   gallery={gallery}
                   index={idx}
-                  skeleton={isLoading}
+                  skeleton={isPlaceholderData}
                 />
               )
             )}
@@ -162,7 +161,7 @@ export function GallerySection() {
               <ActionCard
                 onEnquiryClick={() => setEnquiryOpened(true)}
                 onBookingClick={() => setBookingOpened(true)}
-                skeleton={isLoading}
+                skeleton={isPlaceholderData}
               />
             )}
           </SimpleGrid>
@@ -255,7 +254,7 @@ const GalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
         Date: {gallery.date}
       </Text>
       <Text fz={16} c='red.7' fw={700} className={clsx({ skeleton })}>
-        Prize: {formatPrice(gallery.price)}
+        Prize: {formatPrice(gallery.price.currency, gallery.price.amount)}
       </Text>
     </Stack>
   </Card>
@@ -271,7 +270,7 @@ const SimpleGalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
     data-aos='fade-up'
     data-aos-delay={Math.min(index * 70, 420)}
   >
-    <Card.Section inheritPadding py='lg' h='100%' flex={1}>
+    <Card.Section inheritPadding py='lg' h={300}>
       <Box
         style={{
           height: "100%",

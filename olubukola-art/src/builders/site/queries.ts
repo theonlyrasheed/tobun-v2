@@ -1,98 +1,125 @@
-export const SITE_QUERIES = {
-  ALL_SERVICES: `*[_type == "service"] | order(order asc, _createdAt desc) {
-    _id,
-    _type,
-    title,
-    slug,
-    description,
-    enquiry_url,
-    booking_url,
-    order,
-    featured,
-    image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      },
-      alt,
-      hotspot,
-      crop
-    },
-    hero_image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      },
-      alt,
-      hotspot,
-      crop
-    }
-  }`,
+import { defineQuery } from "groq";
 
-  ALL_TESTIMONIALS: `*[_type == "testimonial"] | order(_createdAt desc) {
-    _id,
-    _type,
-    name,
-    rating,
-    company,
-    quote,
-    avatar {
-      asset->{
-        _id,
-        url
-      }
-    }
-  }`,
+export const allServicesQuery =
+  defineQuery(`*[_type == "service"] | order(order asc, _createdAt desc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "description": coalesce(description, ""),
+  "order": coalesce(order, 0),
+  "featured": coalesce(featured, false),
+  image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  },
+  hero_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
 
-  ALL_FAQS: `*[_type == "faq"] | order(order asc, _createdAt desc) {
-    _id,
-    _type,
-    question,
-    answer,
-    order,
-    featured
-  }`,
+export const allTestimonialsQuery =
+  defineQuery(`*[_type == "testimonial"] | order(_createdAt desc) {
+  _id,
+  _type,
+  "name": coalesce(name, ""),
+  "rating": coalesce(rating, 0),
+  "company": coalesce(company, ""),
+  "quote": coalesce(quote, ""),
+  avatar {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
 
-  ALL_EVENTS: `*[_type == "event"] | order(date desc) {
-    _id,
-    _type,
-    title,
-    slug,
-    description,
-    date,
-    location,
-    image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      },
-      alt,
-      hotspot,
-      crop
-    }
-  }`,
+export const allFaqsQuery =
+  defineQuery(`*[_type == "faq"] | order(order asc, _createdAt desc) {
+  _id,
+  _type,
+  "question": coalesce(question, ""),
+  "answer": coalesce(answer, ""),
+  "order": coalesce(order, 0),
+  "featured": coalesce(featured, false)
+}`);
 
-  ALL_COMPANIES: `*[_type == "company"] | order(title asc) {
-    _id,
-    _type,
-    title,
-    logo {
-      asset->{
-        _id,
-        url
-      }
-    }
-  }`,
-};
+export const allEventsQuery =
+  defineQuery(`*[_type == "event"] | order(date desc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "description": coalesce(description, ""),
+  date,
+  "location": coalesce(location, ""),
+  image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const allCompaniesQuery =
+  defineQuery(`*[_type == "company"] | order(title asc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  logo {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const featuredServicesQuery =
+  defineQuery(`*[_type == "service" && featured == true] | order(order asc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "description": coalesce(description, ""),
+  "order": coalesce(order, 0),
+  "featured": coalesce(featured, false),
+   image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const serviceBySlugQuery =
+  defineQuery(`*[_type == "service" && slug.current == $slug][0] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "description": coalesce(description, ""),
+  "order": coalesce(order, 0),
+  "featured": coalesce(featured, false),
+   image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const featuredFaqsQuery =
+  defineQuery(`*[_type == "faq" && featured == true] | order(order asc) {
+  _id,
+  _type,
+  "question": coalesce(question, ""),
+  "answer": coalesce(answer, ""),
+  "order": coalesce(order, 0),
+  "featured": coalesce(featured, false)
+}`);
+
+export const upcomingEventsQuery =
+  defineQuery(`*[_type == "event" && date >= $now] | order(date asc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "description": coalesce(description, ""),
+  date,
+  "location": coalesce(location, ""),
+   image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);

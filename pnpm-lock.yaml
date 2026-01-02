@@ -225,6 +225,12 @@ importers:
       framer-motion:
         specifier: ^12.23.26
         version: 12.23.26(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      groq:
+        specifier: ^5.1.0
+        version: 5.1.0
+      groqd:
+        specifier: ^1.7.1
+        version: 1.7.1
       nitro:
         specifier: 3.0.1-alpha.1
         version: 3.0.1-alpha.1(lru-cache@11.2.4)(rollup@4.53.3)(vite@7.2.7(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(sugarss@5.0.1(postcss@8.5.6))(tsx@4.21.0)(yaml@2.8.2))
@@ -256,6 +262,9 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.1.0
+        version: 10.1.0
       '@sanity/eslint-config-studio':
         specifier: ^5.0.2
         version: 5.0.2(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
@@ -1415,6 +1424,10 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@10.1.0':
+    resolution: {integrity: sha512-C3mrr3b5dRVlKPJdfrAXS8+dq+rq8Qm5SNRazca0JKgw1HQERFmrVb0towvMmw5uu8hHKNiQasMaR/tydf3Zsg==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
@@ -4766,6 +4779,10 @@ packages:
   groq@5.1.0:
     resolution: {integrity: sha512-ayFz6MxyEPBi16z0jrM/gUSUAXaTqiwEMRCGpkUSAdrcfVVR4GcfD8+kSe36zZvXEC9h3xvPDtIopF/T/5AhTA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
+
+  groqd@1.7.1:
+    resolution: {integrity: sha512-gcm9ccjEEDwD1pn+NS3NzZb4Bc4QrV+PhmvuP63cT1ixIFWnWiFgeauByqkCHmjuZ7QtD/gNWIYFM8tQhPPqiQ==}
+    engines: {node: '>= 14'}
 
   gunzip-maybe@1.4.2:
     resolution: {integrity: sha512-4haO1M4mLO91PW57BMsDFf75UmwoRX0GkdD+Faw+Lr+r/OZrOCS0pIBwOL1xCKQqnQzbNFGgK2V2CpBUPeFNTw==}
@@ -8732,6 +8749,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@faker-js/faker@10.1.0': {}
 
   '@fastify/busboy@2.1.1': {}
 
@@ -12769,6 +12788,11 @@ snapshots:
   groq@3.88.1-typegen-experimental.0: {}
 
   groq@5.1.0: {}
+
+  groqd@1.7.1:
+    dependencies:
+      type-fest: 4.41.0
+      zod: 3.25.76
 
   gunzip-maybe@1.4.2:
     dependencies:

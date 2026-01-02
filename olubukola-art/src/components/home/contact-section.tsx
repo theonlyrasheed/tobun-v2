@@ -10,18 +10,61 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { useMutation } from "@tanstack/react-query";
 import {
   IconBrandTiktok,
   IconBrandYoutube,
   IconMail,
   IconMapPin,
+  IconLoader,
+  IconCheck,
 } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
 import { Link } from "@tanstack/react-router";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES, SOCIAL_MEDIA } from "@/utils/enums";
+import { subscribeToNewsletter } from "@/utils/send-booking";
 
 export function ContactSection() {
+  const form = useForm({
+    initialValues: {
+      email: "",
+    },
+    validate: {
+      email: (value) => {
+        if (!value) return "Email is required";
+        if (!/^\S+@\S+$/.test(value)) return "Invalid email format";
+        return null;
+      },
+    },
+  });
+
+  const subscribeMutation = useMutation({
+    mutationFn: subscribeToNewsletter,
+    onSuccess: () => {
+      notifications.show({
+        title: "Subscription Successful!",
+        message: "Welcome to Olubukola Art! Check your email for updates.",
+        color: "green",
+        icon: <IconCheck size={18} />,
+      });
+      form.reset();
+    },
+    onError: (error) => {
+      notifications.show({
+        title: "Subscription Failed",
+        message: error.message || "Something went wrong. Please try again.",
+        color: "red",
+      });
+    },
+  });
+
+  const handleSubscribe = async (values: { email: string }) => {
+    await subscribeMutation.mutateAsync({ data: values });
+  };
+
   return (
     <Container
       size='full'
@@ -156,38 +199,48 @@ export function ContactSection() {
               </Text>
             </Stack>
 
-            <Group gap={0} wrap='nowrap' align='stretch' mt='md' maw={400}>
-              <TextInput
-                placeholder='Enter email address'
-                size='md'
-                radius={0}
-                styles={{
-                  root: { flex: 1 },
-                  input: {
-                    backgroundColor: "rgba(255, 255, 255, 0.28)",
-                    borderColor: "rgba(255, 255, 255, 0.25)",
-                    color: "white",
-                    borderTopLeftRadius: 4,
-                    borderBottomLeftRadius: 4,
-                  },
-                }}
-              />
+            <form onSubmit={form.onSubmit(handleSubscribe)}>
+              <Group gap={0} wrap='nowrap' align='stretch' mt='md' maw={400}>
+                <TextInput
+                  placeholder='Enter email address'
+                  size='md'
+                  radius={0}
+                  {...form.getInputProps("email")}
+                  styles={{
+                    root: { flex: 1 },
+                    input: {
+                      backgroundColor: "rgba(255, 255, 255, 0.28)",
+                      borderColor: "rgba(255, 255, 255, 0.25)",
+                      color: "white",
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                    },
+                  }}
+                />
 
-              <Button
-                size='md'
-                radius={0}
-                color='#0B3359'
-                className='font-playfair!'
-                styles={{
-                  root: {
-                    borderTopRightRadius: 4,
-                    borderBottomRightRadius: 4,
-                  },
-                }}
-              >
-                Subscribe
-              </Button>
-            </Group>
+                <Button
+                  type='submit'
+                  size='md'
+                  radius={0}
+                  color='#0B3359'
+                  className='font-playfair!'
+                  loading={subscribeMutation.isPending}
+                  loaderProps={{ size: 18 }}
+                  styles={{
+                    root: {
+                      borderTopRightRadius: 4,
+                      borderBottomRightRadius: 4,
+                    },
+                  }}
+                >
+                  {subscribeMutation.isPending ? (
+                    <IconLoader size={18} />
+                  ) : (
+                    "Subscribe"
+                  )}
+                </Button>
+              </Group>
+            </form>
 
             <Group gap='sm' mt='auto'>
               <a href={SOCIAL_MEDIA.TIKTOK} target='_blank'>

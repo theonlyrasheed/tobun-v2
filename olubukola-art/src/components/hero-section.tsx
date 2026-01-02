@@ -12,19 +12,16 @@ import { stats } from "@/data/mockData";
 import clsx from "clsx";
 import { MAX_WIDTH } from "@/utils/constants";
 import { useServices } from "@/builders/site/hooks";
-import { urlFor } from "@/utils/sanity";
 import { PAGES } from "@/utils/enums";
 import { Link } from "@tanstack/react-router";
 
 export function HeroSection() {
-  const { data: services, isLoading } = useServices();
+  const { data: services, isPlaceholderData: isLoading } = useServices();
 
   const categories =
     services?.map((service) => ({
       label: service.title,
-      image: service.hero_image
-        ? urlFor(service.hero_image)
-        : urlFor(service.image),
+      image: service.hero_image ? service.hero_image.url : service.image.url,
     })) || [];
 
   return (

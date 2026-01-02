@@ -1,124 +1,203 @@
-export const BLOG_QUERIES = {
-  ALL_POSTS: `*[_type == "post"] | order(_createdAt desc) {
+import { defineQuery } from "groq";
+
+export const allPostsQuery =
+  defineQuery(`*[_type == "post"] | order(_createdAt desc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  _createdAt,
+  _updatedAt,
+  author->{
     _id,
-    _type,
-    title,
-    slug,
-    excerpt,
-    _createdAt,
-    _updatedAt,
-    author->{
-      _id,
-      name,
-      slug,
-      bio,
-      image {
-        asset->{
-          _id,
-          url
-        }
-      }
-    },
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
+    "bio": coalesce(bio, ""),
+    image {
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
+    }
+  },
+  "categories": coalesce(
     categories[]->{
       _id,
-      title,
-      slug
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
     },
-    main_image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      },
-      alt,
-      hotspot,
-      crop
-    }
-  }`,
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
 
-  POST_BY_SLUG: `*[_type == "post" && slug.current == $slug][0] {
+export const postBySlugQuery =
+  defineQuery(`*[_type == "post" && slug.current == $slug][0] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  "body": coalesce(body, []),
+  _createdAt,
+  _updatedAt,
+  author->{
     _id,
-    _type,
-    title,
-    slug,
-    excerpt,
-    body,
-    _createdAt,
-    _updatedAt,
-    author->{
-      _id,
-      name,
-      slug,
-      bio,
-      image {
-        asset->{
-          _id,
-          url
-        }
-      }
-    },
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
+    "bio": coalesce(bio, ""),
+    image {
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
+    }
+  },
+  "categories": coalesce(
     categories[]->{
       _id,
-      title,
-      slug
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
     },
-    main_image {
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions,
-          lqip
-        }
-      },
-      alt,
-      hotspot,
-      crop
-    }
-  }`,
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
 
-  ALL_POST_CATEGORIES: `*[_type == "post_category"] | order(title asc) {
-    _id,
-    _type,
-    title,
-    description
-  }`,
+export const allPostCategoriesQuery =
+  defineQuery(`*[_type == "post_category"] | order(title asc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "description": coalesce(description, "")
+}`);
 
-  POST_CATEGORY_BY_SLUG: `*[_type == "post_category" && slug.current == $slug][0] {
-    _id,
-    _type,
-    title,
-    description
-  }`,
+export const postCategoryBySlugQuery =
+  defineQuery(`*[_type == "post_category" && slug.current == $slug][0] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "description": coalesce(description, "")
+}`);
 
-  ALL_AUTHORS: `*[_type == "author"] | order(name asc) {
+export const allAuthorsQuery =
+  defineQuery(`*[_type == "author"] | order(name asc) {
+  _id,
+  _type,
+  "name": coalesce(name, ""),
+  "slug": coalesce(slug.current, ""),
+  "bio": coalesce(bio, ""),
+  image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const authorBySlugQuery =
+  defineQuery(`*[_type == "author" && slug.current == $slug][0] {
+  _id,
+  _type,
+  "name": coalesce(name, ""),
+  "slug": coalesce(slug.current, ""),
+  "bio": coalesce(bio, ""),
+  image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+  }`);
+
+export const recentPostsQuery =
+  defineQuery(`*[_type == "post"] | order(_createdAt desc) [0...$limit] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  _createdAt,
+  author->{
     _id,
-    _type,
-    name,
-    slug,
-    bio,
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
     image {
-      asset->{
-        _id,
-        url
-      }
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
     }
-  }`,
+  },
+  "categories": coalesce(
+    categories[]->{
+      _id,
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
+    },
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
 
-  AUTHOR_BY_SLUG: `*[_type == "author" && slug.current == $slug][0] {
+export const postsByCategoryQuery =
+  defineQuery(`*[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  _createdAt,
+  author->{
     _id,
-    _type,
-    name,
-    slug,
-    bio,
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
     image {
-      asset->{
-        _id,
-        url
-      }
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
     }
-  }`,
-};
+  },
+  "categories": coalesce(
+    categories[]->{
+      _id,
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
+    },
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const postsByAuthorQuery =
+  defineQuery(`*[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  _createdAt,
+  author->{
+    _id,
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
+    image {
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
+    }
+  },
+  "categories": coalesce(
+    categories[]->{
+      _id,
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
+    },
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);

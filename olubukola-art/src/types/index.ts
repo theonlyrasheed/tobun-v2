@@ -12,17 +12,18 @@ export interface StatCardProps {
   label: string;
 }
 
-export type { Service as ServiceCardProps } from "@/builders";
+import type { AllServicesQueryResult } from "@/builders/sanity.types";
+export type ServiceCardProps = AllServicesQueryResult[0];
 
 export interface ArtworkCardProps {
   id: string;
   title: string;
   description: string;
   artist: string;
-  image: string;
+  image: string | null;
   size: { height: number; width: number };
   date: string;
-  price: number;
+  price: { currency: string; amount: number };
   availability: "available" | "sold" | "not_for_sale";
 }
 

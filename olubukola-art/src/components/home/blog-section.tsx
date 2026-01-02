@@ -19,24 +19,25 @@ import { SectionTabs } from "@/components/shared/section-tabs";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES } from "@/utils/enums";
 import { usePosts } from "@/builders";
-import { urlFor } from "@/utils/sanity";
-import type { Post } from "@/builders/client";
 import type { BlogPostProps } from "@/types";
+import type { AllPostsQueryResult } from "@/builders/sanity.types";
 
-const transformPostApi = (post: Post): BlogPostProps => ({
-  id: post._id,
-  title: post.title,
-  excerpt: post.excerpt || "Read more about this post...",
-  image: post.main_image?.asset ? urlFor(post.main_image.asset) : "/images/blog/default.jpg",
-  date: post.published_at
-    ? new Date(post.published_at).toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+const transformPostApi = (post: AllPostsQueryResult[0]): BlogPostProps => ({
+  id: post?._id || "",
+  title: post?.title || "",
+  excerpt: post?.excerpt || "Read more about this post...",
+  image: post?.main_image?.url
+    ? post.main_image.url
+    : "/images/blog/default.jpg",
+  date: post?._createdAt
+    ? new Date(post._createdAt).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       })
     : "Date not available",
-  readTime: 5, // Default read time since it's not in the schema
+  readTime: 5,
 });
 
 export function BlogSection() {

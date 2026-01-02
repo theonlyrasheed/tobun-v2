@@ -1,35 +1,48 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
-  serviceApi,
-  testimonialApi,
-  faqApi,
-  eventApi,
-  companyApi,
-} from "./api";
+  getAllServices,
+  getFeaturedServices,
+  getServiceBySlug,
+  getAllTestimonials,
+  getAllFaqs,
+  getFeaturedFaqs,
+  getAllEvents,
+  getUpcomingEvents,
+  getAllCompanies,
+} from "./server-fns";
+import {
+  services,
+  testimonials,
+  events,
+  faqs,
+  companies,
+  featuredServices,
+  featuredFaqs,
+  upcomingEvents,
+} from "./placeholder";
 
-// Service hooks
 export const useServices = () => {
   return useQuery({
     queryKey: ["services"],
-    queryFn: serviceApi.getAllServices,
-    placeholderData: keepPreviousData,
+    queryFn: getAllServices,
+    placeholderData: services,
   });
 };
 
 export const useFeaturedServices = () => {
   return useQuery({
     queryKey: ["services", "featured"],
-    queryFn: serviceApi.getFeaturedServices,
-    placeholderData: keepPreviousData,
+    queryFn: getFeaturedServices,
+    placeholderData: featuredServices,
   });
 };
 
 export const useService = (slug: string) => {
   return useQuery({
     queryKey: ["service", slug],
-    queryFn: () => serviceApi.getServiceBySlug(slug),
+    queryFn: () => getServiceBySlug({ data: slug }),
     enabled: !!slug,
-    placeholderData: keepPreviousData,
+    placeholderData: services.find((service) => service.slug === slug) || null,
   });
 };
 
@@ -37,8 +50,8 @@ export const useService = (slug: string) => {
 export const useTestimonials = () => {
   return useQuery({
     queryKey: ["testimonials"],
-    queryFn: testimonialApi.getAllTestimonials,
-    placeholderData: keepPreviousData,
+    queryFn: getAllTestimonials,
+    placeholderData: testimonials,
   });
 };
 
@@ -46,16 +59,16 @@ export const useTestimonials = () => {
 export const useFaqs = () => {
   return useQuery({
     queryKey: ["faqs"],
-    queryFn: faqApi.getAllFaqs,
-    placeholderData: keepPreviousData,
+    queryFn: getAllFaqs,
+    placeholderData: faqs,
   });
 };
 
 export const useFeaturedFaqs = () => {
   return useQuery({
     queryKey: ["faqs", "featured"],
-    queryFn: faqApi.getFeaturedFaqs,
-    placeholderData: keepPreviousData,
+    queryFn: getFeaturedFaqs,
+    placeholderData: featuredFaqs,
   });
 };
 
@@ -63,16 +76,16 @@ export const useFeaturedFaqs = () => {
 export const useEvents = () => {
   return useQuery({
     queryKey: ["events"],
-    queryFn: eventApi.getAllEvents,
-    placeholderData: keepPreviousData,
+    queryFn: getAllEvents,
+    placeholderData: events,
   });
 };
 
 export const useUpcomingEvents = () => {
   return useQuery({
     queryKey: ["events", "upcoming"],
-    queryFn: eventApi.getUpcomingEvents,
-    placeholderData: keepPreviousData,
+    queryFn: getUpcomingEvents,
+    placeholderData: upcomingEvents,
   });
 };
 
@@ -80,7 +93,7 @@ export const useUpcomingEvents = () => {
 export const useCompanies = () => {
   return useQuery({
     queryKey: ["companies"],
-    queryFn: companyApi.getAllCompanies,
-    placeholderData: keepPreviousData,
+    queryFn: getAllCompanies,
+    placeholderData: companies,
   });
 };

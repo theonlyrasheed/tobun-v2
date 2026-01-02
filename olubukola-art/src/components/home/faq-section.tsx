@@ -3,10 +3,10 @@ import { SectionTitle } from "@/components/section-title";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES } from "@/utils/enums";
 import { useFaqs } from "@/builders";
-import type { Faq } from "@/builders/client";
+import type { AllFaqsQueryResult } from "@/builders/sanity.types";
 import type { FAQItemProps } from "@/types";
 
-const transformFaqApi = (faq: Faq): FAQItemProps => ({
+const transformFaqApi = (faq: AllFaqsQueryResult[0]): FAQItemProps => ({
   question: faq.question,
   answer: Array.isArray(faq.answer)
     ? faq.answer
@@ -26,7 +26,7 @@ const transformFaqApi = (faq: Faq): FAQItemProps => ({
 
 export function FAQSection() {
   const { data: faqs, isPlaceholderData } = useFaqs();
-  const transformedFaqs = faqs?.map(transformFaqApi) || [];
+  const transformedFaqs: FAQItemProps[] = faqs?.map(transformFaqApi) || [];
 
   return (
     <Container

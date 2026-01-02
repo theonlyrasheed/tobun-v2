@@ -1,24 +1,17 @@
 import { Button, Card, Image, Stack, Text, Title } from "@mantine/core";
 import { ServiceCardProps } from "@/types";
-import type { Service } from "@/builders/client";
-import { urlFor } from "@/utils/sanity";
 import clsx from "clsx";
+import type { AllServicesQueryResult } from "@/builders/sanity.types";
 
 type ServiceCardComponentProps = ServiceCardProps & {
   skeleton?: boolean;
-  onBookService?: (service: Service) => void;
-  onMakeEnquiry?: (service: Service) => void;
+  onBookService?: (service: AllServicesQueryResult[0]) => void;
+  onMakeEnquiry?: (service: AllServicesQueryResult[0]) => void;
 };
 
 export function ServiceCard(props: ServiceCardComponentProps) {
-  const {
-    title,
-    description,
-    image,
-    onBookService,
-    onMakeEnquiry,
-    skeleton,
-  } = props;
+  const { title, description, image, onBookService, onMakeEnquiry, skeleton } =
+    props;
 
   return (
     <Card
@@ -26,10 +19,11 @@ export function ServiceCard(props: ServiceCardComponentProps) {
       padding='lg'
       withBorder
       className='transition-shadow hover:shadow-lg'
+      hidden={!image.url}
     >
       <Card.Section inheritPadding pt='lg' className={clsx({ skeleton })}>
         <Image
-          src={urlFor(image)}
+          src={image.url}
           h={250}
           w='100%'
           maw={520}

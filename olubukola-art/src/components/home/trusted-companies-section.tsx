@@ -5,19 +5,18 @@ import { Carousel } from "@mantine/carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useMemo, useState } from "react";
 import { useCompanies } from "@/builders";
-import { urlFor } from "@/utils/sanity";
-import type { Company } from "@/builders/client";
+import type { AllCompaniesQueryResult } from "@/builders/sanity.types";
 
 interface CompanyDisplay {
   name: string;
   src: string;
 }
 
-const transformCompanyApi = (company: Company): CompanyDisplay => ({
-  name: company.name,
-  src: company.logo?.asset
-    ? urlFor(company.logo.asset)
-    : "/images/companies/default.png",
+const transformCompanyApi = (
+  company: AllCompaniesQueryResult[0]
+): CompanyDisplay => ({
+  name: company.title,
+  src: company.logo?.url || "/images/companies/default.png",
 });
 
 export function TrustedCompaniesSection() {
@@ -56,7 +55,7 @@ export function TrustedCompaniesSection() {
     >
       <SectionTitle
         subtitle='WHO WE WORK WITH'
-        title='Trusted By Great- Companies'
+        title='Trusted By Great- Companises'
         skeleton={isPlaceholderData}
       />
 

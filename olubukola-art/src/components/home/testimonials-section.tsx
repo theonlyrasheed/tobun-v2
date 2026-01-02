@@ -19,22 +19,19 @@ import { Carousel } from "@mantine/carousel";
 import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useMemo, useState } from "react";
 import { useTestimonials } from "@/builders";
-import { urlFor } from "@/utils/sanity";
 
-import type { Testimonial } from "@/builders/client";
+import type { AllTestimonialsQueryResult } from "@/builders/sanity.types";
 import type { TestimonialProps } from "@/types";
 
 const transformTestimonialApi = (
-  testimonial: Testimonial
+  testimonial: AllTestimonialsQueryResult[0]
 ): TestimonialProps => {
   return {
     id: testimonial._id,
     name: testimonial.name,
     text: testimonial.quote,
-    rating: testimonial.rating || 0,
-    avatar: testimonial.avatar?.asset
-      ? urlFor(testimonial.avatar.asset)
-      : "/images/testimonials/avatar.jpg",
+    rating: testimonial.rating,
+    avatar: testimonial.avatar?.url ?? "",
   };
 };
 
@@ -121,7 +118,7 @@ export function TestimonialsSection() {
             {pages.map((pageItems, idx) => (
               <Carousel.Slide key={idx}>
                 <SimpleGrid
-                  cols={{ base: 1, lg: 4 }}
+                  cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
                   spacing='lg'
                   className='pb-14 cursor-grab'
                 >
@@ -168,6 +165,7 @@ export function TestimonialsSection() {
                         <Group gap='xs'>
                           <Avatar
                             src={testimonial.avatar}
+                            name={testimonial.name}
                             radius='xl'
                             size='sm'
                           />

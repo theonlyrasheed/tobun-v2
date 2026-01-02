@@ -7,12 +7,14 @@ import { MakeEnquiryModal } from "@/components/modals/make-enquiry";
 import { useState } from "react";
 import { PAGES } from "@/utils/enums";
 import { useServices } from "@/builders";
-import type { Service } from "@/builders/client";
+import type { AllServicesQueryResult } from "@/builders/sanity.types";
 
 export function ServicesSection() {
   const [bookingOpened, setBookingOpened] = useState(false);
   const [enquiryOpened, setEnquiryOpened] = useState(false);
-  const [selected, setSelected] = useState<Service | null>(null);
+  const [selected, setSelected] = useState<AllServicesQueryResult[0] | null>(
+    null
+  );
 
   const { data, isPlaceholderData } = useServices();
 
@@ -44,15 +46,20 @@ export function ServicesSection() {
         }}
       >
         {data?.map((service, idx) => (
-          <Box key={service._id} data-aos='fade-up' data-aos-delay={idx * 80}>
+          <Box
+            key={service._id}
+            data-aos='fade-up'
+            data-aos-delay={idx * 80}
+            hidden={service.image.url === null}
+          >
             <ServiceCard
               {...service}
               skeleton={isPlaceholderData}
-              onBookService={(svc: Service) => {
+              onBookService={(svc: AllServicesQueryResult[0]) => {
                 setSelected(svc);
                 setBookingOpened(true);
               }}
-              onMakeEnquiry={(svc: Service) => {
+              onMakeEnquiry={(svc: AllServicesQueryResult[0]) => {
                 setSelected(svc);
                 setEnquiryOpened(true);
               }}

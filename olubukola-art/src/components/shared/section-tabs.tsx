@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Tabs, type TabsProps } from "@mantine/core";
+import clsx from "clsx";
 
 export type SectionTabItem = {
   value: string;
@@ -15,6 +16,7 @@ type Props = Omit<
   onChange?: (value: string | null) => void;
   tabs: SectionTabItem[];
   children: ReactNode;
+  skeleton?: boolean;
 };
 
 export function SectionTabs({
@@ -23,6 +25,7 @@ export function SectionTabs({
   onChange,
   tabs,
   children,
+  skeleton,
   ...props
 }: Props) {
   return (
@@ -32,6 +35,9 @@ export function SectionTabs({
       onChange={onChange}
       variant='pills'
       color='dark'
+      classNames={{
+        tab: clsx({ skeleton }),
+      }}
       styles={{
         root: {
           width: "100%",

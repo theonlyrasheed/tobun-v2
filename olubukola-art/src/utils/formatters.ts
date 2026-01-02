@@ -6,8 +6,8 @@ export const formatDate = (date: Date): string => {
   });
 };
 
-export const formatPrice = (price: number): string => {
-  return `N${price.toLocaleString()}`;
+export const formatPrice = (currency: string, price: number): string => {
+  return `${currency} ${price.toLocaleString()}`;
 };
 
 export const formatDimensions = (height: number, width: number): string => {

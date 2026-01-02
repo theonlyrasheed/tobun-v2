@@ -1,21 +1,31 @@
+import { sanityClient } from "../client";
 import {
-  sanityClient,
-  type Service,
-  type Testimonial,
-  type Faq,
-  type Event,
-  type Company,
-} from "../client";
-import { SITE_QUERIES } from "./queries";
+  AllEventsQueryResult,
+  AllFaqsQueryResult,
+  AllCompaniesQueryResult,
+  AllServicesQueryResult,
+  AllTestimonialsQueryResult,
+  FeaturedFaqsQueryResult,
+  FeaturedServicesQueryResult,
+  ServiceBySlugQueryResult,
+  UpcomingEventsQueryResult,
+} from "../sanity.types";
+import {
+  allServicesQuery,
+  allTestimonialsQuery,
+  allFaqsQuery,
+  allEventsQuery,
+  allCompaniesQuery,
+  featuredServicesQuery,
+  serviceBySlugQuery,
+  featuredFaqsQuery,
+  upcomingEventsQuery,
+} from "./queries";
 
-// Service API functions
 export const serviceApi = {
-  /**
-   * Get all services
-   */
-  async getAllServices(): Promise<Service[]> {
+  async getAllServices(): Promise<AllServicesQueryResult> {
     try {
-      const services = await sanityClient.fetch(SITE_QUERIES.ALL_SERVICES);
+      const services = await sanityClient.fetch(allServicesQuery);
       return services;
     } catch (error) {
       console.error("Error fetching services:", error);
@@ -23,37 +33,9 @@ export const serviceApi = {
     }
   },
 
-  /**
-   * Get featured services
-   */
-  async getFeaturedServices(): Promise<Service[]> {
+  async getFeaturedServices(): Promise<FeaturedServicesQueryResult> {
     try {
-      const services = await sanityClient.fetch(
-        `*[_type == "service" && featured == true] | order(order asc) {
-          _id,
-          _type,
-          title,
-          slug,
-          description,
-          enquiry_url,
-          booking_url,
-          order,
-          featured,
-          image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`
-      );
+      const services = await sanityClient.fetch(featuredServicesQuery);
       return services;
     } catch (error) {
       console.error("Error fetching featured services:", error);
@@ -61,38 +43,9 @@ export const serviceApi = {
     }
   },
 
-  /**
-   * Get service by slug
-   */
-  async getServiceBySlug(slug: string): Promise<Service | null> {
+  async getServiceBySlug(slug: string): Promise<ServiceBySlugQueryResult> {
     try {
-      const service = await sanityClient.fetch(
-        `*[_type == "service" && slug.current == $slug][0] {
-          _id,
-          _type,
-          title,
-          slug,
-          description,
-          enquiry_url,
-          booking_url,
-          order,
-          featured,
-          image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`,
-        { slug }
-      );
+      const service = await sanityClient.fetch(serviceBySlugQuery, { slug });
       return service;
     } catch (error) {
       console.error("Error fetching service by slug:", error);
@@ -101,16 +54,10 @@ export const serviceApi = {
   },
 };
 
-// Testimonial API functions
 export const testimonialApi = {
-  /**
-   * Get all testimonials
-   */
-  async getAllTestimonials(): Promise<Testimonial[]> {
+  async getAllTestimonials(): Promise<AllTestimonialsQueryResult> {
     try {
-      const testimonials = await sanityClient.fetch(
-        SITE_QUERIES.ALL_TESTIMONIALS
-      );
+      const testimonials = await sanityClient.fetch(allTestimonialsQuery);
       return testimonials;
     } catch (error) {
       console.error("Error fetching testimonials:", error);
@@ -119,14 +66,10 @@ export const testimonialApi = {
   },
 };
 
-// FAQ API functions
 export const faqApi = {
-  /**
-   * Get all FAQs
-   */
-  async getAllFaqs(): Promise<Faq[]> {
+  async getAllFaqs(): Promise<AllFaqsQueryResult> {
     try {
-      const faqs = await sanityClient.fetch(SITE_QUERIES.ALL_FAQS);
+      const faqs = await sanityClient.fetch(allFaqsQuery);
       return faqs;
     } catch (error) {
       console.error("Error fetching FAQs:", error);
@@ -134,21 +77,9 @@ export const faqApi = {
     }
   },
 
-  /**
-   * Get featured FAQs
-   */
-  async getFeaturedFaqs(): Promise<Faq[]> {
+  async getFeaturedFaqs(): Promise<FeaturedFaqsQueryResult> {
     try {
-      const faqs = await sanityClient.fetch(
-        `*[_type == "faq" && featured == true] | order(order asc) {
-          _id,
-          _type,
-          question,
-          answer,
-          order,
-          featured
-        }`
-      );
+      const faqs = await sanityClient.fetch(featuredFaqsQuery);
       return faqs;
     } catch (error) {
       console.error("Error fetching featured FAQs:", error);
@@ -157,14 +88,10 @@ export const faqApi = {
   },
 };
 
-// Event API functions
 export const eventApi = {
-  /**
-   * Get all events
-   */
-  async getAllEvents(): Promise<Event[]> {
+  async getAllEvents(): Promise<AllEventsQueryResult> {
     try {
-      const events = await sanityClient.fetch(SITE_QUERIES.ALL_EVENTS);
+      const events = await sanityClient.fetch(allEventsQuery);
       return events;
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -172,37 +99,10 @@ export const eventApi = {
     }
   },
 
-  /**
-   * Get upcoming events
-   */
-  async getUpcomingEvents(): Promise<Event[]> {
+  async getUpcomingEvents(): Promise<UpcomingEventsQueryResult> {
     try {
       const now = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-      const events = await sanityClient.fetch(
-        `*[_type == "event" && date >= $now] | order(date asc) {
-          _id,
-          _type,
-          title,
-          slug,
-          description,
-          date,
-          location,
-          image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`,
-        { now }
-      );
+      const events = await sanityClient.fetch(upcomingEventsQuery, { now });
       return events;
     } catch (error) {
       console.error("Error fetching upcoming events:", error);
@@ -211,14 +111,10 @@ export const eventApi = {
   },
 };
 
-// Company API functions
 export const companyApi = {
-  /**
-   * Get all companies
-   */
-  async getAllCompanies(): Promise<Company[]> {
+  async getAllCompanies(): Promise<AllCompaniesQueryResult> {
     try {
-      const companies = await sanityClient.fetch(SITE_QUERIES.ALL_COMPANIES);
+      const companies = await sanityClient.fetch(allCompaniesQuery);
       return companies;
     } catch (error) {
       console.error("Error fetching companies:", error);

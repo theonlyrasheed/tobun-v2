@@ -14,6 +14,7 @@ export enum SOCIAL_MEDIA {
   LINKEDIN = "https://www.linkedin.com/in/olubukola-tobun-27747a318",
   EMAIL = "olubukolaart@gmail.com",
   PHONE = "+2348148148813",
+  NEWSLETTER = "https://kit.com",
 }
 
 export type ServiceType =

@@ -1,19 +1,31 @@
+import { sanityClient } from "../client";
 import {
-  sanityClient,
-  type Post,
-  type Author,
-  type Post_category,
-} from "../client";
-import { BLOG_QUERIES } from "./queries";
+  AllAuthorsQueryResult,
+  AllPostCategoriesQueryResult,
+  AllPostsQueryResult,
+  AuthorBySlugQueryResult,
+  PostBySlugQueryResult,
+  PostCategoryBySlugQueryResult,
+  PostsByAuthorQueryResult,
+  PostsByCategoryQueryResult,
+  RecentPostsQueryResult,
+} from "../sanity.types";
+import {
+  allPostsQuery,
+  postBySlugQuery,
+  allPostCategoriesQuery,
+  postCategoryBySlugQuery,
+  allAuthorsQuery,
+  authorBySlugQuery,
+  recentPostsQuery,
+  postsByCategoryQuery,
+  postsByAuthorQuery,
+} from "./queries";
 
-// Blog API functions
 export const blogApi = {
-  /**
-   * Get all blog posts
-   */
-  async getAllPosts(): Promise<Post[]> {
+  async getAllPosts(): Promise<AllPostsQueryResult> {
     try {
-      const posts = await sanityClient.fetch(BLOG_QUERIES.ALL_POSTS);
+      const posts = await sanityClient.fetch(allPostsQuery);
       return posts;
     } catch (error) {
       console.error("Error fetching blog posts:", error);
@@ -21,12 +33,9 @@ export const blogApi = {
     }
   },
 
-  /**
-   * Get post by slug
-   */
-  async getPostBySlug(slug: string): Promise<Post | null> {
+  async getPostBySlug(slug: string): Promise<PostBySlugQueryResult> {
     try {
-      const post = await sanityClient.fetch(BLOG_QUERIES.POST_BY_SLUG, {
+      const post = await sanityClient.fetch(postBySlugQuery, {
         slug,
       });
       return post;
@@ -36,50 +45,11 @@ export const blogApi = {
     }
   },
 
-  /**
-   * Get recent posts (limited)
-   */
-  async getRecentPosts(limit: number = 6): Promise<Post[]> {
+  async getRecentPosts(limit: number = 6): Promise<RecentPostsQueryResult> {
     try {
-      const posts = await sanityClient.fetch(
-        `*[_type == "post"] | order(_createdAt desc) [0...${limit}] {
-          _id,
-          _type,
-          title,
-          slug,
-          excerpt,
-          _createdAt,
-          author->{
-            _id,
-            name,
-            slug,
-            image {
-              asset->{
-                _id,
-                url
-              }
-            }
-          },
-          categories[]->{
-            _id,
-            title,
-            slug
-          },
-          main_image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`
-      );
+      const posts = await sanityClient.fetch(recentPostsQuery, {
+        limit,
+      });
       return posts;
     } catch (error) {
       console.error("Error fetching recent posts:", error);
@@ -87,51 +57,13 @@ export const blogApi = {
     }
   },
 
-  /**
-   * Get posts by category
-   */
-  async getPostsByCategory(categoryId: string): Promise<Post[]> {
+  async getPostsByCategory(
+    categoryId: string
+  ): Promise<PostsByCategoryQueryResult> {
     try {
-      const posts = await sanityClient.fetch(
-        `*[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {
-          _id,
-          _type,
-          title,
-          slug,
-          excerpt,
-          _createdAt,
-          author->{
-            _id,
-            name,
-            slug,
-            image {
-              asset->{
-                _id,
-                url
-              }
-            }
-          },
-          categories[]->{
-            _id,
-            title,
-            slug
-          },
-          main_image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`,
-        { categoryId }
-      );
+      const posts = await sanityClient.fetch(postsByCategoryQuery, {
+        categoryId,
+      });
       return posts;
     } catch (error) {
       console.error("Error fetching posts by category:", error);
@@ -139,51 +71,11 @@ export const blogApi = {
     }
   },
 
-  /**
-   * Get posts by author
-   */
-  async getPostsByAuthor(authorId: string): Promise<Post[]> {
+  async getPostsByAuthor(authorId: string): Promise<PostsByAuthorQueryResult> {
     try {
-      const posts = await sanityClient.fetch(
-        `*[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {
-          _id,
-          _type,
-          title,
-          slug,
-          excerpt,
-          _createdAt,
-          author->{
-            _id,
-            name,
-            slug,
-            image {
-              asset->{
-                _id,
-                url
-              }
-            }
-          },
-          categories[]->{
-            _id,
-            title,
-            slug
-          },
-          main_image {
-            asset->{
-              _id,
-              url,
-              metadata {
-                dimensions,
-                lqip
-              }
-            },
-            alt,
-            hotspot,
-            crop
-          }
-        }`,
-        { authorId }
-      );
+      const posts = await sanityClient.fetch(postsByAuthorQuery, {
+        authorId,
+      });
       return posts;
     } catch (error) {
       console.error("Error fetching posts by author:", error);
@@ -192,14 +84,10 @@ export const blogApi = {
   },
 };
 
-// Author API functions
 export const authorApi = {
-  /**
-   * Get all authors
-   */
-  async getAllAuthors(): Promise<Author[]> {
+  async getAllAuthors(): Promise<AllAuthorsQueryResult> {
     try {
-      const authors = await sanityClient.fetch(BLOG_QUERIES.ALL_AUTHORS);
+      const authors = await sanityClient.fetch(allAuthorsQuery);
       return authors;
     } catch (error) {
       console.error("Error fetching authors:", error);
@@ -207,12 +95,9 @@ export const authorApi = {
     }
   },
 
-  /**
-   * Get author by slug
-   */
-  async getAuthorBySlug(slug: string): Promise<Author | null> {
+  async getAuthorBySlug(slug: string): Promise<AuthorBySlugQueryResult> {
     try {
-      const author = await sanityClient.fetch(BLOG_QUERIES.AUTHOR_BY_SLUG, {
+      const author = await sanityClient.fetch(authorBySlugQuery, {
         slug,
       });
       return author;
@@ -223,16 +108,10 @@ export const authorApi = {
   },
 };
 
-// Post Category API functions
 export const postCategoryApi = {
-  /**
-   * Get all post categories
-   */
-  async getAllCategories(): Promise<Post_category[]> {
+  async getAllCategories(): Promise<AllPostCategoriesQueryResult> {
     try {
-      const categories = await sanityClient.fetch(
-        BLOG_QUERIES.ALL_POST_CATEGORIES
-      );
+      const categories = await sanityClient.fetch(allPostCategoriesQuery);
       return categories;
     } catch (error) {
       console.error("Error fetching post categories:", error);
@@ -240,15 +119,13 @@ export const postCategoryApi = {
     }
   },
 
-  /**
-   * Get post category by slug
-   */
-  async getCategoryBySlug(slug: string): Promise<Post_category | null> {
+  async getCategoryBySlug(
+    slug: string
+  ): Promise<PostCategoryBySlugQueryResult | null> {
     try {
-      const category = await sanityClient.fetch(
-        BLOG_QUERIES.POST_CATEGORY_BY_SLUG,
-        { slug }
-      );
+      const category = await sanityClient.fetch(postCategoryBySlugQuery, {
+        slug,
+      });
       return category;
     } catch (error) {
       console.error("Error fetching post category by slug:", error);

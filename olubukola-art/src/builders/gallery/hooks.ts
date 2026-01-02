@@ -1,17 +1,24 @@
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
-  keepPreviousData,
-  useQuery,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
-import { galleryApi, galleryAlbumApi } from "./api";
-import type { Gallery } from "../client";
+  getAllGalleries,
+  getFeaturedGalleries,
+  getGalleryBySlug,
+  getGalleriesByAlbum,
+  getAvailableGalleries,
+  getGalleriesPaginated,
+  getAllGalleryAlbums,
+  getGalleryAlbumBySlug,
+  getAlbumsWithCount,
+} from "./server-fns";
+import type { AllGalleriesQueryResult } from "../sanity.types";
+import { galleries, galleryAlbums, albumsWithCount } from "./placeholder";
 
 // Gallery hooks
 export const useGalleries = () => {
   return useQuery({
     queryKey: ["galleries"],
-    queryFn: galleryApi.getAllGalleries,
-    placeholderData: keepPreviousData,
+    queryFn: getAllGalleries,
+    placeholderData: galleries,
   });
 };
 
@@ -21,8 +28,7 @@ export const useArtworks = useGalleries;
 export const useFeaturedGalleries = () => {
   return useQuery({
     queryKey: ["galleries", "featured"],
-    queryFn: galleryApi.getFeaturedGalleries,
-    placeholderData: keepPreviousData,
+    queryFn: getFeaturedGalleries,
   });
 };
 
@@ -32,9 +38,9 @@ export const useFeaturedArtworks = useFeaturedGalleries;
 export const useGallery = (slug: string) => {
   return useQuery({
     queryKey: ["gallery", slug],
-    queryFn: () => galleryApi.getGalleryBySlug(slug),
+    queryFn: () => getGalleryBySlug({ data: slug }),
     enabled: !!slug,
-    placeholderData: keepPreviousData,
+    placeholderData: galleries.find((gallery) => gallery.slug === slug) || null,
   });
 };
 
@@ -44,9 +50,8 @@ export const useArtwork = useGallery;
 export const useGalleriesByAlbum = (albumId: string) => {
   return useQuery({
     queryKey: ["galleries", "album", albumId],
-    queryFn: () => galleryApi.getGalleriesByAlbum(albumId),
+    queryFn: () => getGalleriesByAlbum({ data: albumId }),
     enabled: !!albumId,
-    placeholderData: keepPreviousData,
   });
 };
 
@@ -56,8 +61,7 @@ export const useArtworksByCategory = useGalleriesByAlbum;
 export const useAvailableGalleries = () => {
   return useQuery({
     queryKey: ["galleries", "available"],
-    queryFn: galleryApi.getAvailableGalleries,
-    placeholderData: keepPreviousData,
+    queryFn: getAvailableGalleries,
   });
 };
 
@@ -70,8 +74,8 @@ export const useGalleriesPaginated = (
 ) => {
   return useQuery({
     queryKey: ["galleries", "paginated", limit, offset],
-    queryFn: () => galleryApi.getGalleriesPaginated(limit, offset),
-    placeholderData: keepPreviousData,
+    queryFn: () => getGalleriesPaginated({ data: { limit, offset } }),
+    placeholderData: galleries.slice(offset, offset + limit) || [],
   });
 };
 
@@ -82,8 +86,8 @@ export const useArtworksPaginated = useGalleriesPaginated;
 export const useAlbums = () => {
   return useQuery({
     queryKey: ["albums"],
-    queryFn: galleryAlbumApi.getAllGalleryAlbums,
-    placeholderData: keepPreviousData,
+    queryFn: getAllGalleryAlbums,
+    placeholderData: galleryAlbums || [],
   });
 };
 
@@ -93,23 +97,23 @@ export const useCategories = useAlbums;
 export const useCategory = (slug: string) => {
   return useQuery({
     queryKey: ["category", slug],
-    queryFn: () => galleryAlbumApi.getGalleryAlbumBySlug(slug),
+    queryFn: () => getGalleryAlbumBySlug({ data: slug }),
     enabled: !!slug,
-    placeholderData: keepPreviousData,
+    placeholderData: galleryAlbums.find((album) => album.slug === slug) || null,
   });
 };
 
 export const useCategoriesWithCount = () => {
   return useQuery({
     queryKey: ["categories", "with-count"],
-    queryFn: galleryAlbumApi.getAlbumsWithCount,
-    placeholderData: keepPreviousData,
+    queryFn: getAlbumsWithCount,
+    placeholderData: albumsWithCount || [],
   });
 };
 
 // Types for infinite query responses
 interface InfiniteGalleryResponse {
-  data: Gallery[];
+  data: AllGalleriesQueryResult;
   hasMore: boolean;
   nextOffset: number;
 }
@@ -119,7 +123,9 @@ export const useGalleriesInfinite = (limit: number = 12) => {
   return useInfiniteQuery({
     queryKey: ["galleries", "infinite"],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const data = await galleryApi.getGalleriesPaginated(limit, pageParam);
+      const data = await getGalleriesPaginated({
+        data: { limit, offset: pageParam },
+      });
       return {
         data,
         hasMore: data.length === limit,
@@ -140,7 +146,7 @@ export const useGalleriesByAlbumInfinite = (
   return useInfiniteQuery({
     queryKey: ["galleries", "album", albumId, "infinite"],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const data = await galleryApi.getGalleriesByAlbum(albumId);
+      const data = await getGalleriesByAlbum({ data: albumId });
       // For album filtering, we slice the results for pagination
       const startIndex = pageParam;
       const endIndex = startIndex + limit;
@@ -150,7 +156,7 @@ export const useGalleriesByAlbumInfinite = (
         data: paginatedData,
         hasMore: endIndex < data.length,
         nextOffset: endIndex,
-      } as InfiniteGalleryResponse;
+      } as unknown as InfiniteGalleryResponse;
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage: InfiniteGalleryResponse) => {
