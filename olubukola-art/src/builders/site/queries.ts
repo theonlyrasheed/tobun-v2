@@ -44,14 +44,10 @@ export const allFaqsQuery =
 }`);
 
 export const allEventsQuery =
-  defineQuery(`*[_type == "event"] | order(date desc) {
+  defineQuery(`*[_type == "event"] | order(_createdAt desc) {
   _id,
   _type,
-  "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
-  "description": coalesce(description, ""),
-  date,
-  "location": coalesce(location, ""),
   image {
     "url": coalesce(asset->url, null),
     "alt": coalesce(alt, "")
@@ -110,16 +106,31 @@ export const featuredFaqsQuery =
 }`);
 
 export const upcomingEventsQuery =
-  defineQuery(`*[_type == "event" && date >= $now] | order(date asc) {
+  defineQuery(`*[_type == "event"] | order(_createdAt desc) {
   _id,
   _type,
-  "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
-  "description": coalesce(description, ""),
-  date,
-  "location": coalesce(location, ""),
    image {
     "url": coalesce(asset->url, null),
     "alt": coalesce(alt, "")
   }
+}`);
+
+export const advertsSectionQuery =
+  defineQuery(`*[_type == "adverts_section" && enabled == true][0] {
+  _id,
+  _type,
+  "slug": coalesce(slug.current, ""),
+  "enabled": coalesce(enabled, true),
+  "adverts": coalesce(
+    adverts[]{
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, ""),
+      image {
+        "url": coalesce(asset->url, null),
+        "alt": coalesce(alt, "")
+      }
+    },
+    []
+  )
 }`);

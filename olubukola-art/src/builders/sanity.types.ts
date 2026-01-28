@@ -483,13 +483,16 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: ../src/builders/blog/queries.ts
 // Variable: allPostsQuery
-// Query: *[_type == "post"] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  _createdAt,  _updatedAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    "bio": coalesce(bio, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
+// Query: *[_type == "post"] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "numberOfCharacters": length(pt::text(coalesce(body, []))),  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),  "readingTime": select(    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,    round(length(pt::text(coalesce(body, []))) / 5 / 180)  ),  _createdAt,  _updatedAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    "bio": coalesce(bio, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
 export type AllPostsQueryResult = Array<{
   _id: string;
   _type: "post";
   title: string;
   slug: string;
   excerpt: string | "";
+  numberOfCharacters: number;
+  wordCount: number;
+  readingTime: number | 1;
   _createdAt: string;
   _updatedAt: string;
   author: {
@@ -536,7 +539,7 @@ export type AllPostsQueryResult = Array<{
 
 // Source: ../src/builders/blog/queries.ts
 // Variable: postBySlugQuery
-// Query: *[_type == "post" && slug.current == $slug][0] {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "body": coalesce(body, []),  _createdAt,  _updatedAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    "bio": coalesce(bio, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
+// Query: *[_type == "post" && slug.current == $slug][0] {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "body": coalesce(body, []),  "numberOfCharacters": length(pt::text(coalesce(body, []))),  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),  "readingTime": select(    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,    round(length(pt::text(coalesce(body, []))) / 5 / 180)  ),  _createdAt,  _updatedAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    "bio": coalesce(bio, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
 export type PostBySlugQueryResult = {
   _id: string;
   _type: "post";
@@ -544,6 +547,9 @@ export type PostBySlugQueryResult = {
   slug: string;
   excerpt: string | "";
   body: Block_content;
+  numberOfCharacters: number;
+  wordCount: number;
+  readingTime: number | 1;
   _createdAt: string;
   _updatedAt: string;
   author: {
@@ -678,13 +684,16 @@ export type AuthorBySlugQueryResult = {
 
 // Source: ../src/builders/blog/queries.ts
 // Variable: recentPostsQuery
-// Query: *[_type == "post"] | order(_createdAt desc) [0...$limit] {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
+// Query: *[_type == "post"] | order(_createdAt desc) [0...$limit] {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "numberOfCharacters": length(pt::text(coalesce(body, []))),  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),  "readingTime": select(    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,    round(length(pt::text(coalesce(body, []))) / 5 / 180)  ),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
 export type RecentPostsQueryResult = Array<{
   _id: string;
   _type: "post";
   title: string;
   slug: string;
   excerpt: string | "";
+  numberOfCharacters: number;
+  wordCount: number;
+  readingTime: number | 1;
   _createdAt: string;
   author: {
     _id: string;
@@ -710,13 +719,16 @@ export type RecentPostsQueryResult = Array<{
 
 // Source: ../src/builders/blog/queries.ts
 // Variable: postsByCategoryQuery
-// Query: *[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
+// Query: *[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "numberOfCharacters": length(pt::text(coalesce(body, []))),  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),  "readingTime": select(    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,    round(length(pt::text(coalesce(body, []))) / 5 / 180)  ),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
 export type PostsByCategoryQueryResult = Array<{
   _id: string;
   _type: "post";
   title: string;
   slug: string;
   excerpt: string | "";
+  numberOfCharacters: number;
+  wordCount: number;
+  readingTime: number | 1;
   _createdAt: string;
   author: {
     _id: string;
@@ -742,13 +754,16 @@ export type PostsByCategoryQueryResult = Array<{
 
 // Source: ../src/builders/blog/queries.ts
 // Variable: postsByAuthorQuery
-// Query: *[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
+// Query: *[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {  _id,  _type,  "title": coalesce(title, ""),  "slug": coalesce(slug.current, ""),  "excerpt": coalesce(excerpt, ""),  "numberOfCharacters": length(pt::text(coalesce(body, []))),  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),  "readingTime": select(    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,    round(length(pt::text(coalesce(body, []))) / 5 / 180)  ),  _createdAt,  author->{    _id,    "name": coalesce(name, ""),    "slug": coalesce(slug.current, ""),    image {      "url": coalesce(asset->url, null),      "alt": coalesce(alt, "")    }  },  "categories": coalesce(    categories[]->{      _id,      "title": coalesce(title, ""),      "slug": coalesce(slug.current, "")    },    []  ),  main_image {    "url": coalesce(asset->url, null),    "alt": coalesce(alt, "")  }}
 export type PostsByAuthorQueryResult = Array<{
   _id: string;
   _type: "post";
   title: string;
   slug: string;
   excerpt: string | "";
+  numberOfCharacters: number;
+  wordCount: number;
+  readingTime: number | 1;
   _createdAt: string;
   author: {
     _id: string;
@@ -1134,15 +1149,15 @@ export type UpcomingEventsQueryResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type == "post"] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  _createdAt,\n  _updatedAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    "bio": coalesce(bio, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': AllPostsQueryResult;
-    '*[_type == "post" && slug.current == $slug][0] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "body": coalesce(body, []),\n  _createdAt,\n  _updatedAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    "bio": coalesce(bio, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostBySlugQueryResult;
+    '*[_type == "post"] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "numberOfCharacters": length(pt::text(coalesce(body, []))),\n  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),\n  "readingTime": select(\n    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,\n    round(length(pt::text(coalesce(body, []))) / 5 / 180)\n  ),\n  _createdAt,\n  _updatedAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    "bio": coalesce(bio, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': AllPostsQueryResult;
+    '*[_type == "post" && slug.current == $slug][0] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "body": coalesce(body, []),\n  "numberOfCharacters": length(pt::text(coalesce(body, []))),\n  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),\n  "readingTime": select(\n    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,\n    round(length(pt::text(coalesce(body, []))) / 5 / 180)\n  ),\n  _createdAt,\n  _updatedAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    "bio": coalesce(bio, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostBySlugQueryResult;
     '*[_type == "post_category"] | order(title asc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "description": coalesce(description, "")\n}': AllPostCategoriesQueryResult;
     '*[_type == "post_category" && slug.current == $slug][0] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "description": coalesce(description, "")\n}': PostCategoryBySlugQueryResult;
     '*[_type == "author"] | order(name asc) {\n  _id,\n  _type,\n  "name": coalesce(name, ""),\n  "slug": coalesce(slug.current, ""),\n  "bio": coalesce(bio, ""),\n  image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': AllAuthorsQueryResult;
     '*[_type == "author" && slug.current == $slug][0] {\n  _id,\n  _type,\n  "name": coalesce(name, ""),\n  "slug": coalesce(slug.current, ""),\n  "bio": coalesce(bio, ""),\n  image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n  }': AuthorBySlugQueryResult;
-    '*[_type == "post"] | order(_createdAt desc) [0...$limit] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': RecentPostsQueryResult;
-    '*[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostsByCategoryQueryResult;
-    '*[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostsByAuthorQueryResult;
+    '*[_type == "post"] | order(_createdAt desc) [0...$limit] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "numberOfCharacters": length(pt::text(coalesce(body, []))),\n  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),\n  "readingTime": select(\n    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,\n    round(length(pt::text(coalesce(body, []))) / 5 / 180)\n  ),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': RecentPostsQueryResult;
+    '*[_type == "post" && $categoryId in categories[]._ref] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "numberOfCharacters": length(pt::text(coalesce(body, []))),\n  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),\n  "readingTime": select(\n    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,\n    round(length(pt::text(coalesce(body, []))) / 5 / 180)\n  ),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostsByCategoryQueryResult;
+    '*[_type == "post" && author._ref == $authorId] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "numberOfCharacters": length(pt::text(coalesce(body, []))),\n  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),\n  "readingTime": select(\n    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,\n    round(length(pt::text(coalesce(body, []))) / 5 / 180)\n  ),\n  _createdAt,\n  author->{\n    _id,\n    "name": coalesce(name, ""),\n    "slug": coalesce(slug.current, ""),\n    image {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    }\n  },\n  "categories": coalesce(\n    categories[]->{\n      _id,\n      "title": coalesce(title, ""),\n      "slug": coalesce(slug.current, "")\n    },\n    []\n  ),\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': PostsByAuthorQueryResult;
     '*[_type == "gallery"] | order(_createdAt desc)[0...10] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "availability": coalesce(availability, ""),\n  featured,\n  created_at,\n  size {\n  "height": coalesce(heightCm, 0),\n  "width": coalesce(widthCm, 0),\n  "dept": coalesce(depthCm, 0),\n  "notes": coalesce(notes, "")\n  },\n  price {\n  "currency": coalesce(currency, "NGN"),\n  "amount": coalesce(amount, 0)\n  },\n  album->{\n    _id,\n    "title": coalesce(title, ""),\n    "slug": coalesce(slug.current, "")\n  },\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  },\n  "more_images": coalesce(\n    more_images[] {\n      "url": coalesce(asset->url, null),\n      "alt": coalesce(alt, "")\n    },\n    []\n  )\n}': AllGalleriesQueryResult;
     '*[_type == "gallery" && featured == true] | order(_createdAt desc) {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "availability": coalesce(availability, ""),\n  "featured": coalesce(featured, false),\n  created_at,\n  size {\n  "height": coalesce(heightCm, 0),\n  "width": coalesce(widthCm, 0),\n  "dept": coalesce(depthCm, 0),\n  "notes": coalesce(notes, "")\n  },\n  price {\n  "currency": coalesce(currency, "NGN"),\n  "amount": coalesce(amount, 0)\n  },\n  album->{\n    _id,\n    "title": coalesce(title, ""),\n    "slug": coalesce(slug.current, ""),\n    "featured": coalesce(featured, false)\n  },\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': FeaturedGalleriesQueryResult;
     '*[_type == "gallery" && slug.current == $slug][0] {\n  _id,\n  _type,\n  "title": coalesce(title, ""),\n  "slug": coalesce(slug.current, ""),\n  "excerpt": coalesce(excerpt, ""),\n  "description": coalesce(description, ""),\n  "availability": coalesce(availability, ""),\n  "featured": coalesce(featured, false),\n  created_at,\n  "size": coalesce(size, ""),\n  "price": coalesce(price, 0),\n  album->{\n    _id,\n    "title": coalesce(title, ""),\n    "slug": coalesce(slug.current, "")\n  },\n  main_image {\n    "url": coalesce(asset->url, null),\n    "alt": coalesce(alt, "")\n  }\n}': GalleryBySlugQueryResult;

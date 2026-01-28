@@ -5,6 +5,7 @@ import { PAGES } from "@/utils/enums";
 import { useFaqs } from "@/builders";
 import type { AllFaqsQueryResult } from "@/builders/sanity.types";
 import type { FAQItemProps } from "@/types";
+import clsx from "clsx";
 
 const transformFaqApi = (faq: AllFaqsQueryResult[0]): FAQItemProps => ({
   question: faq.question,
@@ -12,13 +13,13 @@ const transformFaqApi = (faq: AllFaqsQueryResult[0]): FAQItemProps => ({
     ? faq.answer
         .filter(
           (block) =>
-            block._type === "block" && "children" in block && block.children
+            block._type === "block" && "children" in block && block.children,
         )
         .map(
           (block) =>
             (block as any).children
               ?.map((child: any) => child.text || "")
-              .join("") || ""
+              .join("") || "",
         )
         .join("\n")
     : "",
@@ -39,12 +40,15 @@ export function FAQSection() {
         subtitle='OUR MOST FAQS'
         title='Frequently Asked Questions'
         id={PAGES.FAQS}
-        skeleton={isPlaceholderData}
       />
 
       <Accordion mt={50} variant='separated' radius='sm'>
         {transformedFaqs.map((faq, index) => (
-          <Accordion.Item key={index} value={`faq-${index}`}>
+          <Accordion.Item
+            key={index}
+            value={`faq-${index}`}
+            className={clsx({ skeleton: isPlaceholderData })}
+          >
             <Accordion.Control>
               <Text className='font-playfair' fz={20} fw={600}>
                 {faq.question}

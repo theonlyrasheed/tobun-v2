@@ -8,6 +8,30 @@ export default defineType({
   icon: EarthGlobeIcon,
   fields: [
     defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      description: 'Used only to avoid duplicates (keep unique).',
+      options: {source: () => 'services-section', maxLength: 96},
+      initialValue: {current: 'services-section'},
+      readOnly: true,
+      validation: (rule) =>
+        rule.required().custom(async (value, context) => {
+          const slug = (value as any)?.current
+          if (!slug) return true
+
+          const client = context.getClient({apiVersion: '2026-01-01'})
+          const id = context.document?._id?.replace(/^drafts\./, '')
+
+          const existing = await client.fetch(
+            `count(*[_type == "services_section" && slug.current == $slug && _id != $id])`,
+            {slug, id},
+          )
+
+          return existing === 0 || 'A Services Section already exists.'
+        }),
+    }),
+    defineField({
       name: 'kicker',
       title: 'Kicker',
       type: 'string',

@@ -150,7 +150,7 @@ export function Footer() {
                     c='dimmed'
                     className='font-poppins hover:text-purple-600 transition-colors'
                   >
-                    Olubukolaart@gmail.com
+                    {SOCIAL_MEDIA.EMAIL}
                   </Text>
                   <Text
                     component='a'
@@ -160,7 +160,7 @@ export function Footer() {
                     c='dimmed'
                     className='font-poppins hover:text-purple-600 transition-colors'
                   >
-                    +2348148148813
+                    {SOCIAL_MEDIA.PHONE}
                   </Text>
                   <Text fz={14} c='dimmed' className='font-poppins'>
                     Lagos, Abuja, Porthacourt

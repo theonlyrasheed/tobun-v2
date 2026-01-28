@@ -25,7 +25,7 @@ import type { ArtworkCardProps } from "@/types";
 import clsx from "clsx";
 
 const transformGalleryApi = (
-  gallery: FeaturedGalleriesQueryResult[0]
+  gallery: FeaturedGalleriesQueryResult[0],
 ): ArtworkCardProps => {
   return {
     id: gallery._id,
@@ -64,7 +64,7 @@ export function GallerySection() {
   const featuredAlbums = albums?.filter(
     (album) =>
       album.featured &&
-      galleries?.some((gallery) => gallery.album?.slug === album.slug)
+      galleries?.some((gallery) => gallery.album?.slug === album.slug),
   );
 
   const tabs = featuredAlbums?.map((album) => ({
@@ -76,7 +76,7 @@ export function GallerySection() {
     if (!featuredAlbums || !galleries) return [];
 
     const selectedAlbum = featuredAlbums.find(
-      (album) => album.slug === albumSlug
+      (album) => album.slug === albumSlug,
     );
 
     if (!selectedAlbum) return [];
@@ -98,7 +98,7 @@ export function GallerySection() {
       setTitle("Gallery");
     } else {
       const selectedAlbum = featuredAlbums?.find(
-        (album) => album.slug === activeTab
+        (album) => album.slug === activeTab,
       );
       setTitle(selectedAlbum?.title ?? "Gallery");
     }
@@ -153,7 +153,7 @@ export function GallerySection() {
                   index={idx}
                   skeleton={isPlaceholderData}
                 />
-              )
+              ),
             )}
 
             {/* Fills the 8th slot when lg=4 and artworks=7 - only show if there are galleries with descriptions */}
@@ -203,14 +203,14 @@ const GalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
     <Card.Section inheritPadding pt='lg'>
       <Box
         style={{
-          height: 300,
+          height: 400,
           backgroundColor: "#f0f0f0",
           position: "relative",
         }}
       >
         <Image
           src={gallery.image}
-          h={300}
+          h={400}
           w='100%'
           maw={520}
           mx='auto'
@@ -270,7 +270,7 @@ const SimpleGalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
     data-aos='fade-up'
     data-aos-delay={Math.min(index * 70, 420)}
   >
-    <Card.Section inheritPadding py='lg' h={300}>
+    <Card.Section inheritPadding py='lg' h={450}>
       <Box
         style={{
           height: "100%",

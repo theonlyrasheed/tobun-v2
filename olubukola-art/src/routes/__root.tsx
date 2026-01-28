@@ -22,7 +22,7 @@ import { ScrollToTop } from "@/components/shared/scroll-to-top";
 import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 
-import "aos/dist/aos.css";
+// import "aos/dist/aos.css";
 import { Notifications } from "@mantine/notifications";
 
 interface MyRouterContext {

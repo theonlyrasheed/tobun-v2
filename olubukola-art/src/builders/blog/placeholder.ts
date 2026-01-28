@@ -7,14 +7,23 @@ import type {
 
 // Generate placeholder blog posts
 export const generateBlogPosts = (count: number = 12): AllPostsQueryResult => {
-  return Array.from({ length: count }, (_, i) => ({
+  return Array.from({ length: count }, (_, i) => {
+    const excerpt = faker.lorem.sentences({ min: 1, max: 1 });
+    const numberOfCharacters = excerpt.length;
+    const wordCount = Math.round(numberOfCharacters / 5);
+    const readingTime = Math.max(1, Math.round(wordCount / 180));
+
+    return {
     _id: `post-${i + 1}`,
     _type: "post",
     _createdAt: faker.date.recent({ days: 365 }).toISOString(),
     _updatedAt: faker.date.recent({ days: 30 }).toISOString(),
-    title: faker.lorem.words({ min: 3, max: 8 }),
+    title: faker.lorem.words({ min: 1, max: 1 }),
     slug: faker.helpers.slugify(faker.lorem.words({ min: 2, max: 5 })),
-    excerpt: faker.lorem.sentences({ min: 1, max: 2 }),
+      excerpt,
+      numberOfCharacters,
+      wordCount,
+      readingTime,
     author: {
       _id: `author-${faker.number.int({ min: 1, max: 5 })}`,
       name: faker.person.fullName(),
@@ -24,7 +33,7 @@ export const generateBlogPosts = (count: number = 12): AllPostsQueryResult => {
           children: [
             {
               marks: [],
-              text: faker.lorem.sentences({ min: 2, max: 4 }),
+              text: faker.lorem.sentences({ min: 1, max: 1 }),
               _type: "span",
               _key: faker.string.uuid(),
             },
@@ -46,15 +55,16 @@ export const generateBlogPosts = (count: number = 12): AllPostsQueryResult => {
       { length: faker.number.int({ min: 1, max: 3 }) },
       (_) => ({
         _id: `category-${faker.number.int({ min: 1, max: 8 })}`,
-        title: faker.lorem.words({ min: 1, max: 3 }),
+        title: faker.lorem.words({ min: 1, max: 1 }),
         slug: faker.helpers.slugify(faker.lorem.words({ min: 1, max: 3 })),
-      })
+      }),
     ),
     main_image: {
       url: `https://via.placeholder.com/800x600?text=Post+Image+${i + 1}`,
       alt: faker.lorem.words({ min: 2, max: 5 }),
     },
-  }));
+    };
+  });
 };
 
 // Generate placeholder authors
@@ -91,7 +101,7 @@ export const generateAuthors = (count: number = 8): AllAuthorsQueryResult => {
 
 // Generate placeholder categories
 export const generatePostCategories = (
-  count: number = 10
+  count: number = 10,
 ): AllPostCategoriesQueryResult => {
   const categoryNames = [
     "Art Techniques",
@@ -117,6 +127,6 @@ export const generatePostCategories = (
 };
 
 // Pre-generated placeholder data
-export const blogPosts = generateBlogPosts(12);
+export const blogPosts = generateBlogPosts(3);
 export const authors = generateAuthors(8);
 export const postCategories = generatePostCategories(10);

@@ -7,6 +7,12 @@ export const allPostsQuery =
   "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
   "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
   _createdAt,
   _updatedAt,
   author->{
@@ -41,6 +47,12 @@ export const postBySlugQuery =
   "slug": coalesce(slug.current, ""),
   "excerpt": coalesce(excerpt, ""),
   "body": coalesce(body, []),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
   _createdAt,
   _updatedAt,
   author->{
@@ -116,6 +128,12 @@ export const recentPostsQuery =
   "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
   "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
   _createdAt,
   author->{
     _id,
@@ -147,6 +165,12 @@ export const postsByCategoryQuery =
   "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
   "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
   _createdAt,
   author->{
     _id,
@@ -178,6 +202,12 @@ export const postsByAuthorQuery =
   "title": coalesce(title, ""),
   "slug": coalesce(slug.current, ""),
   "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
   _createdAt,
   author->{
     _id,

@@ -5,6 +5,7 @@ import {
   faqApi,
   eventApi,
   companyApi,
+  advertsApi,
 } from "./api";
 
 // Service server functions
@@ -63,5 +64,11 @@ export const getUpcomingEvents = createServerFn({ method: "GET" }).handler(
 export const getAllCompanies = createServerFn({ method: "GET" }).handler(
   async () => {
     return await companyApi.getAllCompanies();
+  }
+);
+
+export const getAdvertsSection = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return await advertsApi.getAdvertsSection();
   }
 );

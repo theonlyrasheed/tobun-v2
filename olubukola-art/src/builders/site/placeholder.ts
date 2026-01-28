@@ -48,7 +48,7 @@ export const generateServices = (count: number = 8): AllServicesQueryResult => {
       faker.lorem.words({ min: 2, max: 4 }),
     slug: faker.helpers.slugify(
       serviceTitles[i % serviceTitles.length] ||
-        faker.lorem.words({ min: 2, max: 4 })
+        faker.lorem.words({ min: 2, max: 4 }),
     ),
     description:
       descriptions[i % descriptions.length] ||
@@ -70,7 +70,7 @@ export const generateServices = (count: number = 8): AllServicesQueryResult => {
 
 // Generate placeholder testimonials
 export const generateTestimonials = (
-  count: number = 12
+  count: number = 12,
 ): AllTestimonialsQueryResult => {
   const testimonialTexts = [
     "Olubukola Art has a great workers. They are all so polite and kind. I love them",
@@ -124,33 +124,11 @@ export const generateEvents = (count: number = 8): AllEventsQueryResult => {
       faker.lorem.words({ min: 2, max: 4 }),
     slug: faker.helpers.slugify(
       eventTitles[i % eventTitles.length] ||
-        faker.lorem.words({ min: 2, max: 4 })
+        faker.lorem.words({ min: 2, max: 4 }),
     ),
-    description: [
-      {
-        children: [
-          {
-            marks: [],
-            text: faker.lorem.sentences({ min: 2, max: 4 }),
-            _type: "span",
-            _key: faker.string.uuid(),
-          },
-        ],
-        style: "normal",
-        listItem: undefined,
-        markDefs: [],
-        level: undefined,
-        _type: "block",
-        _key: faker.string.uuid(),
-      },
-    ],
+    description: "",
     date: null,
-    location: {
-      venue: faker.company.name(),
-      address: faker.location.streetAddress(),
-      city: faker.location.city(),
-      country: faker.location.country(),
-    },
+    location: "",
     image: null,
   }));
 };
@@ -247,7 +225,7 @@ export const generateFaqs = (count: number = 15): AllFaqsQueryResult => {
 
 // Generate placeholder companies
 export const generateCompanies = (
-  count: number = 8
+  count: number = 8,
 ): AllCompaniesQueryResult => {
   const companyNames = [
     "FMC Abuja",
@@ -271,7 +249,7 @@ export const generateCompanies = (
           url: `https://via.placeholder.com/200x100?text=Logo+${i + 1}`,
           alt: `${companyNames[i % companyNames.length] || faker.company.name()} logo`,
         },
-      }) as AllCompaniesQueryResult[0]
+      }) as AllCompaniesQueryResult[0],
   );
 };
 
@@ -279,7 +257,7 @@ export const generateCompanies = (
 export const services = generateServices(8);
 export const testimonials = generateTestimonials(12);
 export const events = generateEvents(8);
-export const faqs = generateFaqs(15);
+export const faqs = generateFaqs(5);
 export const companies = generateCompanies(8);
 
 // Helper to get featured services (top 3 services)

@@ -29,11 +29,14 @@ export interface ArtworkCardProps {
 
 export interface BlogPostProps {
   id: string;
+  slug?: string;
   title: string;
   excerpt: string;
   image: string;
   date: string;
   readTime: number;
+  authorName?: string;
+  authorImage?: string;
 }
 
 export interface TestimonialProps {

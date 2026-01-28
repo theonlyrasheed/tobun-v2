@@ -25,6 +25,7 @@ export const stats: StatCardProps[] = [
 export const blogPosts: BlogPostProps[] = placeholderBlogPosts.map(
   (post, i) => ({
     id: post._id,
+    slug: post.slug,
     title: post.title,
     excerpt: post.excerpt || "",
     image: `https://picsum.photos/549/622?random=${i + 10}`,

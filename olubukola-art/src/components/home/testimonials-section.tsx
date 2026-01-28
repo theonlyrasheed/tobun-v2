@@ -24,7 +24,7 @@ import type { AllTestimonialsQueryResult } from "@/builders/sanity.types";
 import type { TestimonialProps } from "@/types";
 
 const transformTestimonialApi = (
-  testimonial: AllTestimonialsQueryResult[0]
+  testimonial: AllTestimonialsQueryResult[0],
 ): TestimonialProps => {
   return {
     id: testimonial._id,
@@ -49,7 +49,7 @@ export function TestimonialsSection() {
     const chunks: TestimonialProps[][] = [];
     for (let i = 0; i < testimonials.length; i += perPage) {
       chunks.push(
-        testimonials.slice(i, i + perPage).map(transformTestimonialApi)
+        testimonials.slice(i, i + perPage).map(transformTestimonialApi),
       );
     }
     return chunks;
@@ -79,12 +79,11 @@ export function TestimonialsSection() {
         base: 30,
         md: 100,
       }}
-      hidden={!isPlaceholderData && !testimonials?.length}
+      hidden={isPlaceholderData || !testimonials?.length}
     >
       <SectionTitle
         subtitle='WHAT OUR CUSTOMER SAYS'
         title='Our Amazing Supporters'
-        skeleton={isPlaceholderData}
       />
 
       <Box

@@ -14,13 +14,13 @@ import { IconHeart } from "@tabler/icons-react";
 import { SectionTitle } from "@/components/section-title";
 import {
   useGalleries,
-  useAlbums,
+  useCategoriesWithCount,
   useGalleriesInfinite,
   useGalleriesByAlbumInfinite,
 } from "@/builders";
 import type {
   AllGalleriesQueryResult,
-  AllGalleryAlbumsQueryResult,
+  AlbumsWithCountQueryResult,
 } from "@/builders/sanity.types";
 import type { ArtworkCardProps } from "@/types";
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -60,7 +60,8 @@ export const Route = createFileRoute("/gallery")({
 function GalleryPage() {
   const { data: galleries, isPlaceholderData: isGalleriesPlaceholder } =
     useGalleries();
-  const { data: albums, isPlaceholderData: isAlbumsPlaceholder } = useAlbums();
+  const { data: albums, isPlaceholderData: isAlbumsPlaceholder } =
+    useCategoriesWithCount();
   const [activeTab, setActiveTab] = useState("all");
 
   const ITEMS_PER_PAGE = 12;
@@ -69,7 +70,7 @@ function GalleryPage() {
   const isPlaceholderData = isGalleriesPlaceholder || isAlbumsPlaceholder;
 
   const selectedAlbum = albums?.find(
-    (album: AllGalleryAlbumsQueryResult[0]) => album.slug === activeTab
+    (album: AlbumsWithCountQueryResult[0]) => album.slug === activeTab
   );
 
   // Use appropriate infinite query based on active tab
@@ -114,10 +115,12 @@ function GalleryPage() {
   // Create tabs from all albums
   const tabs = [
     { value: "all", label: "All" },
-    ...(albums?.map((album) => ({
-      value: album.slug,
-      label: album.title,
-    })) || []),
+    ...(albums
+      ?.filter((album) => album.galleryCount > 0)
+      .map((album) => ({
+        value: album.slug,
+        label: album.title,
+      })) || []),
   ];
 
   const loadMoreRef = useRef<HTMLDivElement>(null);

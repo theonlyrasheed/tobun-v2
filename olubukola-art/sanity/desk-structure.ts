@@ -22,6 +22,7 @@ const GROUPED_TYPES = [
   'testimonial',
   'faq',
   'service',
+  'adverts_section',
   // 'services_section',
 ]
 
@@ -100,6 +101,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .title('FAQs')
                 .icon(HelpCircleIcon)
                 .child(S.documentTypeList('faq').title('FAQs')),
+              S.listItem()
+                .title('Adverts')
+                .icon(ImageIcon)
+                .child(S.documentTypeList('adverts_section').title('Adverts')),
             ]),
         ),
 

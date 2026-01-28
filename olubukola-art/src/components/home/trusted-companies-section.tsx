@@ -13,7 +13,7 @@ interface CompanyDisplay {
 }
 
 const transformCompanyApi = (
-  company: AllCompaniesQueryResult[0]
+  company: AllCompaniesQueryResult[0],
 ): CompanyDisplay => ({
   name: company.title,
   src: company.logo?.url || "/images/companies/default.png",
@@ -29,7 +29,7 @@ export function TrustedCompaniesSection() {
     // Duplicate items so looping feels continuous even with a small source list.
     return Array.from(
       { length: 10 },
-      (_, idx) => transformedCompanies[idx % transformedCompanies.length]
+      (_, idx) => transformedCompanies[idx % transformedCompanies.length],
     );
   }, [companies]);
 
@@ -51,12 +51,11 @@ export function TrustedCompaniesSection() {
       size='full'
       maw={MAX_WIDTH}
       pt={{ base: 30, md: 80 }}
-      hidden={!isPlaceholderData && !companies?.length}
+      hidden={isPlaceholderData || !companies?.length}
     >
       <SectionTitle
         subtitle='WHO WE WORK WITH'
         title='Trusted By Great- Companises'
-        skeleton={isPlaceholderData}
       />
 
       <Box
@@ -65,7 +64,7 @@ export function TrustedCompaniesSection() {
         onMouseLeave={() => setPaused(false)}
       >
         <Carousel
-          emblaOptions={{ loop: true, align: "start", duration: 6000 }}
+          emblaOptions={{ loop: true, align: "start", duration: 6300 }}
           withControls={false}
           withIndicators={false}
           getEmblaApi={setEmbla}

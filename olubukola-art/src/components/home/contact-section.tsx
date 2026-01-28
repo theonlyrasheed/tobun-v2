@@ -140,7 +140,7 @@ export function ContactSection() {
                 }}
               >
                 <Text className='font-playfair' fz={16} fw={600} c='white'>
-                  OlubukolaArt@gmail.com
+                  {SOCIAL_MEDIA.EMAIL}
                 </Text>
               </Box>
             </Group>

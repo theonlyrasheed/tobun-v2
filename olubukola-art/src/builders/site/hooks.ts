@@ -9,6 +9,7 @@ import {
   getAllEvents,
   getUpcomingEvents,
   getAllCompanies,
+  getAdvertsSection,
 } from "./server-fns";
 import {
   services,
@@ -95,5 +96,13 @@ export const useCompanies = () => {
     queryKey: ["companies"],
     queryFn: getAllCompanies,
     placeholderData: companies,
+  });
+};
+
+export const useAdvertsSection = () => {
+  return useQuery({
+    queryKey: ["adverts-section"],
+    queryFn: getAdvertsSection,
+    placeholderData: null,
   });
 };

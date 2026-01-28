@@ -20,6 +20,7 @@ import {
   serviceBySlugQuery,
   featuredFaqsQuery,
   upcomingEventsQuery,
+  advertsSectionQuery,
 } from "./queries";
 
 export const serviceApi = {
@@ -101,12 +102,22 @@ export const eventApi = {
 
   async getUpcomingEvents(): Promise<UpcomingEventsQueryResult> {
     try {
-      const now = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-      const events = await sanityClient.fetch(upcomingEventsQuery, { now });
+      const events = await sanityClient.fetch(upcomingEventsQuery);
       return events;
     } catch (error) {
       console.error("Error fetching upcoming events:", error);
       throw new Error("Failed to fetch upcoming events");
+    }
+  },
+};
+
+export const advertsApi = {
+  async getAdvertsSection(): Promise<any> {
+    try {
+      return await sanityClient.fetch(advertsSectionQuery);
+    } catch (error) {
+      console.error("Error fetching adverts section:", error);
+      throw new Error("Failed to fetch adverts section");
     }
   },
 };

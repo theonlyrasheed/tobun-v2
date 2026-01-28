@@ -5,6 +5,7 @@ import postCategory from './blog/category'
 import gallery from './gallery'
 import galleryAlbum from './gallery/albums'
 import company from './site/company'
+import advertsSection from './site/adverts-section'
 import event from './site/event'
 import faq from './site/faq'
 import testimonial from './site/testimonial'
@@ -24,6 +25,7 @@ export const schemas = [
   // Site
   event,
   company,
+  advertsSection,
   testimonial,
   faq,
   service,
