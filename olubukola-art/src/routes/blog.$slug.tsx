@@ -4,9 +4,35 @@ import { Center, Loader, Text } from "@mantine/core";
 import { BlogPostContent } from "@/components/blog/post-content";
 import { usePost, usePosts } from "@/builders/blog/hooks";
 import type { BlogPostProps } from "@/types";
+import { getPostBySlug } from "@/builders/blog/server-fns";
+import { seo } from "@/utils/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
   ssr: true,
+  loader: async ({ params }) => {
+    return await getPostBySlug({ data: params.slug });
+  },
+  head: ({ loaderData, params }) => {
+    const post = loaderData as any;
+    const title = post?.title
+      ? `${loaderData.title} | Olubukola Art`
+      : "Blog | Olubukola Art";
+    const description = post?.excerpt || undefined;
+    const image = post?.main_image?.url || undefined;
+
+    return {
+      meta: [
+        ...seo({
+          title,
+          description,
+          image,
+          keywords: post?.categories?.map((c: any) => c.title).filter(Boolean).join(", "),
+        }),
+        { name: "og:url", content: `/blog/${params.slug}` },
+        { name: "og:type", content: "article" },
+      ],
+    };
+  },
   component: BlogPostRoute,
 });
 
