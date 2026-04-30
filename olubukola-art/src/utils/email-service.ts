@@ -15,6 +15,7 @@ export interface SubscriptionEmailData {
 }
 
 interface SendEmailWithMailjetProps {
+  from: { email: string; name: string };
   to: { email: string; name: string };
   subject: string;
   htmlContent: string;
@@ -35,7 +36,7 @@ export function generateBookingEmailHTML(data: BookingEmailData): string {
     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
-          New Booking Request from Olubukola Art Gallery
+          New Booking Request from Olubukola Art
         </h2>
 
         <h3 style="color: #34495e; margin-top: 30px;">Customer Details:</h3>
@@ -49,7 +50,7 @@ export function generateBookingEmailHTML(data: BookingEmailData): string {
         </div>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 14px;">
-          <p>This booking request was submitted through the Olubukola Art Gallery website.</p>
+          <p>This booking request was submitted through the Olubukola Art website.</p>
         </div>
       </div>
     </body>
@@ -58,7 +59,7 @@ export function generateBookingEmailHTML(data: BookingEmailData): string {
 }
 
 export function generateSubscriptionEmailHTML(
-  data: SubscriptionEmailData
+  data: SubscriptionEmailData,
 ): string {
   return `
     <!DOCTYPE html>
@@ -104,7 +105,7 @@ export function generateSubscriptionEmailHTML(
 
         <div style="border-top: 2px solid #3498db; padding-top: 20px; margin-top: 30px; text-align: center;">
           <p style="color: #666; font-size: 14px;">
-            You're receiving this because you subscribed to updates from Olubukola Art Gallery.<br>
+            You're receiving this because you subscribed to updates from Olubukola Art.<br>
             If you no longer wish to receive these emails, you can unsubscribe at any time.
           </p>
         </div>
@@ -115,7 +116,7 @@ export function generateSubscriptionEmailHTML(
 }
 
 export function generateAdminSubscriptionNotificationHTML(
-  data: SubscriptionEmailData
+  data: SubscriptionEmailData,
 ): string {
   return `
     <!DOCTYPE html>
@@ -145,7 +146,7 @@ export function generateAdminSubscriptionNotificationHTML(
         </div>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 14px;">
-          <p>This is an automated notification from your Olubukola Art Gallery website.</p>
+          <p>This is an automated notification from your Olubukola Art website.</p>
           <p>You can manage your subscribers through your email service provider or ${SOCIAL_MEDIA.NEWSLETTER} dashboard.</p>
         </div>
       </div>
@@ -162,20 +163,21 @@ async function sendEmailWithMailjet({
   to,
   subject,
   htmlContent,
+  from,
 }: SendEmailWithMailjetProps) {
   const mailjetPkg = await import("node-mailjet");
   const Client = mailjetPkg.default.Client;
   const mailjet = Client.apiConnect(
     "08a7b606d1373b362ae68c08137ce9bd", // API Key
-    "6f21ab094fe3d246da411a17f93bb2fe" // API Secret
+    "6f21ab094fe3d246da411a17f93bb2fe", // API Secret
   );
 
   const request = mailjet.post("send", { version: "v3.1" }).request({
     Messages: [
       {
         From: {
-          Email: "yinkacode@gmail.com",
-          Name: "Olubukola Art Gallery",
+          Email: from.email,
+          Name: from.name,
         },
         To: [
           {
@@ -230,7 +232,8 @@ export async function sendBookingEmailWithMailjet(data: BookingEmailData) {
   const emailContent = generateBookingEmailHTML(data);
 
   return await sendEmailWithMailjet({
-    to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art Gallery" },
+    to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art" },
+    from: { email: data.email, name: `${data.firstName} ${data.lastName}` },
     subject: `New Booking Request - ${data.interest}`,
     htmlContent: emailContent,
   });
@@ -243,7 +246,7 @@ export async function sendBookingEmailWithResend(_data: BookingEmailData) {
   // const emailContent = generateBookingEmailHTML(data);
 
   // const result = await resend.emails.send({
-  //   from: "Olubukola Art Gallery <onboarding@resend.dev>",
+  //   from: "Olubukola Art <onboarding@resend.dev>",
   //   to: [SOCIAL_MEDIA.EMAIL],
   //   subject: `New Booking Request - ${data.interest}`,
   //   html: emailContent,
@@ -265,7 +268,7 @@ export async function sendBookingEmail(data: BookingEmailData) {
 
 // Subscription Email Services
 export async function sendSubscriptionEmailWithMailjet(
-  data: SubscriptionEmailData
+  data: SubscriptionEmailData,
 ) {
   const emailContent = generateSubscriptionEmailHTML(data);
 
@@ -277,12 +280,12 @@ export async function sendSubscriptionEmailWithMailjet(
 }
 
 export async function sendAdminSubscriptionNotification(
-  data: SubscriptionEmailData
+  data: SubscriptionEmailData,
 ) {
   const emailContent = generateAdminSubscriptionNotificationHTML(data);
 
   return await sendEmailWithMailjet({
-    to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art Gallery Admin" },
+    to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art Admin" },
     subject: "🔔 New Newsletter Subscriber - " + data.email,
     htmlContent: emailContent,
   });
