@@ -13,7 +13,7 @@ import {
 import { DateInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { ServiceCardProps } from "@/types";
 import { sendBookingEmail } from "@/utils/send-booking";
 import { notifications } from "@mantine/notifications";
@@ -26,7 +26,7 @@ export type MakeEnquiryFormValues = {
   eventType: string;
   date: string;
   location: string;
-  message: string;
+  comments: string;
 };
 
 export type MakeEnquiryModalProps = {
@@ -52,7 +52,7 @@ export function MakeEnquiryModal({
       eventType: defaultEventType ?? "",
       date: "",
       location: "",
-      message: "",
+      comments: "",
     },
   });
 
@@ -205,7 +205,7 @@ export function MakeEnquiryModal({
                 placeholder='Please type here'
                 autosize
                 minRows={8}
-                {...form.getInputProps("message")}
+                {...form.getInputProps("comments")}
               />
 
               <Button

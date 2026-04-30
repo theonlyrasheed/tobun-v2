@@ -1,14 +1,17 @@
 import { SOCIAL_MEDIA } from "./enums";
 
-export interface BookingEmailData {
+export type BookingEmailData = Partial<{
   firstName: string;
   lastName: string;
   email: string;
   date: string | null;
-  interest: string;
+  eventType?: string;
+  location?: string;
+  message: string;
+  interest?: string;
   comments: string;
   agree: boolean;
-}
+}>;
 
 export interface SubscriptionEmailData {
   email: string;
@@ -31,12 +34,12 @@ export function generateBookingEmailHTML(data: BookingEmailData): string {
     <html>
     <head>
       <meta charset="utf-8">
-      <title>New Booking Request</title>
+      <title>New ${data.eventType ? "Event Enquiry Request" : "Booking Request"}</title>
     </head>
     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
         <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
-          New Booking Request from Olubukola Art
+          New ${data.eventType ? "Event Enquiry Request" : "Booking Request"} from Olubukola Art
         </h2>
 
         <h3 style="color: #34495e; margin-top: 30px;">Customer Details:</h3>
@@ -45,12 +48,13 @@ export function generateBookingEmailHTML(data: BookingEmailData): string {
           <p style="margin: 10px 0;"><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
           <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${data.email}" style="color: #3498db;">${data.email}</a></p>
           <p style="margin: 10px 0;"><strong>Preferred Date:</strong> ${data.date ? new Date(data.date).toLocaleDateString() : "Not specified"}</p>
-          <p style="margin: 10px 0;"><strong>Interest:</strong> ${data.interest}</p>
+          <p style="margin: 10px 0;"><strong>${data.eventType ? "Event Type" : "Interest"}:</strong> ${data.eventType || data.interest}</p>
           <p style="margin: 10px 0;"><strong>Comments:</strong> ${data.comments || "No comments provided"}</p>
+          ${data.location ? `<p style="margin: 10px 0;"><strong>Location:</strong> ${data.location}</p>` : ""}
         </div>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 14px;">
-          <p>This booking request was submitted through the Olubukola Art website.</p>
+          <p>This ${data.eventType ? "event enquiry request" : "booking request"} was submitted through the Olubukola Art website.</p>
         </div>
       </div>
     </body>
@@ -208,7 +212,7 @@ export async function subscribeToKit(email: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.KIT_API_KEY || "your-kit-api-key"}`, // Add to environment variables
+        Authorization: `Bearer ${process.env.KIT_API_KEY || ""}`,
       },
       body: JSON.stringify({
         email,
@@ -233,7 +237,7 @@ export async function sendBookingEmailWithMailjet(data: BookingEmailData) {
 
   return await sendEmailWithMailjet({
     to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art" },
-    from: { email: data.email, name: `${data.firstName} ${data.lastName}` },
+    from: { email: data.email!, name: `${data.firstName} ${data.lastName}` },
     subject: `New Booking Request - ${data.interest}`,
     htmlContent: emailContent,
   });
