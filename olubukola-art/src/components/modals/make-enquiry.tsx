@@ -152,6 +152,7 @@ export function MakeEnquiryModal({
                 label='Date'
                 placeholder='YYYY/MM/DD'
                 valueFormat='YYYY/MM/DD'
+                maxDate={new Date()}
                 clearable
                 value={form.values.date || null}
                 onChange={(v) => form.setFieldValue("date", v ?? "")}

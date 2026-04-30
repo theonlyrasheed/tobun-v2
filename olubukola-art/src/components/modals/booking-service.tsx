@@ -61,7 +61,7 @@ export function BookingServiceModal({
             : (s as GalleryCardProps).title,
         label: s.title,
       })),
-    [services, modalType]
+    [services, modalType],
   );
 
   const form = useForm<BookingServiceFormValues>({
@@ -203,6 +203,7 @@ export function BookingServiceModal({
                 label='Date'
                 placeholder='dd/mm/yyyy'
                 valueFormat='DD/MM/YYYY'
+                maxDate={new Date()}
                 clearable
                 value={form.values.date}
                 onChange={(v) => form.setFieldValue("date", v)}
@@ -222,7 +223,7 @@ export function BookingServiceModal({
                   onChange={(v) =>
                     form.setFieldValue(
                       "interest",
-                      v as BookingServiceFormValues["interest"]
+                      v as BookingServiceFormValues["interest"],
                     )
                   }
                 >
