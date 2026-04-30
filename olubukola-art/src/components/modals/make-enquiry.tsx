@@ -15,6 +15,9 @@ import { useForm } from "@mantine/form";
 import { IconCalendar } from "@tabler/icons-react";
 import { useEffect } from "react";
 import type { ServiceCardProps } from "@/types";
+import { sendBookingEmail } from "@/utils/send-booking";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 export type MakeEnquiryFormValues = {
   firstName: string;
@@ -59,9 +62,40 @@ export function MakeEnquiryModal({
     if (service?.title) form.setFieldValue("eventType", service.title);
   }, [defaultEventType, opened, service?.title]);
 
-  const handleSubmit = form.onSubmit((vals) => {
-    onSubmit?.(vals);
-    onClose();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = form.onSubmit(async (vals) => {
+    setIsSubmitting(true);
+
+    try {
+      const result = await sendBookingEmail({ data: vals });
+
+      if (result.success) {
+        notifications.show({
+          title: "Enquiry Submitted Successfully!",
+          message: "We'll get back to you soon with more details.",
+          color: "green",
+          icon: <IconCheck size={18} />,
+          autoClose: 5000,
+        });
+
+        onSubmit?.(vals);
+        onClose();
+        form.reset();
+      } else {
+        throw new Error("Failed to send enquiry");
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Submission Failed",
+        message: "Please try again or contact us directly.",
+        color: "red",
+        icon: <IconX size={18} />,
+        autoClose: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   });
 
   return (
@@ -177,6 +211,8 @@ export function MakeEnquiryModal({
               <Button
                 fullWidth
                 h={54}
+                disabled={isSubmitting}
+                loading={isSubmitting}
                 radius={6}
                 type='submit'
                 className='font-playfair!'
