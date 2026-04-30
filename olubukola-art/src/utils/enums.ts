@@ -13,7 +13,8 @@ export enum SOCIAL_MEDIA {
   TIKTOK = "https://www.tiktok.com/@olubukolaart",
   LINKEDIN = "https://www.linkedin.com/in/olubukola-tobun-27747a318",
   EMAIL = "olubukolaart@gmail.com",
-  DEFAULT_EMAIL = "yinkacode@gmail.com",
+  DEFAULT_EMAIL = "booking@olubukola.com",
+  NO_REPLY_EMAIL = "noreply@olubukola.com",
   PHONE = "+2348148148813",
   NEWSLETTER = "https://kit.com",
 }
