@@ -274,6 +274,7 @@ export async function sendSubscriptionEmailWithMailjet(
 
   return await sendEmailWithMailjet({
     to: { email: data.email, name: "Art Enthusiast" },
+    from: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art" },
     subject: "🎨 Welcome to Olubukola Art - Your Creative Journey Begins!",
     htmlContent: emailContent,
   });
@@ -286,6 +287,7 @@ export async function sendAdminSubscriptionNotification(
 
   return await sendEmailWithMailjet({
     to: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art Admin" },
+    from: { email: SOCIAL_MEDIA.EMAIL, name: "Olubukola Art" },
     subject: "🔔 New Newsletter Subscriber - " + data.email,
     htmlContent: emailContent,
   });
