@@ -1,0 +1,16 @@
+.root {
+  &[data-variant="outline"] {
+    border-width: 1px;
+    border-color: var(--primary-border-light);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &[data-variant="unstyled"] {
+    &:active:not(:has(:active)) {
+      background-color: var(--primary-background-light);
+    }
+  }
+}

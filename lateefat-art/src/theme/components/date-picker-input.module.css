@@ -1,0 +1,33 @@
+.root {
+  &[data-variant="default"] {
+    display: flex;
+    flex-direction: column;
+    gap: rem(6);
+
+    .input {
+      min-height: rem(50);
+      padding-right: rem(48);
+      padding-block: 0;
+    }
+
+    .error {
+      font-size: rem(12px);
+    }
+  }
+}
+
+.section {
+  width: rem(48);
+}
+
+.day {
+  &[data-selected="true"] {
+    border-radius: 100%;
+  }
+  &[data-today="true"] {
+    border-radius: 100%;
+    background-color: transparent;
+    border: 1px solid var(--gray-12);
+    color: var(--gray-12);
+  }
+}

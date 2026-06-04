@@ -1,0 +1,22 @@
+.root {
+  flex: 1;
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &[data-variant="admin-app-shell"] {
+    .main {
+      .header {
+        background-color: var(--white);
+        border-color: #d7dad7;
+      }
+
+      .section {
+        background-color: #fcfdfc;
+      }
+    }
+  }
+}

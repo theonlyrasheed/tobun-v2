@@ -1,0 +1,80 @@
+@import "fonts/index.css";
+@import "semantic/index.css";
+@import "globals.css";
+@import "customize-progress-bar.css";
+
+* {
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 40px;
+  /* font-size: large; */
+
+  ::selection {
+    background-color: #ffe3e1;
+  }
+}
+
+:root {
+  --cornsilk: rgba(255, 240, 222, 1);
+  --lavendar: rgba(230, 236, 251, 1);
+  --jet: rgba(53, 53, 53, 1);
+  --venatian-red: rgba(251, 214, 214, 1);
+  --aero-blue: rgba(211, 248, 226, 1);
+  --crayola-green: rgba(24, 177, 113, 1);
+  --carrot-orange: rgba(225, 137, 28, 1);
+  --fire-opal: rgba(237, 85, 86, 1);
+  --chinese-black: rgba(21, 21, 21, 1);
+  --chinese-silver: rgba(200, 200, 200, 1);
+}
+
+strong {
+  font-weight: 500 !important;
+}
+
+.remove-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.sb-avatar__text > div {
+  border-radius: 100%;
+  border-width: 1.5px;
+}
+
+.container-1120 {
+  width: 100%;
+  max-width: 1160px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.container-1240 {
+  max-width: 1304px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.container-1240.relative.of-hidden {
+  width: 100%;
+}
+
+.bg-grad-news {
+  pointer-events: none;
+  object-fit: cover;
+  width: 100%;
+  height: 90%;
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+}
+
+.container-710 {
+  max-width: 774px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}

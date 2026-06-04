@@ -1,0 +1,40 @@
+@config "../tailwind.config.ts";
+
+@import "tailwindcss";
+@import "@mantine/core/styles.css";
+@import "@mantine/notifications/styles.css";
+
+/* Import design variables */
+@import "./variables/index.css";
+
+/* Import custom app styles & sass accent color mapper */
+@import "./styles/index.css";
+@import "./styles/accent.scss";
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  html,
+  body {
+    color: var(--mantine-color-gray-9);
+    background-color: var(--mantine-color-white);
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
