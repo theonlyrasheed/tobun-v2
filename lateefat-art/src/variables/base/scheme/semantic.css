@@ -1,0 +1,131 @@
+/* ============================================================
+   LATEEFAT TOBUN — Semantic design tokens
+   Brand palette under :root (always light by default),
+   flipped for [data-theme="dark"].
+   ============================================================ */
+
+:root {
+  /* ---- Fixed brand palette (do not change per theme) ---- */
+  --paper:     oklch(0.975 0.010 83);
+  --paper-2:   oklch(0.949 0.014 80);
+  --paper-3:   oklch(0.918 0.018 77);
+  --line-warm: oklch(0.852 0.022 74);
+
+  --ink-raw:      oklch(0.255 0.028 52);
+  --ink-raw-soft: oklch(0.455 0.030 52);
+
+  --clay:       oklch(0.620 0.150 42);
+  --clay-deep:  oklch(0.520 0.150 39);
+  --clay-soft:  oklch(0.720 0.120 48);
+  --clay-tint:  oklch(0.930 0.045 55);
+
+  --cobalt:        oklch(0.500 0.160 256);
+  --cobalt-deep:   oklch(0.360 0.130 260);
+  --cobalt-bright: oklch(0.585 0.175 254);
+
+  --gold:      oklch(0.805 0.115 83);
+  --gold-deep: oklch(0.720 0.130 75);
+
+  --deep:      oklch(0.225 0.045 268);
+  --deep-2:    oklch(0.285 0.060 266);
+
+  --on-dark:   oklch(0.965 0.012 85);
+
+  /* ---- Semantic light (default) ---- */
+  --bg:        var(--paper);
+  --surface:   var(--paper-2);
+  --surface-2: var(--paper-3);
+  --fg:        var(--ink-raw);
+  --fg-soft:   var(--ink-raw-soft);
+  --line:      var(--line-warm);
+  --accent:    var(--clay);
+  --accent-deep: var(--clay-deep);
+  --accent-2:  var(--cobalt);
+  --accent-2-bright: var(--cobalt-bright);
+
+  /* ---- Legacy aliases ---- */
+  --cream:       var(--bg);
+  --cream-2:     var(--surface);
+  --sand:        var(--surface-2);
+  --sand-line:   var(--line);
+  --ink:         var(--fg);
+  --ink-soft:    var(--fg-soft);
+  --indigo:      var(--cobalt);
+  --indigo-700:  var(--cobalt-deep);
+  --indigo-900:  var(--deep);
+  --indigo-bright: var(--cobalt-bright);
+  --ochre:       var(--clay-soft);
+  --ochre-deep:  var(--clay-deep);
+
+  /* ---- Font families ---- */
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --serif:   'Newsreader', Georgia, serif;
+  --body:    'Hanken Grotesk', system-ui, sans-serif;
+  --mono:    'Space Mono', ui-monospace, monospace;
+
+  /* ---- Layout ---- */
+  --maxw: 1340px;
+  --gut: clamp(20px, 5vw, 76px);
+  --header-h: 96px;
+  --radius: 3px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- Dark theme overrides ---- */
+[data-theme="dark"] {
+  --bg:        oklch(0.205 0.022 268);
+  --surface:   oklch(0.255 0.028 266);
+  --surface-2: oklch(0.305 0.032 264);
+  --fg:        oklch(0.955 0.010 85);
+  --fg-soft:   oklch(0.760 0.018 80);
+  --line:      oklch(0.380 0.030 264);
+  --clay-tint: oklch(0.330 0.060 45);
+  --deep:      oklch(0.155 0.020 268);
+  --deep-2:    oklch(0.225 0.030 266);
+
+  /* Dark clay scale */
+  --clay-1: oklch(0.185 0.035 45);
+  --clay-2: oklch(0.220 0.048 44);
+  --clay-3: oklch(0.280 0.068 44);
+  --clay-4: oklch(0.340 0.090 43);
+  --clay-5: oklch(0.400 0.110 43);
+  --clay-6: oklch(0.460 0.130 43);
+  --clay-7: oklch(0.520 0.145 42);
+  --clay-8: oklch(0.570 0.148 42);
+  --clay-9: oklch(0.620 0.150 42);
+  --clay-10: oklch(0.670 0.140 43);
+  --clay-11: oklch(0.720 0.125 45);
+  --clay-12: oklch(0.870 0.070 52);
+
+  /* Dark cobalt scale */
+  --cobalt-1: oklch(0.175 0.040 262);
+  --cobalt-2: oklch(0.220 0.055 261);
+  --cobalt-3: oklch(0.280 0.075 260);
+  --cobalt-4: oklch(0.330 0.095 259);
+  --cobalt-5: oklch(0.380 0.115 258);
+  --cobalt-6: oklch(0.420 0.130 257);
+  --cobalt-7: oklch(0.460 0.148 257);
+  --cobalt-8: oklch(0.500 0.158 256);
+  --cobalt-9: oklch(0.545 0.165 255);
+  --cobalt-10: oklch(0.585 0.170 254);
+  --cobalt-11: oklch(0.650 0.162 253);
+  --cobalt-12: oklch(0.820 0.110 252);
+
+  /* Dark gold scale */
+  --gold-brand-1: oklch(0.195 0.038 75);
+  --gold-brand-2: oklch(0.250 0.058 76);
+  --gold-brand-3: oklch(0.320 0.080 77);
+  --gold-brand-4: oklch(0.400 0.100 78);
+  --gold-brand-5: oklch(0.480 0.115 80);
+  --gold-brand-6: oklch(0.560 0.120 81);
+  --gold-brand-7: oklch(0.640 0.122 82);
+  --gold-brand-8: oklch(0.720 0.125 82);
+  --gold-brand-9: oklch(0.760 0.120 83);
+  --gold-brand-10: oklch(0.805 0.115 83);
+  --gold-brand-11: oklch(0.860 0.100 84);
+  --gold-brand-12: oklch(0.940 0.058 86);
+
+  color-scheme: dark;
+}
+
+[data-theme="dark"] .ph.light { --paper-2: oklch(0.30 0.03 264); }

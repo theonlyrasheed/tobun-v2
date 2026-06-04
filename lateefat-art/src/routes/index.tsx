@@ -1,29 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Container, Title, Text, Button, Group, Stack } from "@mantine/core";
+import { Preloader } from "@/components/home/preloader";
+import { HomeHero } from "@/components/home/hero";
+import { AboutTeaser } from "@/components/home/about-teaser";
+import { FeaturedWork } from "@/components/home/featured-work";
+import { Services } from "@/components/home/services";
+import { EventsTeaser } from "@/components/home/events-teaser";
+import { Testimonials } from "@/components/home/testimonials";
+import { FAQ } from "@/components/home/faq";
+import { RecognitionBand } from "@/components/home/recognition-band";
 
 export const Route = createFileRoute("/")({
-  component: HomeComponent,
+  component: HomePage,
 });
 
-function HomeComponent() {
+function HomePage() {
   return (
-    <Container size="md" py="xl">
-      <Stack align="center" gap="lg" style={{ minHeight: "60vh", justifyContent: "center" }}>
-        <Title order={1} size="h1" className="font-playfair">
-          Lateefat Art
-        </Title>
-        <Text size="lg" c="dimmed" ta="center" maw={600}>
-          Welcome to the fresh portfolio workspace of Lateefat Art. This project is configured with the theme and configurations of the reference project, ready for visual designs.
-        </Text>
-        <Group>
-          <Button variant="filled" size="md">
-            Explore Gallery
-          </Button>
-          <Button variant="outline" size="md">
-            Contact
-          </Button>
-        </Group>
-      </Stack>
-    </Container>
+    <>
+      <Preloader />
+      <HomeHero />
+      <AboutTeaser />
+      <FeaturedWork />
+      <Services />
+      <EventsTeaser />
+      <Testimonials />
+      <FAQ />
+      <RecognitionBand />
+    </>
   );
 }

@@ -1,17 +1,46 @@
 .root {
-  &[data-variant="default"] {
-    display: flex;
-    flex-direction: column;
-    gap: rem(6);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 
-    .input {
-      font-size: rem(14);
-      overflow-y: scroll;
+  .label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--fg-soft);
+    width: fit-content;
+  }
 
-      &[data-disabled="true"] {
-        background-color: white;
-        color: black;
-      }
+  .input {
+    font-family: var(--body);
+    font-size: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--sand-line);
+    background: var(--bg);
+    color: var(--fg);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+
+    &::placeholder { color: var(--fg-soft); }
+
+    &:focus, &[data-focused] {
+      border-color: var(--cobalt);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--cobalt) 22%, transparent);
+      outline: none;
     }
+
+    &[data-error] { border-color: var(--mantine-color-red-6); }
+
+    &[data-disabled="true"] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .error {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
   }
 }

@@ -1,23 +1,49 @@
 .root {
+  border-radius: 100px;
+  font-family: var(--body);
+  font-weight: 600;
+  letter-spacing: 0;
+  transition: transform 0.2s var(--ease), background 0.2s, color 0.2s, border-color 0.2s;
+
+  &[data-variant="primary"] {
+    background: var(--cobalt);
+    color: var(--on-dark);
+    border: 1px solid transparent;
+    &:hover:not([data-disabled]) { background: var(--cobalt-deep); transform: translateY(-2px); }
+  }
+
+  &[data-variant="ochre"] {
+    background: var(--clay-soft);
+    color: var(--deep);
+    border: 1px solid transparent;
+    &:hover:not([data-disabled]) { background: var(--clay-deep); color: var(--on-dark); transform: translateY(-2px); }
+  }
+
+  &[data-variant="ghost"] {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--sand-line);
+    &:hover:not([data-disabled]) { border-color: var(--ink); transform: translateY(-2px); }
+  }
+
+  &[data-variant="filled"] {
+    &:hover:not([data-disabled]) { transform: translateY(-2px); }
+  }
+
   &[data-variant="gradient"] {
-    box-shadow: 0px -1px 0px 0px var(--accent-12, #203c25) inset,
-      0px 0px 0px 1px var(--accent-11, #2a7e3b),
-      0px 1px 1px 0px var(--gray-5, #dfe2df) inset;
+    box-shadow: 0px -1px 0px 0px var(--clay-12) inset,
+      0px 0px 0px 1px var(--clay-11),
+      0px 1px 1px 0px rgba(255,255,255,0.1) inset;
   }
 
   &[data-variant="light"] {
     border: 1px solid var(--mantine-color-accent-light-color);
   }
 
-  &:disabled {
+  &:disabled, &[data-disabled] {
     cursor: not-allowed;
-  }
-
-  &[data-variant="admin-app-shell"] {
-    --button-height: var(--button-height-sm);
-    --button-padding-x: var(--button-padding-x-sm);
-    --button-fz: var(--mantine-font-size-sm);
-    font-size: var(--mantine-font-size-sm);
+    opacity: 0.45;
+    transform: none;
   }
 
   &[data-loading="true"] {

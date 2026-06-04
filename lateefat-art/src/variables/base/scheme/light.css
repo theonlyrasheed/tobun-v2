@@ -366,4 +366,46 @@
   --secondary-8: #2b0015;
   --secondary-9: #15000b;
   --secondary-10: #000000;
+
+  /* 12-step clay scale (light mode) */
+  --clay-1: oklch(0.975 0.010 55);
+  --clay-2: oklch(0.955 0.018 52);
+  --clay-3: oklch(0.930 0.045 55);
+  --clay-4: oklch(0.890 0.065 50);
+  --clay-5: oklch(0.840 0.090 47);
+  --clay-6: oklch(0.790 0.110 45);
+  --clay-7: oklch(0.720 0.120 48);
+  --clay-8: oklch(0.670 0.135 44);
+  --clay-9: oklch(0.620 0.150 42);
+  --clay-10: oklch(0.570 0.150 40);
+  --clay-11: oklch(0.520 0.150 39);
+  --clay-12: oklch(0.380 0.120 38);
+
+  /* 12-step cobalt scale (light) */
+  --cobalt-1: oklch(0.970 0.010 260);
+  --cobalt-2: oklch(0.940 0.020 258);
+  --cobalt-3: oklch(0.890 0.045 257);
+  --cobalt-4: oklch(0.820 0.075 257);
+  --cobalt-5: oklch(0.740 0.110 257);
+  --cobalt-6: oklch(0.670 0.135 256);
+  --cobalt-7: oklch(0.600 0.152 256);
+  --cobalt-8: oklch(0.550 0.158 256);
+  --cobalt-9: oklch(0.500 0.160 256);
+  --cobalt-10: oklch(0.440 0.148 258);
+  --cobalt-11: oklch(0.360 0.130 260);
+  --cobalt-12: oklch(0.250 0.095 262);
+
+  /* 12-step gold-brand scale (light) */
+  --gold-brand-1: oklch(0.975 0.012 88);
+  --gold-brand-2: oklch(0.955 0.025 86);
+  --gold-brand-3: oklch(0.920 0.048 85);
+  --gold-brand-4: oklch(0.880 0.068 84);
+  --gold-brand-5: oklch(0.850 0.088 84);
+  --gold-brand-6: oklch(0.835 0.100 83);
+  --gold-brand-7: oklch(0.820 0.108 83);
+  --gold-brand-8: oklch(0.805 0.115 83);
+  --gold-brand-9: oklch(0.770 0.120 81);
+  --gold-brand-10: oklch(0.730 0.125 78);
+  --gold-brand-11: oklch(0.720 0.130 75);
+  --gold-brand-12: oklch(0.580 0.120 70);
 }
