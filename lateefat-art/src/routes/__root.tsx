@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { MantineProvider } from "@mantine/core";
 import { mantineTheme } from "@/theme";
-import appCss from "../styles.css?url";
+import appCss from "@/styles/index.css?url";
 import { Notifications } from "@mantine/notifications";
 
 interface MyRouterContext {
@@ -20,7 +20,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lateefat Art", description: "Lateefat Art Portfolio Website" }
+      { title: "Lateefat Art", description: "Lateefat Art Portfolio Website" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -53,16 +53,14 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
         <HeadContent />
       </head>
       <body>
         <MantineProvider theme={mantineTheme}>
-          <Notifications position="top-right" />
-          <main className="min-h-screen">
-            {children}
-          </main>
+          <Notifications position='top-right' />
+          <main className='min-h-screen'>{children}</main>
         </MantineProvider>
         <Scripts />
       </body>

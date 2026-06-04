@@ -1,7 +1,0 @@
-@tailwind components;
-@tailwind utilities;
-
-@layer mantine {
-  @tailwind base;
-}
-

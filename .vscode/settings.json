@@ -1,4 +1,8 @@
 {
+  "workbench.editor.customLabels.patterns": {
+    "**/routes/**/*.tsx": "${dirname} - ${filename}.${extname}"
+  },
+  "css.customData": [".vscode/tailwind.json", ".vscode/postcss.json"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
