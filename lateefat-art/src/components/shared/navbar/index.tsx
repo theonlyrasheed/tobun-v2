@@ -13,36 +13,81 @@ const NAV_LINKS = [
 
 function SunIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    <svg
+      width='18'
+      height='18'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <circle cx='12' cy='12' r='5' />
+      <line x1='12' y1='1' x2='12' y2='3' />
+      <line x1='12' y1='21' x2='12' y2='23' />
+      <line x1='4.22' y1='4.22' x2='5.64' y2='5.64' />
+      <line x1='18.36' y1='18.36' x2='19.78' y2='19.78' />
+      <line x1='1' y1='12' x2='3' y2='12' />
+      <line x1='21' y1='12' x2='23' y2='12' />
+      <line x1='4.22' y1='19.78' x2='5.64' y2='18.36' />
+      <line x1='18.36' y1='5.64' x2='19.78' y2='4.22' />
     </svg>
   );
 }
 
 function MoonIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    <svg
+      width='18'
+      height='18'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      aria-hidden='true'
+    >
+      <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' />
     </svg>
   );
 }
 
 function MenuIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-      <line x1="2" y1="6" x2="20" y2="6"/><line x1="2" y1="12" x2="20" y2="12"/><line x1="2" y1="18" x2="20" y2="18"/>
+    <svg
+      width='22'
+      height='22'
+      viewBox='0 0 22 22'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      aria-hidden='true'
+    >
+      <line x1='2' y1='6' x2='20' y2='6' />
+      <line x1='2' y1='12' x2='20' y2='12' />
+      <line x1='2' y1='18' x2='20' y2='18' />
     </svg>
   );
 }
 
 function CloseIcon() {
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-      <line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/>
+    <svg
+      width='22'
+      height='22'
+      viewBox='0 0 22 22'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      aria-hidden='true'
+    >
+      <line x1='4' y1='4' x2='18' y2='18' />
+      <line x1='18' y1='4' x2='4' y2='18' />
     </svg>
   );
 }
@@ -57,10 +102,13 @@ export function NavBar() {
 
   React.useEffect(() => {
     const watched = document.querySelector("[data-header-watch]");
-    if (!watched) { setOnDark(false); return; }
+    if (!watched) {
+      setOnDark(false);
+      return;
+    }
     const obs = new IntersectionObserver(
       ([entry]) => setOnDark(entry.isIntersecting),
-      { threshold: 0, rootMargin: "-80px 0px 0px 0px" }
+      { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
     );
     obs.observe(watched);
     return () => obs.disconnect();
@@ -93,28 +141,35 @@ export function NavBar() {
           role="navigation"
           aria-label="Main navigation"
         >
-          <Anchor
+          <Box
             component={Link}
             to="/"
             className="brand"
             aria-label="Lateefat Tobun — Home"
           >
-            <Box component="span" className="b-mark" aria-hidden="true" />
-            <Text component="span" className="b-name">
+            <Box component="span" className="b-mark b-mark-avatar" aria-hidden="true">
+              <Box
+                component="img"
+                src="/assets/img/portrait.png"
+                alt="Lateefat Tobun logo"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Box>
+            <Box component="span" className="b-name">
               Lateefat Tobun
-            </Text>
-          </Anchor>
+            </Box>
+          </Box>
           <Box component="span" className="nav-div" aria-hidden="true" />
           <Box component="ul" className="nav-links" role="list">
             {NAV_LINKS.map((l) => (
               <Box component="li" key={l.href}>
-                <Anchor
+                <Box
                   component={Link}
                   to={l.href}
                   className={pathname.startsWith(l.href) ? "active" : ""}
                 >
                   {l.label}
-                </Anchor>
+                </Box>
               </Box>
             ))}
           </Box>
@@ -127,9 +182,9 @@ export function NavBar() {
           >
             {theme === "light" ? <SunIcon /> : <MoonIcon />}
           </Box>
-          <Anchor component={Link} to="/contact" className="nav-cta">
+          <Box component={Link} to="/contact" className="nav-cta">
             Contact
-          </Anchor>
+          </Box>
           <Box
             component="button"
             className="nav-toggle"
@@ -149,18 +204,26 @@ export function NavBar() {
         aria-label="Navigation menu"
       >
         <Box className="mm-top">
-          <Anchor
+          <Box
             component={Link}
             to="/"
             className="brand"
             onClick={() => setMenuOpen(false)}
             aria-label="Lateefat Tobun — Home"
+            style={{ color: "var(--on-dark)" }}
           >
-            <Box component="span" className="b-mark" aria-hidden="true" />
-            <Text component="span" className="b-name">
+            <Box component="span" className="b-mark b-mark-avatar" aria-hidden="true">
+              <Box
+                component="img"
+                src="/assets/img/portrait.png"
+                alt="Lateefat Tobun logo"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </Box>
+            <Box component="span" className="b-name">
               Lateefat Tobun
-            </Text>
-          </Anchor>
+            </Box>
+          </Box>
           <Box
             component="button"
             className="nav-toggle"
@@ -171,32 +234,31 @@ export function NavBar() {
             <CloseIcon />
           </Box>
         </Box>
-        <Box component="ul" className="nav-links" role="list">
-          {NAV_LINKS.map((l) => (
-            <Box component="li" key={l.href}>
-              <Anchor
-                component={Link}
-                to={l.href}
-                onClick={() => setMenuOpen(false)}
-              >
-                <Box component="span" className="idx" aria-hidden="true">
-                  {l.idx}
-                </Box>
-                <Text component="span">{l.label}</Text>
-              </Anchor>
-            </Box>
-          ))}
-          <Box component="li">
-            <Anchor
+        <Box component="nav" className="nav-links" aria-label="Mobile">
+          {NAV_LINKS.map((l, i) => (
+            <Box
               component={Link}
-              to="/contact"
+              key={l.href}
+              to={l.href}
+              className={pathname.startsWith(l.href) ? "active" : ""}
               onClick={() => setMenuOpen(false)}
             >
               <Box component="span" className="idx" aria-hidden="true">
-                06
+                0{i + 1}
               </Box>
-              <Text component="span">Contact</Text>
-            </Anchor>
+              <span>{l.label}</span>
+            </Box>
+          ))}
+          <Box
+            component={Link}
+            to="/contact"
+            className={pathname === "/contact" ? "active" : ""}
+            onClick={() => setMenuOpen(false)}
+          >
+            <Box component="span" className="idx" aria-hidden="true">
+              06
+            </Box>
+            <span>Contact</span>
           </Box>
         </Box>
         <Box className="mm-foot">BRADFORD, UK · HELLO@TOBUNLATEEFAT.COM</Box>
