@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { mantineTheme } from "@/theme";
+import { mantineTheme, cssVariablesResolver } from "@/theme";
 import appCss from "@/styles/index.css?url";
 import { NavBar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
@@ -112,7 +112,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeContext.Provider value={themeCtx}>
-          <MantineProvider theme={mantineTheme} defaultColorScheme='light'>
+          <MantineProvider theme={mantineTheme} defaultColorScheme='light' cssVariablesResolver={cssVariablesResolver}>
             <Notifications position='top-right' />
             <NavBar />
             <AppShell>
