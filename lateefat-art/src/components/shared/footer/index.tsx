@@ -59,7 +59,7 @@ export function Footer() {
     validate: zodResolver(schema),
   });
 
-  const handleSubmit = form.onSubmit((values) => {
+  const handleSubmit = form.onSubmit((_values) => {
     setDone(true);
     form.reset();
   });

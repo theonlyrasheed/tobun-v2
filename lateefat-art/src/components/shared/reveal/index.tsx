@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Box } from "@mantine/core";
 
 export function useReveal() {
   React.useEffect(() => {
@@ -51,13 +50,12 @@ interface RevealProps {
 
 export function Reveal({ children, delay, className, as: Tag = "div" }: RevealProps) {
   return (
-    <Box
-      component={Tag}
+    <Tag
       data-reveal
       className={className}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
-    </Box>
+    </Tag>
   );
 }

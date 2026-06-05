@@ -83,7 +83,7 @@ export function ExhibitionsHero() {
           </span>
           <span className="sep" />
           <span>United Kingdom</span>
-          <span class="sep" />
+          <span className="sep" />
           <span>Nigeria</span>
           <span className="sep" />
           <span>Ghana</span>

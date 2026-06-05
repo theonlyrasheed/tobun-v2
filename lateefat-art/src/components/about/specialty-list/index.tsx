@@ -100,7 +100,7 @@ export function SpecialtyList() {
       <div className="eyebrow-row">
         <div>
           <span className="kicker">Areas of specialty &amp; beyond</span>
-          <h2 class="h-lg" style={{ marginTop: "16px" }}>
+          <h2 className="h-lg" style={{ marginTop: "16px" }}>
             Six ways I <em className="accent-ochre">make</em>
           </h2>
         </div>
