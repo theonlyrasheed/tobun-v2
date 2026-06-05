@@ -1,6 +1,10 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getPressArticle, pressOrder, getPressArticle as getArticle } from "@/data/press";
+import {
+  getPressArticle,
+  pressOrder,
+  getPressArticle as getArticle,
+} from "@/data/press";
 import { Box, Text } from "@mantine/core";
 
 export const Route = createFileRoute("/press_/$slug")({
@@ -13,7 +17,6 @@ function PressArticlePage() {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    // Run hero entrance animation on mount
     const timer = setTimeout(() => {
       setMounted(true);
     }, 50);
@@ -23,7 +26,7 @@ function PressArticlePage() {
   if (!data) {
     return (
       <Box
-        className="art-missing"
+        className='art-missing'
         style={{
           maxWidth: "60ch",
           margin: "0 auto",
@@ -31,27 +34,36 @@ function PressArticlePage() {
           textAlign: "center",
         }}
       >
-        <span className="kicker no-tick" style={{ justifyContent: "center" }}>
+        <span className='kicker no-tick' style={{ justifyContent: "center" }}>
           In the press
         </span>
-        <h1 style={{ fontFamily: "var(--display)", fontWeight: 800, fontSize: "clamp(2rem,5vw,3.4rem)", letterSpacing: "-0.03em", margin: "16px 0" }}>
+        <h1
+          style={{
+            fontFamily: "var(--display)",
+            fontWeight: 800,
+            fontSize: "clamp(2rem,5vw,3.4rem)",
+            letterSpacing: "-0.03em",
+            margin: "16px 0",
+          }}
+        >
           Article not found
         </h1>
         <p style={{ color: "var(--ink-soft)", marginBottom: "28px" }}>
-          That piece of coverage could not be found. Browse the full press archive instead.
+          That piece of coverage could not be found. Browse the full press
+          archive instead.
         </p>
-        <Link to="/press" className="btn btn-primary">
+        <Link to='/press' className='btn btn-primary'>
           Back to press
           <svg
-            width="17"
-            height="17"
-            viewBox="0 0 17 17"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
+            width='17'
+            height='17'
+            viewBox='0 0 17 17'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='1.8'
             style={{ marginLeft: "8px" }}
           >
-            <path d="M3 8.5h11M9 3.5l5 5-5 5" />
+            <path d='M3 8.5h11M9 3.5l5 5-5 5' />
           </svg>
         </Link>
       </Box>
@@ -62,10 +74,13 @@ function PressArticlePage() {
   const others = pressOrder.filter((s) => s !== slug).slice(0, 3);
 
   return (
-    <Box component="article" style={{ background: "var(--bg)", color: "var(--fg)" }}>
+    <Box
+      component='article'
+      style={{ background: "var(--bg)", color: "var(--fg)" }}
+    >
       {/* Editorial Hero Header */}
       <Box
-        component="header"
+        component='header'
         className={`art-hero${mounted ? " in" : ""}`}
         data-header-watch
         data-screen-label={`Press article — ${data.outlet}`}
@@ -78,10 +93,14 @@ function PressArticlePage() {
           minHeight: "clamp(520px, 78vh, 820px)",
           display: "flex",
           alignItems: "flex-end",
-          padding: "calc(var(--header-h) + clamp(28px,5vh,64px)) var(--gut) clamp(36px,5vh,72px)",
+          padding:
+            "calc(var(--header-h) + clamp(28px,5vh,64px)) var(--gut) clamp(36px,5vh,72px)",
         }}
       >
-        <Box className="art-hero-bg" style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <Box
+          className='art-hero-bg'
+          style={{ position: "absolute", inset: 0, zIndex: 0 }}
+        >
           <img
             src={data.hero}
             alt={data.heroCaption || ""}
@@ -95,10 +114,10 @@ function PressArticlePage() {
             }}
           />
         </Box>
-        <Box className="art-hero-glow" />
+        <Box className='art-hero-glow' />
 
         <Box
-          className="art-hero-inner"
+          className='art-hero-inner'
           style={{
             position: "relative",
             zIndex: 2,
@@ -108,8 +127,8 @@ function PressArticlePage() {
           }}
         >
           <Link
-            className="art-back a-anim d1"
-            to="/press"
+            className='art-back a-anim d1'
+            to='/press'
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -123,14 +142,20 @@ function PressArticlePage() {
               textDecoration: "none",
             }}
           >
-            <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ width: "15px", height: "15px" }}>
-              <path d="M12 3L3 12M10 12H3V5" />
+            <svg
+              viewBox='0 0 15 15'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='1.8'
+              style={{ width: "15px", height: "15px" }}
+            >
+              <path d='M12 3L3 12M10 12H3V5' />
             </svg>
             Back to press
           </Link>
 
           <Box
-            className="art-eyebrow a-anim d2"
+            className='art-eyebrow a-anim d2'
             style={{
               display: "flex",
               alignItems: "center",
@@ -142,25 +167,31 @@ function PressArticlePage() {
               fontWeight: 700,
             }}
           >
-            <span className="outlet" style={{ color: "var(--gold)" }}>
+            <span className='outlet' style={{ color: "var(--gold)" }}>
               {data.outlet}
             </span>
             <span
-              className="sep"
+              className='sep'
               style={{
                 width: "4px",
                 height: "4px",
                 borderRadius: "50%",
-                background: "color-mix(in oklab, var(--on-dark) 40%, transparent)",
+                background:
+                  "color-mix(in oklab, var(--on-dark) 40%, transparent)",
               }}
             />
-            <span className="kind" style={{ color: "color-mix(in oklab, var(--on-dark) 70%, transparent)" }}>
+            <span
+              className='kind'
+              style={{
+                color: "color-mix(in oklab, var(--on-dark) 70%, transparent)",
+              }}
+            >
               {data.kind || "Feature"}
             </span>
           </Box>
 
           <h1
-            className="art-title a-anim d3"
+            className='art-title a-anim d3'
             style={{
               fontFamily: "var(--display)",
               fontWeight: 800,
@@ -176,7 +207,7 @@ function PressArticlePage() {
           </h1>
 
           <p
-            className="art-standfirst a-anim d4"
+            className='art-standfirst a-anim d4'
             style={{
               margin: "clamp(18px,2.2vw,26px) 0 0",
               maxWidth: "56ch",
@@ -191,7 +222,7 @@ function PressArticlePage() {
           </p>
 
           <Box
-            className="art-meta a-anim d5"
+            className='art-meta a-anim d5'
             style={{
               display: "flex",
               flexWrap: "wrap",
@@ -209,12 +240,13 @@ function PressArticlePage() {
             {data.read && (
               <>
                 <span
-                  className="sep"
+                  className='sep'
                   style={{
                     width: "4px",
                     height: "4px",
                     borderRadius: "50%",
-                    background: "color-mix(in oklab, var(--on-dark) 40%, transparent)",
+                    background:
+                      "color-mix(in oklab, var(--on-dark) 40%, transparent)",
                   }}
                 />
                 <span>{data.read}</span>
@@ -225,9 +257,9 @@ function PressArticlePage() {
       </Box>
 
       {/* Article Body Content */}
-      <Box className="art-wrap">
+      <Box className='art-wrap'>
         <Box
-          className="art-body"
+          className='art-body'
           style={{
             maxWidth: "70ch",
             margin: "0 auto",
@@ -237,7 +269,16 @@ function PressArticlePage() {
           {data.body.map((block, idx) => {
             if ("p" in block) {
               return (
-                <Text key={idx} component="p" style={{ margin: "0 0 1.35em", fontSize: "clamp(1.08rem, 1.35vw, 1.22rem)", lineHeight: 1.75, color: "var(--ink)" }}>
+                <Text
+                  key={idx}
+                  component='p'
+                  style={{
+                    margin: "0 0 1.35em",
+                    fontSize: "clamp(1.08rem, 1.35vw, 1.22rem)",
+                    lineHeight: 1.75,
+                    color: "var(--ink)",
+                  }}
+                >
                   {block.p}
                 </Text>
               );
@@ -246,7 +287,7 @@ function PressArticlePage() {
               return (
                 <blockquote
                   key={idx}
-                  className="art-quote"
+                  className='art-quote'
                   style={{
                     margin: "clamp(34px, 4vw, 52px) 0",
                     padding: 0,
@@ -291,13 +332,13 @@ function PressArticlePage() {
               return (
                 <figure
                   key={idx}
-                  className="art-fig"
+                  className='art-fig'
                   style={{
                     margin: "clamp(30px,4vw,48px) 0",
                   }}
                 >
                   <Box
-                    className="img"
+                    className='img'
                     style={{
                       borderRadius: "var(--radius)",
                       overflow: "hidden",
@@ -308,7 +349,7 @@ function PressArticlePage() {
                     <img
                       src={block.img}
                       alt={block.cap || ""}
-                      loading="lazy"
+                      loading='lazy'
                       style={{
                         width: "100%",
                         height: "100%",
@@ -341,11 +382,17 @@ function PressArticlePage() {
 
       {/* Gallery Section */}
       {data.gallery && data.gallery.length > 0 && (
-        <section className="art-gallery-sec" style={{ borderTop: "1px solid var(--sand-line)", paddingBlock: "clamp(40px,5vw,68px)" }}>
-          <Box className="art-wrap">
-            <span className="kicker">From the feature</span>
+        <section
+          className='art-gallery-sec'
+          style={{
+            borderTop: "1px solid var(--sand-line)",
+            paddingBlock: "clamp(40px,5vw,68px)",
+          }}
+        >
+          <Box className='art-wrap'>
+            <span className='kicker'>From the feature</span>
             <div
-              className="art-gallery"
+              className='art-gallery'
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
@@ -356,7 +403,7 @@ function PressArticlePage() {
               {data.gallery.map((src, i) => (
                 <Box
                   key={i}
-                  className="g"
+                  className='g'
                   style={{
                     aspectRatio: "1/1",
                     borderRadius: "var(--radius)",
@@ -366,8 +413,8 @@ function PressArticlePage() {
                 >
                   <img
                     src={src}
-                    alt=""
-                    loading="lazy"
+                    alt=''
+                    loading='lazy'
                     style={{
                       width: "100%",
                       height: "100%",
@@ -384,9 +431,9 @@ function PressArticlePage() {
       )}
 
       {/* Source Link Section */}
-      <Box className="art-wrap">
+      <Box className='art-wrap'>
         <Box
-          className="art-source"
+          className='art-source'
           style={{
             display: "flex",
             alignItems: "center",
@@ -397,27 +444,54 @@ function PressArticlePage() {
             paddingBlock: "clamp(26px,3vw,40px)",
           }}
         >
-          <span className="credit" style={{ fontFamily: "var(--mono)", fontSize: ".72rem", letterSpacing: ".15em", textTransform: "uppercase", color: "var(--ink-soft)" }}>
-            Coverage by <b style={{ color: "var(--indigo-bright)" }}>{data.outlet}</b> &middot; {data.date}
+          <span
+            className='credit'
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: ".72rem",
+              letterSpacing: ".15em",
+              textTransform: "uppercase",
+              color: "var(--ink-soft)",
+            }}
+          >
+            Coverage by{" "}
+            <b style={{ color: "var(--indigo-bright)" }}>{data.outlet}</b>{" "}
+            &middot; {data.date}
           </span>
           {data.source && data.source.href && data.source.href !== "#" ? (
             <Box
-              component="a"
-              className="link-arrow"
+              component='a'
+              className='link-arrow'
               href={data.source.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target='_blank'
+              rel='noopener noreferrer'
             >
               Read the original
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ marginLeft: "4px" }}>
-                <path d="M3 12L12 3M5 3h7v7" />
+              <svg
+                width='15'
+                height='15'
+                viewBox='0 0 15 15'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1.8'
+                style={{ marginLeft: "4px" }}
+              >
+                <path d='M3 12L12 3M5 3h7v7' />
               </svg>
             </Box>
           ) : (
-            <Link className="link-arrow" to="/press">
+            <Link className='link-arrow' to='/press'>
               All press
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.8" style={{ marginLeft: "4px" }}>
-                <path d="M3 12L12 3M5 3h7v7" />
+              <svg
+                width='15'
+                height='15'
+                viewBox='0 0 15 15'
+                fill='none'
+                stroke='currentColor'
+                stroke-width='1.8'
+                style={{ marginLeft: "4px" }}
+              >
+                <path d='M3 12L12 3M5 3h7v7' />
               </svg>
             </Link>
           )}
@@ -426,10 +500,16 @@ function PressArticlePage() {
 
       {/* More recommended coverage */}
       {others.length > 0 && (
-        <section className="art-more" style={{ background: "var(--surface)", paddingBlock: "clamp(48px,6vw,88px)" }}>
-          <Box className="art-wrap">
+        <section
+          className='art-more'
+          style={{
+            background: "var(--surface)",
+            paddingBlock: "clamp(48px,6vw,88px)",
+          }}
+        >
+          <Box className='art-wrap'>
             <Box
-              className="head"
+              className='head'
               style={{
                 display: "flex",
                 alignItems: "baseline",
@@ -439,19 +519,35 @@ function PressArticlePage() {
                 marginBottom: "clamp(24px,3vw,40px)",
               }}
             >
-              <h2 className="h-md" style={{ margin: 0, fontFamily: "var(--display)", fontWeight: 700, fontSize: "1.5rem" }}>
+              <h2
+                className='h-md'
+                style={{
+                  margin: 0,
+                  fontFamily: "var(--display)",
+                  fontWeight: 700,
+                  fontSize: "1.5rem",
+                }}
+              >
                 More coverage
               </h2>
-              <Link className="link-arrow" to="/press">
+              <Link className='link-arrow' to='/press'>
                 All press
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.8" style={{ marginLeft: "4px" }}>
-                  <path d="M3 12L12 3M5 3h7v7" />
+                <svg
+                  width='15'
+                  height='15'
+                  viewBox='0 0 15 15'
+                  fill='none'
+                  stroke='currentColor'
+                  stroke-width='1.8'
+                  style={{ marginLeft: "4px" }}
+                >
+                  <path d='M3 12L12 3M5 3h7v7' />
                 </svg>
               </Link>
             </Box>
 
             <Box
-              className="art-more-grid"
+              className='art-more-grid'
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -465,13 +561,18 @@ function PressArticlePage() {
                 return (
                   <Link
                     key={s}
-                    className="art-more-card"
-                    to="/press/$slug"
+                    className='art-more-card'
+                    to='/press/$slug'
                     params={{ slug: s }}
-                    style={{ display: "flex", flexDirection: "column", textDecoration: "none", color: "inherit" }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
                   >
                     <Box
-                      className="img"
+                      className='img'
                       style={{
                         aspectRatio: "16/11",
                         borderRadius: "var(--radius)",
@@ -481,8 +582,8 @@ function PressArticlePage() {
                     >
                       <img
                         src={o.hero}
-                        alt=""
-                        loading="lazy"
+                        alt=''
+                        loading='lazy'
                         style={{
                           width: "100%",
                           height: "100%",
@@ -493,7 +594,7 @@ function PressArticlePage() {
                       />
                     </Box>
                     <Box
-                      className="src"
+                      className='src'
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -505,15 +606,42 @@ function PressArticlePage() {
                         textTransform: "uppercase",
                       }}
                     >
-                      <span className="outlet" style={{ color: "var(--indigo-bright)", fontWeight: 700 }}>
+                      <span
+                        className='outlet'
+                        style={{
+                          color: "var(--indigo-bright)",
+                          fontWeight: 700,
+                        }}
+                      >
                         {o.outlet}
                       </span>
-                      <span className="sep" style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--sand-line)" }} />
-                      <span className="date" style={{ color: "var(--ink-soft)" }}>
+                      <span
+                        className='sep'
+                        style={{
+                          width: "3px",
+                          height: "3px",
+                          borderRadius: "50%",
+                          background: "var(--sand-line)",
+                        }}
+                      />
+                      <span
+                        className='date'
+                        style={{ color: "var(--ink-soft)" }}
+                      >
                         {o.date}
                       </span>
                     </Box>
-                    <div className="t" style={{ fontSize: "1.22rem", fontWeight: 700, fontFamily: "var(--display)", letterSpacing: "-.02em", marginTop: "8px", lineHeight: 1.16 }}>
+                    <div
+                      className='t'
+                      style={{
+                        fontSize: "1.22rem",
+                        fontWeight: 700,
+                        fontFamily: "var(--display)",
+                        letterSpacing: "-.02em",
+                        marginTop: "8px",
+                        lineHeight: 1.16,
+                      }}
+                    >
                       {o.title}
                     </div>
                   </Link>
