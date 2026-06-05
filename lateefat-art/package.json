@@ -47,6 +47,8 @@
     "framer-motion": "^12.23.26",
     "groq": "^5.1.0",
     "groqd": "^1.7.1",
+    "lucide-react": "^0.561.0",
+    "mantine-form-zod-resolver": "^1.3.0",
     "nitro": "3.0.1-alpha.1",
     "node-mailjet": "^6.0.11",
     "photoswipe": "^5.4.4",
@@ -56,7 +58,8 @@
     "resend": "^6.6.0",
     "sanity": "^5.0.0",
     "styled-components": "^6.1.18",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",

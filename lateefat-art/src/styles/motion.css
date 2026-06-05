@@ -89,9 +89,10 @@
   .preloader { display: none !important; }
 }
 
+
 /* ---------- Nav behaviour ---------- */
-.site-header { transition: transform .55s var(--ease), background .3s var(--ease), border-color .3s; }
-.site-header.nav-hidden { transform: translate(-50%, -170%); }
+
+
 
 [data-magnetic] { display: inline-flex; will-change: transform; }
 
