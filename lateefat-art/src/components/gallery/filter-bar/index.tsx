@@ -3,13 +3,13 @@ import { Box, Button } from "@mantine/core";
 
 const CATEGORIES = [
   { label: "All work", value: "all" },
-  { label: "Digital Couture", value: "digital-couture" },
-  { label: "Visual Paintings", value: "visual-paintings" },
-  { label: "Mural Art", value: "mural-art" },
-  { label: "Digital Illustration", value: "digital-illustration" },
-  { label: "Fabric / ADIRE", value: "fabric-adire" },
-  { label: "Photography", value: "photography" },
-  { label: "AI Features", value: "ai-features" },
+  { label: "Digital Couture", value: "couture" },
+  { label: "Visual Paintings", value: "painting" },
+  { label: "Mural Art", value: "mural" },
+  { label: "Digital Illustration", value: "illustration" },
+  { label: "Fabric / ADIRE", value: "textile" },
+  { label: "Photography", value: "photo" },
+  { label: "AI Features", value: "ai" },
 ] as const;
 
 interface FilterBarProps {

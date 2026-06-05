@@ -31,7 +31,10 @@ function useTheme() {
     localStorage.setItem("lt_theme", theme);
   }, [theme]);
 
-  return { theme, toggle: () => setTheme((t) => (t === "light" ? "dark" : "light")) };
+  return {
+    theme,
+    toggle: () => setTheme((t) => (t === "light" ? "dark" : "light")),
+  };
 }
 
 export const ThemeContext = React.createContext<{
@@ -44,8 +47,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier" },
-      { name: "description", content: "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK." },
+      {
+        title: "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier",
+      },
+      {
+        name: "description",
+        content:
+          "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.",
+      },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -59,9 +68,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   ),
   notFoundComponent: () => (
     <RootDocument>
-      <div style={{ padding: "2rem", textAlign: "center", minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "1rem" }}>
-        <h1 className="h-lg">404 — Not Found</h1>
-        <p className="lead">The page you are looking for does not exist.</p>
+      <div
+        style={{
+          padding: "2rem",
+          textAlign: "center",
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
+        <h1 className='h-lg'>404 — Not Found</h1>
+        <p className='lead'>The page you are looking for does not exist.</p>
       </div>
     </RootDocument>
   ),
@@ -85,15 +105,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const themeCtx = useTheme();
 
   return (
-    <html lang="en" data-theme="light">
+    <html lang='en' data-theme='light'>
       <head>
-        <ColorSchemeScript defaultColorScheme="light" />
+        <ColorSchemeScript defaultColorScheme='light' />
         <HeadContent />
       </head>
       <body>
         <ThemeContext.Provider value={themeCtx}>
-          <MantineProvider theme={mantineTheme} defaultColorScheme="light">
-            <Notifications position="top-right" />
+          <MantineProvider theme={mantineTheme} defaultColorScheme='light'>
+            <Notifications position='top-right' />
             <NavBar />
             <AppShell>
               <main>{children}</main>

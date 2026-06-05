@@ -3,24 +3,43 @@ import { Box } from "@mantine/core";
 
 export function useReveal() {
   React.useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    if (!els.length) return;
-
-    const obs = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in");
-            obs.unobserve(entry.target);
+            io.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.05 }
     );
 
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  });
+    const observeNewElements = () => {
+      const els = document.querySelectorAll<HTMLElement>("[data-reveal]:not(.in)");
+      els.forEach((el) => {
+        io.observe(el);
+      });
+    };
+
+    // Initial check
+    observeNewElements();
+
+    // Observe body for addition of new DOM elements
+    const mutationObserver = new MutationObserver(() => {
+      observeNewElements();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      io.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
 }
 
 interface RevealProps {

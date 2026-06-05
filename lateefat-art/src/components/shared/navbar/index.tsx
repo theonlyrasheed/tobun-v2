@@ -109,17 +109,24 @@ export function NavBar() {
   const [lastScrollY, setLastScrollY] = React.useState(0);
 
   React.useEffect(() => {
-    const watched = document.querySelector("[data-header-watch]");
-    if (!watched) {
-      setOnDark(false);
-      return;
-    }
-    const obs = new IntersectionObserver(
-      ([entry]) => setOnDark(entry.isIntersecting),
-      { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
-    );
-    obs.observe(watched);
-    return () => obs.disconnect();
+    let obs: IntersectionObserver | null = null;
+    const timer = setTimeout(() => {
+      const watched = document.querySelector("[data-header-watch]");
+      if (!watched) {
+        setOnDark(false);
+        return;
+      }
+      obs = new IntersectionObserver(
+        ([entry]) => setOnDark(entry.isIntersecting),
+        { threshold: 0, rootMargin: "-80px 0px 0px 0px" },
+      );
+      obs.observe(watched);
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      if (obs) obs.disconnect();
+    };
   }, [pathname]);
 
   React.useEffect(() => {

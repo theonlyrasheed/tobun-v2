@@ -1,128 +1,143 @@
 import * as React from "react";
-import { Box, Text, Button } from "@mantine/core";
+import { Box, Text } from "@mantine/core";
 import { Kicker } from "@/components/shared/kicker";
-import { DetailPanel, type DetailRecord } from "@/components/shared/detail-panel";
+import { DetailDrawer, type DetailRecord } from "@/components/shared/detail-drawer";
+import { useDisclosure } from "@mantine/hooks";
 
 const EXHIBITIONS = [
   {
     year: "2026",
     name: "The Pocket Stories",
-    place: "Barbican Centre, London",
-    desc: "Wearable digital art exploring memory and the things we carry, presented as an immersive installation.",
+    place: "United Kingdom",
+    desc: "Wearable digital couture exploring memory and the garments we carry.",
     record: {
-      kicker: "2026 · Upcoming",
+      kicker: "Exhibition · 2026",
       title: "The Pocket Stories",
-      meta: ["Digital Couture", "Installation", "London"],
-      img: "https://picsum.photos/seed/lt-14-wearable-art/800/600",
+      meta: ["Mar 14–28, 2026", "11am–7pm", "Bradford, United Kingdom", "Digital Couture"],
+      img: "https://picsum.photos/seed/lt-19-the-pocket-stories/1000/750",
       paragraphs: [
-        "A wearable art exhibition exploring memory, garments, and the things we carry.",
-        "Presented as an immersive installation at the Barbican Centre, the work draws on ADIRE textile tradition and digital couture to explore what we preserve in cloth and code.",
+        "Wearable digital couture exploring memory and the garments we carry. The Pocket Stories asks a simple question — what do we keep, and where do we keep it? — and answers it in fabric, indigo and rendered cloth.",
+        "Built around ADIRE printing and digital pattern, each piece pairs a physical garment with a digital twin you can wear in virtual space. Visitors are invited to leave a story behind in a pocket; by closing night the gallery itself becomes the artwork."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-14-wearable-art/700/700",
-        "https://picsum.photos/seed/lt-1-digital-couture-01/700/700",
+        "https://picsum.photos/seed/lt-1-digital-couture-01/600/600",
+        "https://picsum.photos/seed/lt-14-wearable-art/600/600",
+        "https://picsum.photos/seed/lt-9-tie-dye-pattern/600/600",
+        "https://picsum.photos/seed/lt-8-digital-couture-02/600/600"
       ],
-    },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
   },
   {
     year: "2025",
     name: "Valentine Series",
-    place: "Tiwani Contemporary, London & Lagos",
-    desc: "Hand-dyed ADIRE cloth and digital couture in conversation about intimacy, love, and what we make for those we love.",
+    place: "Nigeria",
+    desc: "Colour, contrast and connection across fabric, charcoal and digital media.",
     record: {
-      kicker: "2025 · London & Lagos",
+      kicker: "Featured exhibition · 2025",
       title: "Valentine Series",
-      meta: ["ADIRE", "Digital Couture", "Bilateral"],
-      img: "https://picsum.photos/seed/lt-2-adire-indigo-study/800/600",
+      meta: ["Feb 8–22, 2025", "10am–6pm", "Lagos, Nigeria", "Mixed media"],
+      img: "https://picsum.photos/seed/lt-17-valentine-series-h/1000/750",
       paragraphs: [
-        "Shown across London and Lagos, the Valentine Series brought together hand-dyed indigo cloth and digital couture.",
-        "A conversation about intimacy, love, and the things we make for the people we love.",
+        "A study in colour, contrast and intimacy. The Valentine Series brings together fabric painting, charcoal and digital couture into a single meditation on connection.",
+        "Shown in Lagos across two weeks, the series gathered a community around a shared creative goal — colour as language, contrast as feeling, connection as the work itself."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-2-adire-indigo-study/700/700",
-        "https://picsum.photos/seed/lt-9-tie-dye-pattern/700/700",
+        "https://picsum.photos/seed/lt-5-charcoal-contrast-/600/600",
+        "https://picsum.photos/seed/lt-10-visual-painting/600/600",
+        "https://picsum.photos/seed/lt-16-fabric-painting/600/600"
       ],
-    },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
   },
   {
     year: "2024",
     name: "Elevating Heritage",
-    place: "Gallery 1957, Accra",
-    desc: "Traditional Yoruba indigo pattern reinterpreted through generative systems, shown alongside live printing workshops.",
+    place: "Ghana",
+    desc: "Mural and textile work celebrating Yoruba craft and pattern.",
     record: {
-      kicker: "2024 · Accra, Ghana",
+      kicker: "Exhibition · 2024",
       title: "Elevating Heritage",
-      meta: ["Mural", "ADIRE", "Community"],
-      img: "https://picsum.photos/seed/lt-11-mural-heritage/800/600",
+      meta: ["May 3–17, 2024", "9am–5pm", "Accra, Ghana", "Mural", "Textile"],
+      img: "https://picsum.photos/seed/lt-21-elevating-heritage/1000/750",
       paragraphs: [
-        "Yoruba indigo pattern met generative systems in a show that asked what it means to keep tradition alive by letting it change.",
-        "Paired with live printing workshops, visitors dyed their own cloth and watched the pattern reappear on screen.",
+        "Mural and textile work celebrating Yoruba craft and pattern. Elevating Heritage took ADIRE off the body and onto the wall — large-scale public work rooted in community and place.",
+        "The Accra show paired finished murals with a live printing workshop, reconnecting craft and identity for everyone who walked through."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-11-mural-heritage/700/700",
-        "https://picsum.photos/seed/lt-3-clayton-community-/700/700",
+        "https://picsum.photos/seed/lt-3-clayton-community-/600/600",
+        "https://picsum.photos/seed/lt-11-mural-heritage/600/600",
+        "https://picsum.photos/seed/lt-2-adire-indigo-study/600/600"
       ],
-    },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
   },
   {
     year: "2023",
-    name: "Digital Culture Event",
-    place: "Tate Exchange, London",
-    desc: "A community gathering placing ancestral and algorithmic tools on equal footing, open to all makers.",
+    name: "The Art We Carry",
+    place: "United Kingdom",
+    desc: "Charcoal and illustration on identity, weight and belonging.",
     record: {
-      kicker: "2023 · London",
-      title: "Digital Culture Event",
-      meta: ["Workshop", "Community", "AI"],
-      img: "https://picsum.photos/seed/lt-12-ai-illustration-hy/800/600",
+      kicker: "Exhibition · 2023",
+      title: "The Art We Carry",
+      meta: ["Nov 9–23, 2023", "12pm–8pm", "London, United Kingdom", "Charcoal", "Illustration"],
+      img: "https://picsum.photos/seed/lt-22-the-art-we-carry/1000/750",
       paragraphs: [
-        "Printing tables and rendering screens side by side — a gathering for makers who had never met.",
-        "By closing time, the walls held indigo beside generative pattern, made by hands that had arrived as strangers.",
+        "Charcoal and illustration on identity, weight and belonging. The Art We Carry is a reflective body of work about the things we hold and the marks they leave.",
+        "Quiet, monochrome and deliberate, the series let contrast do the talking — the hand behind every line made plainly visible."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-12-ai-illustration-hy/700/700",
-        "https://picsum.photos/seed/lt-4-ai-feature/700/700",
+        "https://picsum.photos/seed/lt-5-charcoal-contrast-/600/600",
+        "https://picsum.photos/seed/lt-15-sketch-series/600/600",
+        "https://picsum.photos/seed/lt-6-digital-illustrati/600/600"
       ],
-    },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
   },
   {
-    year: "2022",
-    name: "Clayton Community Mural",
-    place: "Clayton Community Centre, Manchester",
-    desc: "Large-scale public mural celebrating the heritage and futures of a multicultural community.",
+    year: "2021",
+    name: "Colors of Clothes",
+    place: "United Kingdom",
+    desc: "Fabric paintings translating tie-and-dye into framed visual art.",
     record: {
-      kicker: "2022 · Manchester",
-      title: "Clayton Community Mural",
-      meta: ["Mural Art", "Public", "Community"],
-      img: "https://picsum.photos/seed/lt-3-clayton-community-/800/600",
+      kicker: "Exhibition · 2021",
+      title: "Colors of Clothes",
+      meta: ["Jul 6–20, 2021", "10am–6pm", "Bradford, United Kingdom", "Fabric painting"],
+      img: "https://picsum.photos/seed/lt-10-visual-painting/1000/750",
       paragraphs: [
-        "A large-scale mural commissioned by Clayton Community Centre, celebrating heritage and futures.",
-        "Created with direct input from local residents over twelve weeks of community engagement.",
+        "Fabric paintings translating tie-and-dye into framed visual art. Colors of Clothes lifted ADIRE from garment to canvas — pattern read as painting.",
+        "Each framed piece began as four yards of cloth, asking how the colours we wear become the colours we keep."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-3-clayton-community-/700/700",
+        "https://picsum.photos/seed/lt-16-fabric-painting/600/600",
+        "https://picsum.photos/seed/lt-9-tie-dye-pattern/600/600",
+        "https://picsum.photos/seed/lt-2-adire-indigo-study/600/600"
       ],
-    },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
   },
   {
     year: "2020",
-    name: "Four Yards",
-    place: "Online / Self-published",
-    desc: "The beginning — four yards of fabric and a question about how pattern behaves once it wraps a body.",
+    name: "Minds on Earth",
+    place: "United Kingdom",
+    desc: "Early experiments at the meeting point of sketch, fabric and code.",
     record: {
-      kicker: "2020 · Origin",
-      title: "Four Yards",
-      meta: ["ADIRE", "Fabric", "Series Origin"],
-      img: "https://picsum.photos/seed/lt-9-tie-dye-pattern/800/600",
+      kicker: "Exhibition · 2020",
+      title: "Minds on Earth",
+      meta: ["Oct 2–16, 2020", "11am–5pm", "Bradford, United Kingdom", "Mixed media"],
+      img: "https://picsum.photos/seed/lt-12-ai-illustration-hy/1000/750",
       paragraphs: [
-        "With only four yards of fabric, the practice began — a question about how pattern behaves once it wraps a body.",
-        "This self-published series of studies became the foundation for everything that followed.",
+        "Early experiments at the meeting point of sketch, fabric and code. Minds on Earth was the first show to put hand-drawn work beside digital output.",
+        "It set the direction for everything since — tradition and technology in the same frame, neither one winning."
       ],
       gallery: [
-        "https://picsum.photos/seed/lt-9-tie-dye-pattern/700/700",
-        "https://picsum.photos/seed/lt-16-fabric-painting/700/700",
+        "https://picsum.photos/seed/lt-12-ai-illustration-hy/600/600",
+        "https://picsum.photos/seed/lt-15-sketch-series/600/600",
+        "https://picsum.photos/seed/lt-4-ai-feature/600/600"
       ],
-    },
-  },
+      cta: { label: "Enquire about this series", href: "/contact" }
+    }
+  }
 ] as const;
 
 interface RecordListProps {
@@ -130,126 +145,59 @@ interface RecordListProps {
 }
 
 export function RecordList({ activeYear }: RecordListProps) {
-  const [openRecord, setOpenRecord] = React.useState<DetailRecord | null>(null);
-  const [panelOpen, setPanelOpen] = React.useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [selectedRecord, setSelectedRecord] = React.useState<DetailRecord | null>(null);
 
-  const handleOpen = (record: DetailRecord) => {
-    setOpenRecord(record);
-    setPanelOpen(true);
-  };
-
-  const handleClose = () => {
-    setPanelOpen(false);
-    setTimeout(() => setOpenRecord(null), 500);
+  const handleOpen = (rec: DetailRecord) => {
+    setSelectedRecord(rec);
+    open();
   };
 
   return (
     <>
-      <Box
-        component="section"
-        id="the-record"
-        className="section-tight"
-        style={{ background: "var(--bg)" }}
-      >
-        <Box className="wrap">
-          <Kicker>The record</Kicker>
-          <h2
-            className="h-lg"
-            data-reveal
-            style={{ margin: "16px 0 clamp(28px,4vw,48px)", fontFamily: "var(--display)" }}
-          >
-            Exhibitions &amp; shows.
-          </h2>
+      <Box component="section" className="section-tight wrap" style={{ background: "var(--bg)" }}>
+        <Kicker>The record</Kicker>
+        <Box style={{ marginTop: "26px" }}>
+          {EXHIBITIONS.map((exh, i) => {
+            const isMatch = activeYear === "All years" || exh.year === activeYear;
+            if (!isMatch) return null;
 
-          <Box style={{ borderTop: "1px solid var(--sand-line)" }}>
-            {EXHIBITIONS.map((exh) => {
-              const hidden = activeYear !== "All years" && exh.year !== activeYear;
-              if (hidden) return null;
-
-              return (
-                <Box
-                  key={exh.name}
-                  data-reveal
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "80px 1fr auto",
-                    gap: "clamp(16px,3vw,40px)",
-                    alignItems: "start",
-                    padding: "clamp(20px,3vw,32px) 0",
-                    borderBottom: "1px solid var(--sand-line)",
-                    transition: "padding-left 0.25s var(--ease), border-color 0.25s",
-                    cursor: "pointer",
-                    position: "relative",
-                  }}
-                  onClick={() => handleOpen(exh.record)}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.paddingLeft = "16px";
-                    (e.currentTarget as HTMLElement).style.borderTopColor = "var(--clay)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.paddingLeft = "0";
-                    (e.currentTarget as HTMLElement).style.borderTopColor = "var(--sand-line)";
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "var(--mono)",
-                      fontSize: "0.78rem",
-                      letterSpacing: "0.06em",
-                      color: "var(--fg-soft)",
-                      paddingTop: "4px",
-                    }}
+            return (
+              <Box
+                key={exh.name}
+                className="ex-row"
+                data-reveal
+                onClick={() => handleOpen(exh.record)}
+                style={{
+                  borderBottom: i === EXHIBITIONS.length - 1 ? "1px solid var(--sand-line)" : undefined
+                }}
+              >
+                <div className="yr">{exh.year}</div>
+                <div>
+                  <div className="nm">{exh.name}</div>
+                  <div className="place">{exh.place}</div>
+                </div>
+                <div className="ds">{exh.desc}</div>
+                <span className="ex-go">
+                  View details{" "}
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
                   >
-                    {exh.year}
-                  </Text>
-                  <Box>
-                    <Text
-                      style={{
-                        fontFamily: "var(--display)",
-                        fontWeight: 700,
-                        fontSize: "clamp(1.1rem,2vw,1.5rem)",
-                        letterSpacing: "-0.02em",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {exh.name}
-                    </Text>
-                    <Text
-                      style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", letterSpacing: "0.06em", color: "var(--fg-soft)", marginBottom: "8px" }}
-                    >
-                      {exh.place}
-                    </Text>
-                    <Text style={{ color: "var(--fg-soft)", fontSize: "0.92rem", lineHeight: 1.5, maxWidth: "52ch" }}>
-                      {exh.desc}
-                    </Text>
-                  </Box>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    style={{
-                      borderRadius: "100px",
-                      fontFamily: "var(--mono)",
-                      fontSize: "0.68rem",
-                      letterSpacing: "0.1em",
-                      padding: "8px 16px",
-                      color: "var(--fg-soft)",
-                      border: "1px solid var(--sand-line)",
-                      background: "transparent",
-                      whiteSpace: "nowrap",
-                      alignSelf: "flex-start",
-                    }}
-                    onClick={(e) => { e.stopPropagation(); handleOpen(exh.record); }}
-                  >
-                    View details
-                  </Button>
-                </Box>
-              );
-            })}
-          </Box>
+                    <path d="M3 12L12 3M5 3h7v7" />
+                  </svg>
+                </span>
+              </Box>
+            );
+          })}
         </Box>
       </Box>
 
-      <DetailPanel open={panelOpen} record={openRecord} onClose={handleClose} />
+      <DetailDrawer opened={opened} onClose={close} record={selectedRecord} />
     </>
   );
 }

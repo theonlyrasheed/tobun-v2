@@ -14,6 +14,7 @@ const EXPLORE_LINKS = [
   { href: "/events", label: "Events" },
   { href: "/about", label: "About" },
   { href: "/press", label: "Press" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 const SOCIAL = [
@@ -208,7 +209,12 @@ export function Footer() {
               Commissions, collaborations, exhibitions and workshops — I’d love
               to hear what you’re imagining.
             </Text>
-            <Anchor component={Link} to='/contact' className='footer-cta-btn'>
+            <Anchor
+              component={Link}
+              to='/contact'
+              className='footer-cta-btn'
+              underline='never'
+            >
               Start a conversation <ArrowIcon />
             </Anchor>
           </Box>
@@ -457,8 +463,17 @@ export function Footer() {
               display: "flex",
               alignItems: "center",
               gap: "20px",
+              flexWrap: "wrap",
             }}
           >
+            <Anchor
+              component={Link}
+              to='/privacy'
+              className='footer-link'
+              style={{ fontSize: "0.6rem", letterSpacing: "0.03em" }}
+            >
+              Privacy Policy
+            </Anchor>
             <Box
               style={{
                 display: "flex",

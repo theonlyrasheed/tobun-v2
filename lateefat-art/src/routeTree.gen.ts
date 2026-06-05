@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PressRouteImport } from './routes/press'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ExhibitionsRouteImport } from './routes/exhibitions'
@@ -16,7 +17,13 @@ import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PressSlugRouteImport } from './routes/press_.$slug'
 
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PressRoute = PressRouteImport.update({
   id: '/press',
   path: '/press',
@@ -52,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PressSlugRoute = PressSlugRouteImport.update({
+  id: '/press_/$slug',
+  path: '/press/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +73,8 @@ export interface FileRoutesByFullPath {
   '/exhibitions': typeof ExhibitionsRoute
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
+  '/privacy': typeof PrivacyRoute
+  '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +84,8 @@ export interface FileRoutesByTo {
   '/exhibitions': typeof ExhibitionsRoute
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
+  '/privacy': typeof PrivacyRoute
+  '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +96,8 @@ export interface FileRoutesById {
   '/exhibitions': typeof ExhibitionsRoute
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
+  '/privacy': typeof PrivacyRoute
+  '/press_/$slug': typeof PressSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +109,8 @@ export interface FileRouteTypes {
     | '/exhibitions'
     | '/gallery'
     | '/press'
+    | '/privacy'
+    | '/press/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +120,8 @@ export interface FileRouteTypes {
     | '/exhibitions'
     | '/gallery'
     | '/press'
+    | '/privacy'
+    | '/press/$slug'
   id:
     | '__root__'
     | '/'
@@ -109,6 +131,8 @@ export interface FileRouteTypes {
     | '/exhibitions'
     | '/gallery'
     | '/press'
+    | '/privacy'
+    | '/press_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +143,19 @@ export interface RootRouteChildren {
   ExhibitionsRoute: typeof ExhibitionsRoute
   GalleryRoute: typeof GalleryRoute
   PressRoute: typeof PressRoute
+  PrivacyRoute: typeof PrivacyRoute
+  PressSlugRoute: typeof PressSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/press': {
       id: '/press'
       path: '/press'
@@ -172,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/press_/$slug': {
+      id: '/press_/$slug'
+      path: '/press/$slug'
+      fullPath: '/press/$slug'
+      preLoaderRoute: typeof PressSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +223,8 @@ const rootRouteChildren: RootRouteChildren = {
   ExhibitionsRoute: ExhibitionsRoute,
   GalleryRoute: GalleryRoute,
   PressRoute: PressRoute,
+  PrivacyRoute: PrivacyRoute,
+  PressSlugRoute: PressSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

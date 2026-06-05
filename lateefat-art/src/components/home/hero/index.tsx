@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Box, Text, Anchor } from "@mantine/core";
+import { useMediaQuery, useReducedMotion, useTimeout } from "@mantine/hooks";
 
 export function HomeHero() {
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -9,22 +10,29 @@ export function HomeHero() {
   
   const [motionMode] = React.useState<"spotlight" | "still" | "parallax" | any>("spotlight");
 
+  const reduce = useReducedMotion();
+  const fine = useMediaQuery("(hover: hover) and (pointer: fine)");
+
+  // Entrance animation trigger
+  const { start: triggerReveal, clear: clearReveal } = useTimeout(() => {
+    containerRef.current?.classList.add("hero-in");
+  }, 1480);
+
+  React.useEffect(() => {
+    if (reduce) {
+      containerRef.current?.classList.add("hero-in");
+    } else {
+      triggerReveal();
+    }
+    return clearReveal;
+  }, [reduce, triggerReveal, clearReveal]);
+
   React.useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-    // Entrance animation trigger
-    const reveal = () => container.classList.add("hero-in");
-    let revealTimer: NodeJS.Timeout;
-    
-    if (reduce) {
-      reveal();
-    } else {
-      // Delay for preloader intro
-      revealTimer = setTimeout(reveal, 1480);
+    if (motionMode !== "parallax" || !fine || reduce) {
+      return;
     }
 
     // Parallax logic
@@ -65,18 +73,19 @@ export function HomeHero() {
       if (figRef.current) figRef.current.style.transform = "";
     };
 
-    if (motionMode === "parallax" && fine && !reduce) {
-      container.addEventListener("pointermove", onMove);
-      container.addEventListener("pointerleave", clearParallax);
-    }
+    container.addEventListener("pointermove", onMove);
+    container.addEventListener("pointerleave", clearParallax);
 
     return () => {
-      clearTimeout(revealTimer);
       cancelAnimationFrame(raf);
       container.removeEventListener("pointermove", onMove);
       container.removeEventListener("pointerleave", clearParallax);
+      if (bgRef.current) bgRef.current.style.transform = "";
+      if (glowRef.current) glowRef.current.style.transform = "";
+      if (figRef.current) figRef.current.style.transform = "";
     };
-  }, [motionMode]);
+  }, [motionMode, fine, reduce]);
+
 
   return (
     <Box

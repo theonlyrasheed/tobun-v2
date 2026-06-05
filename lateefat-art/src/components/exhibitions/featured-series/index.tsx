@@ -1,44 +1,50 @@
 import * as React from "react";
-import { Box, Stack, Text } from "@mantine/core";
-import { Kicker } from "@/components/shared/kicker";
-import { LinkArrow } from "@/components/shared/link-arrow";
+import { Box, Text } from "@mantine/core";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 
 export function FeaturedSeries() {
   return (
-    <Box component="section" className="section" style={{ background: "var(--bg)" }}>
-      <Box
-        className="wrap"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "clamp(40px,6vw,96px)",
-          alignItems: "center",
-        }}
-      >
+    <Box component="section" className="section wrap" style={{ background: "var(--bg)" }}>
+      <Box className="feature" data-reveal>
         <ImagePlaceholder
-          src="https://picsum.photos/seed/lt-14-wearable-art/700/840"
-          alt="Valentine Series"
+          src="https://picsum.photos/seed/lt-17-valentine-series-h/800/900"
+          alt="Valentine Series — hero piece"
           bloom
-          data-reveal
-          style={{ aspectRatio: "5/6" }}
+          style={{
+            width: "100%",
+            borderRadius: "var(--radius)",
+          }}
         />
-        <Stack gap={20} data-reveal>
-          <Kicker>Featured series</Kicker>
-          <h2 className="h-lg" style={{ fontFamily: "var(--display)", margin: 0 }}>
-            Valentine{" "}
-            <em style={{ fontFamily: "var(--serif)", fontStyle: "italic", fontWeight: 300, color: "var(--clay-deep)" }}>
-              Series
-            </em>
+        <Box>
+          <span className="tag" style={{ marginBottom: "16px", display: "inline-block" }}>
+            Featured · 2025 · Nigeria
+          </span>
+          <h2 className="h-lg" style={{ margin: "0 0 18px" }}>
+            Valentine Series
           </h2>
-          <Text className="lead" style={{ margin: 0 }}>
-            A series exploring the intersection of love, ADIRE textile tradition, and the digital body — rooted in the belief that intimacy can be worn as well as felt.
+          <Text className="lead" style={{ color: "var(--ink-soft)", margin: 0 }}>
+            A study in colour, contrast and intimacy. The Valentine Series brings together fabric painting, charcoal and digital couture into a single meditation on connection — gathering a community around a shared creative goal.
           </Text>
-          <Text style={{ color: "var(--fg-soft)", lineHeight: 1.65 }}>
-            Shown across London and Lagos in 2025, the series brought together hand-dyed indigo cloth and digital couture in a conversation about what we make for the people we love.
-          </Text>
-          <LinkArrow href="/contact">Enquire about this series</LinkArrow>
-        </Stack>
+          <Box
+            component="a"
+            href="/contact"
+            className="link-arrow"
+            style={{ marginTop: "24px", display: "inline-flex" }}
+          >
+            Enquire about this series
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 15 15"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              style={{ marginLeft: "6px" }}
+            >
+              <path d="M3 12L12 3M5 3h7v7" />
+            </svg>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

@@ -1,69 +1,313 @@
 import * as React from "react";
 import { Box, Text } from "@mantine/core";
-import { ImagePlaceholder } from "@/components/shared/image-placeholder";
-import { Kicker } from "@/components/shared/kicker";
+
+const FAN_CARDS = [
+  { seed: "lt-1-digital-couture-01", i: -3 },
+  { seed: "lt-3-clayton-community-", i: -2 },
+  { seed: "lt-2-adire-indigo-study", i: -1 },
+  { seed: "lt-7-editorial-photogra", i: 0 },
+  { seed: "lt-4-ai-feature", i: 1 },
+  { seed: "lt-5-charcoal-contrast-", i: 2 },
+  { seed: "lt-11-mural-heritage", i: 3 },
+] as const;
 
 export function GalleryHero() {
+  const heroRef = React.useRef<HTMLDivElement>(null);
+  const fanRef = React.useRef<HTMLDivElement>(null);
+  const [inViewport, setInViewport] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setInViewport(true);
+    }, 50);
+
+    const hero = heroRef.current;
+    const fan = fanRef.current;
+    if (!hero || !fan) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    if (reduce || !fine) return;
+
+    let rx = 0, ry = 0, tx = 0, ty = 0, raf = 0;
+
+    const loop = () => {
+      rx += (tx - rx) * 0.08;
+      ry += (ty - ry) * 0.08;
+      fan.style.transform = `rotateY(${rx}deg) rotateX(${ry}deg)`;
+
+      if (Math.abs(tx - rx) > 0.01 || Math.abs(ty - ry) > 0.01) {
+        raf = requestAnimationFrame(loop);
+      } else {
+        raf = 0;
+      }
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      const r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 12;
+      ty = -((e.clientY - r.top) / r.height - 0.5) * 7;
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+
+    const onPointerLeave = () => {
+      tx = 0;
+      ty = 0;
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+
+    hero.addEventListener("pointermove", onPointerMove);
+    hero.addEventListener("pointerleave", onPointerLeave);
+
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      hero.removeEventListener("pointermove", onPointerMove);
+      hero.removeEventListener("pointerleave", onPointerLeave);
+    };
+  }, []);
+
   return (
     <Box
       component="section"
+      ref={heroRef}
+      className={`gal-hero${inViewport ? " gh-in" : ""}`}
+      data-header-watch
+      data-screen-label="Gallery — Hero"
       style={{
         position: "relative",
-        minHeight: "100svh",
+        overflow: "hidden",
+        minHeight: "clamp(640px, 94vh, 1020px)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-end",
-        background: "var(--deep)",
-        overflow: "hidden",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
         color: "var(--on-dark)",
+        background: "var(--deep)",
+        padding: "calc(var(--header-h) + clamp(18px, 3vh, 40px)) var(--gut) clamp(40px, 6vh, 84px)",
       }}
-      data-header-watch
     >
-      {/* Background */}
-      <Box style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        <ImagePlaceholder
-          src="https://picsum.photos/seed/lt-fresco-bg/1600/900"
-          alt=""
-          style={{ width: "100%", height: "100%", borderRadius: 0, opacity: 0.4 }}
-          className="bg-breathe"
+      <Box
+        className="gh-bg"
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+        }}
+      >
+        <Box
+          component="img"
+          src="/assets/img/fresco.jpg"
+          alt="Baroque ceiling fresco"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "50% 40%",
+            opacity: 0.32,
+            transform: "scale(1.08)",
+          }}
         />
-        <Box style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 50% 60% at 65% 40%, color-mix(in oklab, var(--gold) 18%, transparent) 0%, transparent 65%)" }} />
-        <Box style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, var(--deep) 0%, transparent 60%)" }} />
       </Box>
+      <Box
+        className="gh-glow"
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "48%",
+          width: "72vw",
+          height: "72vw",
+          maxWidth: "880px",
+          maxHeight: "880px",
+          transform: "translate(-50%, -50%)",
+          zIndex: 1,
+          pointerEvents: "none",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, color-mix(in oklab, var(--gold) 28%, transparent), transparent 62%)",
+          filter: "blur(8px)",
+        }}
+      />
 
-      {/* Arched SVG headline */}
-      <Box style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -60%)", width: "min(700px, 90vw)", zIndex: 1 }}>
-        <svg viewBox="0 0 700 200" style={{ width: "100%", overflow: "visible" }}>
+      <Box
+        className="gh-inner"
+        style={{
+          position: "relative",
+          zIndex: 3,
+          width: "100%",
+          maxWidth: "1120px",
+          perspective: "1500px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "clamp(16px, 2.4vh, 30px)",
+        }}
+      >
+        <Text
+          component="span"
+          className="kicker no-tick gh-kicker gh-anim d1"
+          style={{ color: "var(--gold)" }}
+        >
+          Our gallery
+        </Text>
+
+        <svg
+          className="gh-arc gh-anim d2"
+          viewBox="0 0 1200 250"
+          role="img"
+          aria-label="The world is your canvas"
+          style={{
+            width: "min(96vw, 1080px)",
+            height: "auto",
+            display: "block",
+            overflow: "visible",
+          }}
+        >
           <defs>
-            <path id="arc" d="M 50,180 A 300,300 0 0,1 650,180" />
+            <path id="galArc" d="M 70 235 Q 600 35 1130 235" fill="none" />
           </defs>
-          <text style={{ fontFamily: "var(--display)", fontSize: 72, fontWeight: 800, fill: "var(--on-dark)", letterSpacing: "-0.04em" }}>
-            <textPath href="#arc" startOffset="50%" textAnchor="middle">
-              The world is your <tspan style={{ fill: "var(--clay-soft)", fontFamily: "var(--serif)", fontStyle: "italic", fontWeight: 300 }}>canvas</tspan>
+          <text
+            textAnchor="middle"
+            fontSize="96"
+            style={{
+              fontFamily: "var(--display)",
+              fontWeight: 800,
+              letterSpacing: "-0.01em",
+              fill: "var(--on-dark)",
+              paintOrder: "stroke",
+            }}
+          >
+            <textPath href="#galArc" startOffset="50%">
+              The world is your{" "}
+              <tspan
+                className="accent"
+                style={{
+                  fill: "var(--gold)",
+                  fontFamily: "var(--serif)",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                }}
+              >
+                canvas
+              </tspan>
             </textPath>
           </text>
         </svg>
-      </Box>
 
-      {/* Content bottom */}
-      <Box className="wrap" style={{ position: "relative", zIndex: 2, paddingBottom: "clamp(48px,8vw,96px)" }}>
-        <Box data-reveal style={{ maxWidth: "40ch" }}>
-          <Kicker style={{ color: "var(--gold)" }}>Browse the work</Kicker>
-          <Text
-            className="lead"
-            style={{ margin: "16px 0 28px", color: "color-mix(in oklab, var(--on-dark) 80%, transparent)" }}
+        <Box
+          ref={fanRef}
+          className="gh-fan gh-anim d3"
+          data-gh-fan
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            gap: "clamp(4px, 0.7vw, 11px)",
+            transformStyle: "preserve-3d",
+            marginTop: "clamp(-6px, -0.5vw, 0)",
+          }}
+        >
+          {FAN_CARDS.map((card) => (
+            <Box
+              key={card.seed}
+              component="a"
+              href="#gallery-grid"
+              className="gh-card"
+              data-cursor="view"
+              data-cursor-label="Explore"
+              style={{
+                "--i": card.i,
+                position: "relative",
+                flex: "none",
+                width: "clamp(72px, 10.5vw, 152px)",
+                aspectRatio: "3/4",
+                borderRadius: "12px",
+                overflow: "hidden",
+                border: "1px solid rgba(255, 255, 255, 0.14)",
+                transform: `rotate(calc(${card.i} * 3deg)) translateY(calc(${card.i} * ${card.i} * -6px))`,
+                transformOrigin: "center bottom",
+                boxShadow: "0 26px 46px -26px rgba(0, 0, 0, 0.72)",
+              } as React.CSSProperties}
+            >
+              <Box
+                component="img"
+                src={`https://picsum.photos/seed/${card.seed}/600/800`}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </Box>
+          ))}
+        </Box>
+
+        <Text
+          component="p"
+          className="gh-lead gh-anim d3"
+          style={{
+            position: "relative",
+            zIndex: 3,
+            maxWidth: "60ch",
+            fontFamily: "var(--serif)",
+            fontSize: "clamp(1.05rem, 1.6vw, 1.45rem)",
+            lineHeight: 1.5,
+            color: "color-mix(in oklab, var(--on-dark) 86%, transparent)",
+            textWrap: "pretty",
+          }}
+        >
+          Explore moments, details and expressions from a creative journey where
+          art, fashion and digital innovation intersect.{" "}
+          <em style={{ fontStyle: "italic", color: "var(--gold)" }}>
+            Create something — even if it's invisible.
+          </em>
+        </Text>
+
+        <Box
+          component="a"
+          className="gh-scroll gh-anim d4"
+          href="#gallery-grid"
+          style={{
+            position: "relative",
+            zIndex: 3,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "9px",
+            fontFamily: "var(--mono)",
+            fontSize: "0.64rem",
+            letterSpacing: ".2em",
+            textTransform: "uppercase",
+            color: "color-mix(in oklab, var(--on-dark) 70%, transparent)",
+          }}
+        >
+          Browse the work
+          <Box
+            component="span"
+            className="dot"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              display: "grid",
+              placeItems: "center",
+              border:
+                "1px solid color-mix(in oklab, var(--on-dark) 38%, transparent)",
+            }}
           >
-            Seven years of practice across digital couture, mural art, visual painting, illustration, fabric, and AI — all in one place.
-          </Text>
-          <a
-            href="#gallery-grid"
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.5em", fontFamily: "var(--mono)", fontSize: "0.7rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--on-dark)" }}
-          >
-            Browse the work
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="M7 2v10M3.5 8.5 7 12l3.5-3.5" />
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+            >
+              <path d="M6.5 2v9M3 7.5l3.5 3.5L10 7.5" />
             </svg>
-          </a>
+          </Box>
         </Box>
       </Box>
     </Box>

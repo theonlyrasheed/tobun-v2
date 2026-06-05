@@ -1,10 +1,27 @@
-import { createTheme, DefaultMantineColor, MantineColorsTuple } from "@mantine/core";
+import {
+  createTheme,
+  DefaultMantineColor,
+  MantineColorsTuple,
+  CSSVariablesResolver,
+} from "@mantine/core";
 
 import { breakpoints } from "./breakpoints";
 import { colors } from "./colors";
 import { components } from "./components";
 import { headings } from "./headings";
 import { shadows } from "./shadows";
+
+export const cssVariablesResolver: CSSVariablesResolver = () => ({
+  variables: {
+    "--mantine-color-body": "var(--bg)",
+  },
+  light: {
+    "--mantine-color-body": "var(--bg)",
+  },
+  dark: {
+    "--mantine-color-body": "var(--bg)",
+  },
+});
 
 export const mantineTheme = createTheme({
   components,
@@ -66,6 +83,7 @@ export const mantineTheme = createTheme({
   defaultRadius: "3px",
   fontFamily: "var(--body)",
 });
+
 
 type ExtendedCustomColors =
   | "accent"
