@@ -36,8 +36,22 @@ export function JourneyTimeline() {
 
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  // Monitor breakpoint to enable/disable drag/scroll calculations
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const updateProgress = React.useCallback(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      return;
+    }
     const track = trackRef.current;
     if (!track) return;
 
@@ -87,6 +101,7 @@ export function JourneyTimeline() {
   const dragStart = React.useRef({ isDown: false, sx: 0, sl0: 0 });
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
     const track = trackRef.current;
     if (!track) return;
     dragStart.current = { isDown: true, sx: e.clientX, sl0: track.scrollLeft };
@@ -94,6 +109,7 @@ export function JourneyTimeline() {
   };
 
   const onPointerMove = React.useCallback((e: PointerEvent) => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
     if (!dragStart.current.isDown) return;
     const track = trackRef.current;
     if (!track) return;
@@ -120,15 +136,15 @@ export function JourneyTimeline() {
   return (
     <section
       ref={containerRef}
-      className='section cream-2-block'
+      className="section cream-2-block"
       style={{ padding: "64px 0px 124px" }}
     >
-      <div className='wrap'>
-        <div className='eyebrow-row'>
+      <div className="wrap">
+        <div className="eyebrow-row">
           <div>
-            <span className='kicker'>The journey</span>
-            <h2 className='h-lg' style={{ marginTop: "16px" }}>
-              A defining <em className='accent-ochre'>turn</em>
+            <span className="kicker">The journey</span>
+            <h2 className="h-lg" style={{ marginTop: "16px" }}>
+              A defining <em className="accent-ochre">turn</em>
             </h2>
           </div>
         </div>
@@ -136,52 +152,52 @@ export function JourneyTimeline() {
 
       {/* Track sits outside .wrap so it can bleed edge-to-edge, but we
           cap and centre it at --maxw so it never exceeds the content width */}
-      <div className='jrn-outer' data-reveal>
+      <div className="jrn-outer" data-reveal>
         <div
           ref={trackRef}
           className={`jrn-track ${isDragging ? "dragging" : ""}`}
           onPointerDown={onPointerDown}
-          style={{ touchAction: "pan-y" }}
+          style={{ touchAction: isMobile ? "auto" : "pan-y" }}
         >
-          <div className='jrn-inner'>
-            <div className='jrn-line' />
-            <div ref={fillRef} className='jrn-fill' />
+          <div className="jrn-inner">
+            <div className="jrn-line" />
+            <div ref={fillRef} className="jrn-fill" />
             {TIMELINE_STEPS.map((step, i) => (
               <div
                 key={step.yr}
-                className={`jrn-step ${i === activeIndex ? "on" : ""}`}
-                onClick={() => setActiveIndex(i)}
+                className={`jrn-step ${isMobile || i === activeIndex ? "on" : ""}`}
+                onClick={() => !isMobile && setActiveIndex(i)}
               >
-                <span className='jrn-dot' />
-                <div className='jrn-yr'>{step.yr}</div>
-                <div className='jrn-ti'>{step.ti}</div>
-                <p className='jrn-de'>{step.de}</p>
+                <span className="jrn-dot" />
+                <div className="jrn-yr">{step.yr}</div>
+                <div className="jrn-ti">{step.ti}</div>
+                <p className="jrn-de">{step.de}</p>
               </div>
             ))}
           </div>
         </div>
 
         <div
-          className='jrn-hint'
+          className="jrn-hint"
           style={{
             alignItems: "flex-end",
             textAlign: "center",
           }}
         >
-          <span className='drag'>
+          <span className="drag">
             <svg
-              width='16'
-              height='16'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='1.8'
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
             >
-              <path d='M8 7L3 12l5 5M16 7l5 5-5 5M3 12h18' />
+              <path d="M8 7L3 12l5 5M16 7l5 5-5 5M3 12h18" />
             </svg>
             Drag or scroll
           </span>
-          <span className='bar'>
+          <span className="bar">
             <span ref={barSpanRef} data-jrn-bar />
           </span>
         </div>

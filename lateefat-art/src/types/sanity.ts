@@ -19,14 +19,26 @@ export interface Service {
   order?: number
 }
 
+export type EventStatus = 'upcoming' | 'ongoing' | 'expired'
+
 export interface SiteEvent {
-  yr: string
+  slug: string
+  /** Formatted display date, e.g. "Mar 2026 · London" */
   date: string
+  /** Raw ISO datetime used for status computation */
+  rawDate: string
+  rawEndDate?: string
+  status: EventStatus
+  yr: string
   title: string
   desc: string
   badge: string
   img: string
   href: string
+  location: string
+  featured: boolean
+  bookingUrl?: string
+  body?: any[]
 }
 
 export interface ExhibitionRecord {

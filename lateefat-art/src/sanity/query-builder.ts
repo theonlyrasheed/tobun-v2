@@ -4,6 +4,7 @@ import {
   testimonialsQuery,
   servicesQuery,
   eventsQuery,
+  eventBySlugQuery,
   exhibitionsQuery,
   galleryQuery,
   pressArticlesQuery,
@@ -20,7 +21,7 @@ import {
   fallbackGalleryItems,
 } from '@/data/fallbacks'
 import { pressArticles } from '@/data/press'
-import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
+import type { FAQ, Testimonial, Service, SiteEvent, EventStatus, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
 import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
@@ -54,6 +55,38 @@ function calcAspect(w: number, h: number): string {
   if (r > 1.3) return '4/3'
   if (r < 0.7) return '2/3'
   return '3/4'
+}
+
+/* ── Event status helpers ─────────────────────────────────────── */
+function getEventStatus(dateISO: string, endDateISO?: string): EventStatus {
+  const now = Date.now()
+  const start = new Date(dateISO).getTime()
+  const end = endDateISO ? new Date(endDateISO).getTime() : null
+  if (now < start) return 'upcoming'
+  if (end !== null && now <= end) return 'ongoing'
+  return 'expired'
+}
+
+function mapEvent(item: any): SiteEvent {
+  const dateObj = new Date(item.date)
+  const formatted = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+  return {
+    slug: item.slug || '',
+    rawDate: item.date,
+    rawEndDate: item.end_date ?? undefined,
+    status: getEventStatus(item.date, item.end_date),
+    yr: dateObj.getFullYear().toString(),
+    date: `${formatted} · ${item.location || ''}`,
+    title: item.title,
+    desc: item.desc,
+    badge: item.badge,
+    img: urlFor(item.image).width(800).url(),
+    href: item.booking_url || item.href || '/contact',
+    location: item.location || '',
+    featured: item.featured ?? false,
+    bookingUrl: item.booking_url ?? undefined,
+    body: item.body ?? undefined,
+  }
 }
 
 /* ── Query builder ────────────────────────────────────────────── */
@@ -97,21 +130,16 @@ export const sanityQ = {
     fetch: async (): Promise<SiteEvent[]> => {
       const data = await tryFetch<any[]>(eventsQuery)
       if (data?.length) {
-        return data.map((item) => {
-          const dateObj = new Date(item.date)
-          const formatted = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-          return {
-            yr: item.yr || dateObj.getFullYear().toString(),
-            date: `${formatted} · ${item.location}`,
-            title: item.title,
-            desc: item.desc,
-            badge: item.badge,
-            img: urlFor(item.image).width(800).url(),
-            href: item.href || '/contact',
-          }
-        })
+        return data.map((item) => mapEvent(item))
       }
       return fallbackEvents
+    },
+    detail: {
+      key: (slug: string) => ['events', 'detail', slug] as const,
+      fetch: async (slug: string): Promise<SiteEvent | null> => {
+        const item = await tryFetch<any>(eventBySlugQuery, { slug })
+        return item ? mapEvent(item) : null
+      },
     },
   },
 
@@ -194,6 +222,7 @@ export const sanityQ = {
               body: item.body,
               gallery: item.gallery ? item.gallery.map((g: any) => urlFor(g).width(800).url()) : [],
               source: { label: item.source?.label || 'Read the original', href: item.source?.href || '#' },
+              featured: item.featured ?? false,
             }
           })
         }

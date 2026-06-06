@@ -1,20 +1,38 @@
 import * as React from "react";
 import { Box, Text } from "@mantine/core";
+import { useGallery } from "@/hooks/use-sanity";
 
-const FAN_CARDS = [
-  { seed: "lt-1-digital-couture-01", i: -3 },
-  { seed: "lt-3-clayton-community-", i: -2 },
-  { seed: "lt-2-adire-indigo-study", i: -1 },
-  { seed: "lt-7-editorial-photogra", i: 0 },
-  { seed: "lt-4-ai-feature", i: 1 },
-  { seed: "lt-5-charcoal-contrast-", i: 2 },
-  { seed: "lt-11-mural-heritage", i: 3 },
-] as const;
+const FAN_POSITIONS = [-3, -2, -1, 0, 1, 2, 3] as const;
+
+/** Deterministically shuffle an array (Fisher-Yates with a seed derived from array length). */
+function seedShuffle<T>(arr: T[]): T[] {
+  const out = [...arr];
+  // simple deterministic pseudo-random based on indices — stable across renders
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = (i * 1103515245 + 12345) % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 export function GalleryHero() {
+  const { data: galleryItems = [] } = useGallery();
   const heroRef = React.useRef<HTMLDivElement>(null);
   const fanRef = React.useRef<HTMLDivElement>(null);
   const [inViewport, setInViewport] = React.useState(false);
+
+  // Pick 7 items — prefer featured ones, then fill from shuffled rest
+  const fanItems = React.useMemo(() => {
+    if (galleryItems.length === 0) return [];
+    const featured = galleryItems.filter((g: any) => g.featured);
+    const rest = seedShuffle(galleryItems.filter((g: any) => !g.featured));
+    const pool = [...featured, ...rest].slice(0, 7);
+    // Pad with shuffled repeats if we have fewer than 7 items
+    while (pool.length < 7 && galleryItems.length > 0) {
+      pool.push(galleryItems[pool.length % galleryItems.length]);
+    }
+    return pool.slice(0, 7);
+  }, [galleryItems]);
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -208,41 +226,45 @@ export function GalleryHero() {
             marginTop: "clamp(-6px, -0.5vw, 0)",
           }}
         >
-          {FAN_CARDS.map((card) => (
-            <Box
-              key={card.seed}
-              component="a"
-              href="#gallery-grid"
-              className="gh-card"
-              data-cursor="view"
-              data-cursor-label="Explore"
-              style={{
-                "--i": card.i,
-                position: "relative",
-                flex: "none",
-                width: "clamp(72px, 10.5vw, 152px)",
-                aspectRatio: "3/4",
-                borderRadius: "12px",
-                overflow: "hidden",
-                border: "1px solid rgba(255, 255, 255, 0.14)",
-                transform: `rotate(calc(${card.i} * 3deg)) translateY(calc(${card.i} * ${card.i} * -6px))`,
-                transformOrigin: "center bottom",
-                boxShadow: "0 26px 46px -26px rgba(0, 0, 0, 0.72)",
-              } as React.CSSProperties}
-            >
+          {fanItems.map((item: any, idx: number) => {
+            const i = FAN_POSITIONS[idx] ?? 0;
+            const src = item.src || item.largeSrc || `https://picsum.photos/seed/${item.seed}/600/800`;
+            return (
               <Box
-                component="img"
-                src={`https://picsum.photos/seed/${card.seed}/600/800`}
-                alt=""
+                key={item.seed || idx}
+                component="a"
+                href="#gallery-grid"
+                className="gh-card"
+                data-cursor="view"
+                data-cursor-label="Explore"
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            </Box>
-          ))}
+                  "--i": i,
+                  position: "relative",
+                  flex: "none",
+                  width: "clamp(72px, 10.5vw, 152px)",
+                  aspectRatio: "3/4",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  transform: `rotate(calc(${i} * 3deg)) translateY(calc(${i} * ${i} * -6px))`,
+                  transformOrigin: "center bottom",
+                  boxShadow: "0 26px 46px -26px rgba(0, 0, 0, 0.72)",
+                } as React.CSSProperties}
+              >
+                <Box
+                  component="img"
+                  src={src}
+                  alt={item.title || ""}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              </Box>
+            );
+          })}
         </Box>
 
         <Text

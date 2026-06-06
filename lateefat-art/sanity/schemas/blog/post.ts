@@ -143,6 +143,15 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'featured',
+      title: 'Featured story',
+      type: 'boolean',
+      description:
+        'The most recent post with this turned on is shown as the Featured Coverage at the top of the Press page. Only one post needs to be featured at a time — toggling this on automatically replaces the previous featured story.',
+      initialValue: false,
+    }),
+
+    defineField({
       name: 'related_posts',
       title: 'Read more posts',
       description: 'Optional: Curated list of related coverage.',

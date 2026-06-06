@@ -6,9 +6,12 @@ import { usePressArticles } from "@/hooks/use-sanity";
 export function FeaturedCoverage() {
   const { data: articles = [] } = usePressArticles();
 
+  // Pick the most recent post marked featured=true in Sanity.
+  // Articles arrive ordered by published_at desc, so the first match is always the newest.
+  // Falls back to the most recent post overall when none are explicitly featured.
   const featured = React.useMemo(() => {
     if (articles.length === 0) return null;
-    return articles.find((art: any) => art.outlet.toLowerCase().includes("guardian")) || articles[0];
+    return articles.find((art: any) => art.featured === true) ?? articles[0];
   }, [articles]);
 
   if (!featured) return null;

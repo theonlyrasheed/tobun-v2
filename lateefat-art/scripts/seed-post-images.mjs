@@ -13,56 +13,57 @@ const client = createClient({
   useCdn: false,
 })
 
-// Unsplash direct CDN links — each chosen to match the post's theme
+// Picsum Photos — always reliable, deterministic seeds, high-quality 1600×900
+// Seeds chosen to surface varied, artistically relevant tones
 const POST_IMAGES = [
   {
     postId: 'post-in-between-cultures',
-    url: 'https://images.unsplash.com/photo-1578301978-405574dc67e4?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Colourful layered fabric textures representing cultural identity',
+    url: 'https://picsum.photos/seed/cultures/1600/900',
+    alt: 'Abstract textures representing layered cultural identity',
   },
   {
     postId: 'post-ori-inu-the-silent-companion',
-    url: 'https://images.unsplash.com/photo-1513364776-537808165f1c?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Meditative portrait — light and shadow on a face in quiet reflection',
+    url: 'https://picsum.photos/seed/oriinu/1600/900',
+    alt: 'Meditative portrait — light and shadow in quiet reflection',
   },
   {
     postId: 'post-the-faces-we-outgrow',
-    url: 'https://images.unsplash.com/photo-1596557407523-61e1fe6b07ee?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Layered abstract portrait exploring identity and transformation',
+    url: 'https://picsum.photos/seed/faces/1600/900',
+    alt: 'Layered portrait exploring identity and transformation',
   },
   {
     postId: 'post-what-generative-art-taught-me-about-control',
-    url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Vibrant generative digital art — flowing colourful algorithmic patterns',
+    url: 'https://picsum.photos/seed/generative/1600/900',
+    alt: 'Vibrant flowing algorithmic patterns — generative digital art',
   },
   {
     postId: 'post-colour-as-language',
-    url: 'https://images.unsplash.com/photo-1499892477493-f52cc080a3dc?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Bright acrylic paint palette — ochre, indigo and gold colour swatches',
+    url: 'https://picsum.photos/seed/colour/1600/900',
+    alt: 'Vivid colour field — ochre, indigo and gold interplay',
   },
   {
     postId: 'post-on-making-things-by-hand',
-    url: 'https://images.unsplash.com/photo-1452860851-c94d0ef40f14?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Artist\'s hands working with textured paint on canvas',
+    url: 'https://picsum.photos/seed/handcraft/1600/900',
+    alt: 'Artist\'s hands at work — textured paint on canvas',
   },
   {
     postId: 'post-digital-couture-when-fashion-meets-algorithm',
-    url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=85&auto=format&fit=crop&crop=entropy&sig=2',
-    alt: 'Digital fashion illustration — vibrant colour and flowing silhouette',
+    url: 'https://picsum.photos/seed/couture/1600/900',
+    alt: 'Digital fashion silhouette — vibrant colour and flowing form',
   },
   {
     postId: 'post-bradford-streets-my-canvas',
-    url: 'https://images.unsplash.com/photo-1541701494-ba19a39b11f4?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Colourful community mural on a Bradford street — unity and resilience',
+    url: 'https://picsum.photos/seed/bradford/1600/900',
+    alt: 'Community mural on a Bradford street — unity and resilience in colour',
   },
   {
     postId: 'post-what-economics-taught-me-about-art',
-    url: 'https://images.unsplash.com/photo-1509631928351-0cc8e7c1e895?w=1600&q=85&auto=format&fit=crop',
-    alt: 'Geometric abstract art — structure and pattern meeting creative expression',
+    url: 'https://picsum.photos/seed/economics/1600/900',
+    alt: 'Geometric abstract composition — structure meeting creative expression',
   },
   {
     postId: 'post-roots-of-radiance-making',
-    url: 'https://images.unsplash.com/photo-1524508762-1c78bc636e88?w=1600&q=85&auto=format&fit=crop',
+    url: 'https://picsum.photos/seed/radiance/1600/900',
     alt: 'Layered patterned fabric — ankara print textile art in warm tones',
   },
 ]

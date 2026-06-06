@@ -1,15 +1,18 @@
 import * as React from "react";
 import { Box, Button } from "@mantine/core";
+import { useGallery } from "@/hooks/use-sanity";
 
-const CATEGORIES = [
-  { label: "All work", value: "all" },
-  { label: "Digital Couture", value: "couture" },
-  { label: "Visual Paintings", value: "painting" },
-  { label: "Mural Art", value: "mural" },
-  { label: "Digital Illustration", value: "illustration" },
-  { label: "Fabric / ADIRE", value: "textile" },
-  { label: "Photography", value: "photo" },
-  { label: "AI Features", value: "ai" },
+// Master list — values must match `slug.current` of gallery_album documents in Sanity.
+// Pills for albums with no items are hidden automatically.
+const ALL_CATEGORIES = [
+  { label: "All work",        value: "all" },
+  { label: "Painting",        value: "painting" },
+  { label: "Digital Art",     value: "digital-art" },
+  { label: "Generative Art",  value: "generative-art" },
+  { label: "Textile Art",     value: "textile-art" },
+  { label: "Murals",          value: "murals" },
+  { label: "Digital Couture", value: "digital-couture" },
+  { label: "Coloring",        value: "coloring" },
 ] as const;
 
 interface FilterBarProps {
@@ -18,8 +21,27 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ active, onChange }: FilterBarProps) {
+  const { data: items = [] } = useGallery();
   const barRef = React.useRef<HTMLDivElement>(null);
   const [stuck, setStuck] = React.useState(false);
+
+  // Build the set of album slugs that actually have at least one gallery item
+  const populatedSlugs = React.useMemo(() => {
+    const slugs = new Set<string>();
+    items.forEach((item: any) => {
+      if (item.cat) slugs.add(item.cat);
+    });
+    return slugs;
+  }, [items]);
+
+  // Only keep "All work" (always shown) + categories that have data
+  const visibleCategories = React.useMemo(
+    () =>
+      ALL_CATEGORIES.filter(
+        (cat) => cat.value === "all" || populatedSlugs.has(cat.value)
+      ),
+    [populatedSlugs]
+  );
 
   React.useEffect(() => {
     const el = barRef.current;
@@ -48,17 +70,20 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
         padding: "12px 0",
       }}
     >
+      {/* Scroll wrapper — no wrap, horizontal scroll on all viewports */}
       <Box
-        className="wrap"
+        className="wrap filter-scroll-wrap"
         style={{
           display: "flex",
           gap: "8px",
-          flexWrap: "wrap",
+          flexWrap: "nowrap",
           overflowX: "auto",
+          WebkitOverflowScrolling: "touch" as any,
           scrollbarWidth: "none",
+          paddingBottom: "2px", /* prevent clipping button shadows */
         }}
       >
-        {CATEGORIES.map((cat) => {
+        {visibleCategories.map((cat) => {
           const isActive = active === cat.value;
           return (
             <Button
@@ -67,6 +92,7 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
               size="sm"
               onClick={() => onChange(cat.value)}
               style={{
+                flexShrink: 0,
                 borderRadius: "100px",
                 fontFamily: "var(--mono)",
                 fontSize: "0.7rem",
@@ -85,6 +111,32 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
           );
         })}
       </Box>
+
+      <style>{`
+        /* Hide scrollbar on webkit (Chrome, Safari, mobile) */
+        .filter-scroll-wrap::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* On mobile, add a right fade-out to hint there's more to scroll */
+        @media (max-width: 768px) {
+          .filter-scroll-wrap {
+            /* Extend the wrap to full bleed so fade reaches the edge */
+            margin-right: calc(-1 * var(--gut, 24px));
+            padding-right: var(--gut, 24px);
+            -webkit-mask-image: linear-gradient(
+              to right,
+              black calc(100% - 48px),
+              transparent 100%
+            );
+            mask-image: linear-gradient(
+              to right,
+              black calc(100% - 48px),
+              transparent 100%
+            );
+          }
+        }
+      `}</style>
     </Box>
   );
 }

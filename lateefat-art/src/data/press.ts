@@ -16,6 +16,7 @@ export interface PressArticle {
   body: PressBodyBlock[];
   gallery: string[];
   source: { label: string; href: string };
+  featured?: boolean;
 }
 
 export const pressArticles: PressArticle[] = [

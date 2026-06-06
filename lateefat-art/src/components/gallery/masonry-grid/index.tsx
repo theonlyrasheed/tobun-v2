@@ -16,11 +16,28 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
   React.useEffect(() => {
     if (items.length === 0) return;
 
-    let lightbox = new PhotoSwipeLightbox({
+    const lightbox = new PhotoSwipeLightbox({
       gallery: "#gallery-grid",
       children: "a.masonry-item",
       pswpModule: () => import("photoswipe"),
     });
+
+    // Register a caption bar that reads data-caption from the current slide's anchor
+    lightbox.on("uiRegister", () => {
+      lightbox.pswp!.ui!.registerElement({
+        name: "caption",
+        order: 9,
+        isButton: false,
+        appendTo: "wrapper",
+        onInit(el, pswp) {
+          pswp.on("change", () => {
+            const anchor = pswp.currSlide?.data?.element as HTMLElement | undefined;
+            el.innerHTML = anchor?.dataset?.caption ?? "";
+          });
+        },
+      });
+    });
+
     lightbox.init();
 
     return () => {
@@ -48,7 +65,7 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
           {items.map((item: any, idx: number) => {
             const hidden =
               activeFilter !== "all" &&
-              !item.cat.split(" ").includes(activeFilter);
+              item.cat !== activeFilter;
 
             // Use direct src/largeSrc from Sanity queries, or fallback to picsum format if using fallback
             const thumbnailSrc = item.src || `https://picsum.photos/seed/${item.seed}/800/900`;
@@ -64,6 +81,7 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
                 data-pswp-height={item.h}
                 data-cursor="view"
                 data-cursor-label="Explore"
+                data-caption={[item.title, item.subtitle, item.year].filter(Boolean).join(" · ")}
                 style={{
                   display: hidden ? "none" : "block",
                 }}
@@ -155,6 +173,24 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
           text-transform: uppercase;
           opacity: 0.85;
           margin-top: 4px;
+        }
+
+        /* PhotoSwipe caption bar */
+        .pswp__caption {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 14px 20px 18px;
+          background: linear-gradient(to top, rgba(10, 8, 30, 0.82) 0%, transparent 100%);
+          color: #fff;
+          font-family: var(--display, serif);
+          font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+          font-weight: 600;
+          letter-spacing: 0.01em;
+          pointer-events: none;
+          z-index: 10;
+          text-align: center;
         }
       `}</style>
     </Box>

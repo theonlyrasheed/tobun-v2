@@ -21,8 +21,18 @@ export const servicesQuery = `
 
 /* ── Events ───────────────────────────────────────────────────── */
 export const eventsQuery = `
-  *[_type == "event"] | order(order asc) {
-    yr, date, title, desc, badge, image, href, location
+  *[_type == "event"] | order(date asc) {
+    "slug": slug.current,
+    date, end_date, title, desc, badge, image, href,
+    location, featured, booking_url, body
+  }
+`
+
+export const eventBySlugQuery = `
+  *[_type == "event" && slug.current == $slug][0] {
+    "slug": slug.current,
+    date, end_date, title, desc, badge, image, href,
+    location, featured, booking_url, body
   }
 `
 
@@ -64,7 +74,7 @@ export const siteSettingsQuery = `
 export const pressArticlesQuery = `
   *[_type == "post"] | order(published_at desc) {
     "slug": slug.current,
-    outlet, kind, published_at,
+    outlet, kind, published_at, featured,
     title, standfirst, excerpt,
     main_image, body, gallery, source
   }

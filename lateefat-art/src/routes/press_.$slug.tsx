@@ -8,8 +8,7 @@ import { pressComponents } from "@/components/shared/portable-text";
 import { sanityQ } from "@/sanity/query-builder";
 
 export const Route = createFileRoute("/press_/$slug")({
-  loaderDeps: ({ params }) => ({ slug: params.slug }),
-  loader: ({ context: { queryClient }, deps: { slug } }) =>
+  loader: ({ context: { queryClient }, params: { slug } }) =>
     Promise.all([
       queryClient.ensureQueryData({
         queryKey: sanityQ.press.detail.key(slug),

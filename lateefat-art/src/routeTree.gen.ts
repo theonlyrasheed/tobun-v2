@@ -19,6 +19,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PressSlugRouteImport } from './routes/press_.$slug'
+import { Route as EventsSlugRouteImport } from './routes/events_.$slug'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -70,6 +71,11 @@ const PressSlugRoute = PressSlugRouteImport.update({
   path: '/press/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsSlugRoute = EventsSlugRouteImport.update({
+  id: '/events_/$slug',
+  path: '/events/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/events/$slug': typeof EventsSlugRoute
   '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/events/$slug': typeof EventsSlugRoute
   '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/events_/$slug': typeof EventsSlugRoute
   '/press_/$slug': typeof PressSlugRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/press'
     | '/privacy'
     | '/terms'
+    | '/events/$slug'
     | '/press/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/press'
     | '/privacy'
     | '/terms'
+    | '/events/$slug'
     | '/press/$slug'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/press'
     | '/privacy'
     | '/terms'
+    | '/events_/$slug'
     | '/press_/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   PressRoute: typeof PressRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  EventsSlugRoute: typeof EventsSlugRoute
   PressSlugRoute: typeof PressSlugRoute
 }
 
@@ -232,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PressSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events_/$slug': {
+      id: '/events_/$slug'
+      path: '/events/$slug'
+      fullPath: '/events/$slug'
+      preLoaderRoute: typeof EventsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   PressRoute: PressRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  EventsSlugRoute: EventsSlugRoute,
   PressSlugRoute: PressSlugRoute,
 }
 export const routeTree = rootRouteImport
