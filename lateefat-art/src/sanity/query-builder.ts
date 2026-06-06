@@ -130,7 +130,12 @@ export const sanityQ = {
           tags: item.tags || [],
           order: item.order,
           slug: item.slug || '',
-          image: item.image ? urlFor(item.image).url() : undefined,
+          // gallery_ref takes priority; fall back to uploaded image
+          image: item.gallery_image
+            ? urlFor(item.gallery_image).width(800).height(1000).fit('crop').url()
+            : item.image
+            ? urlFor(item.image).width(800).height(1000).fit('crop').url()
+            : undefined,
         }))
       }
       return fallbackServices

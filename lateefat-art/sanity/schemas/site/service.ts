@@ -21,36 +21,11 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'Image',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          validation: (rule) =>
-            rule.required().warning('Alt text is important for accessibility/SEO'),
-        }),
-      ],
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'hero_image',
-      title: 'Hero Image',
-      description:
-        'Optional image that will be used in the home page hero section. If not provided, the main image will be used.',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          validation: (rule) => rule.warning('Alt text is important for accessibility/SEO'),
-        }),
-      ],
+      name: 'gallery_ref',
+      title: 'Gallery Showcase Image',
+      type: 'reference',
+      to: [{type: 'gallery'}],
+      description: 'Pick a piece from your gallery to use as this service\'s showcase image.',
     }),
     defineField({
       name: 'description',
@@ -77,8 +52,8 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      media: 'image',
       subtitle: 'description',
+      media: 'gallery_ref.main_image',
     },
     prepare({title, media, subtitle}) {
       return {

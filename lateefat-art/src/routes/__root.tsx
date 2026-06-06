@@ -4,7 +4,6 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  ScrollRestoration,
   createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
@@ -17,6 +16,7 @@ import { NavBar } from "@/components/shared/navbar";
 import { Footer } from "@/components/shared/footer";
 import { Cursor } from "@/components/shared/cursor";
 import { useReveal } from "@/components/shared/reveal";
+import { FavIcon } from "@/components/shared/favicon";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -100,11 +100,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
           name: "twitter:image",
           content: "/assets/img/portrait.png",
         },
-    ],
+      ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/assets/img/portrait.png" },
-      { rel: "apple-touch-icon", href: "/assets/img/portrait.png" }
     ],
   };
 },
@@ -162,6 +160,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang='en' data-theme='light'>
       <head>
         <ColorSchemeScript defaultColorScheme='light' />
+        <FavIcon />
         <HeadContent />
       </head>
       <body>
@@ -176,7 +175,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Cursor />
           </MantineProvider>
         </ThemeContext.Provider>
-        <ScrollRestoration />
         <Scripts />
       </body>
     </html>

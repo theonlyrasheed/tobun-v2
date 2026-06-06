@@ -15,7 +15,8 @@ export const testimonialsQuery = `
 /* ── Services ─────────────────────────────────────────────────── */
 export const servicesQuery = `
   *[_type == "service"] | order(order asc) {
-    title, description, tags, order, image, "slug": slug.current
+    title, description, tags, order, image, "slug": slug.current,
+    "gallery_image": gallery_ref->main_image
   }
 `
 
