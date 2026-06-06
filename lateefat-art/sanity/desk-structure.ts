@@ -2,6 +2,7 @@ import {
   BookIcon,
   CalendarIcon,
   CommentIcon,
+  DocumentTextIcon,
   HelpCircleIcon,
   ImageIcon,
   TagIcon,
@@ -18,11 +19,13 @@ const GROUPED_TYPES = [
   'gallery',
   'gallery_album',
   'event',
+  'exhibition',
   'company',
   'testimonial',
   'faq',
   'service',
   'adverts_section',
+  'legalPage',
   // 'services_section',
 ]
 
@@ -90,6 +93,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .icon(CalendarIcon)
                 .child(S.documentTypeList('event').title('Events')),
               S.listItem()
+                .title('Exhibitions')
+                .icon(CalendarIcon)
+                .child(S.documentTypeList('exhibition').title('Exhibitions')),
+              S.listItem()
                 .title('Companies')
                 .icon(UsersIcon)
                 .child(S.documentTypeList('company').title('Companies')),
@@ -105,6 +112,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .title('Adverts')
                 .icon(ImageIcon)
                 .child(S.documentTypeList('adverts_section').title('Adverts')),
+              S.listItem()
+                .title('Legal Pages')
+                .icon(DocumentTextIcon)
+                .child(S.documentTypeList('legalPage').title('Legal Pages')),
             ]),
         ),
 

@@ -1,6 +1,13 @@
+import * as React from "react";
 import { Box, Text } from "@mantine/core";
+import { useServices } from "@/hooks/use-sanity";
+
 
 export function Services() {
+  const { data: services = [] } = useServices();
+
+  if (services.length === 0) return null;
+
   return (
     <Box component='section' className='section cream-2-block'>
       <Box className='wrap'>
@@ -23,75 +30,31 @@ export function Services() {
           </Text>
         </Box>
         <Box className='svc'>
-          <Box className='row' data-reveal>
-            <Text component='span' className='num'>
-              01
-            </Text>
-            <Text component='span' className='nm'>
-              Creative Services
-            </Text>
-            <Text component='span' className='ds'>
-              Digital illustration, textile &amp; visual art, fashion-tech
-              commissions and custom couture pieces.
-            </Text>
-            <Box component='span' className='chips'>
-              <Box component='span' className='tag'>
-                Illustration
+          {services.map((svc: any, idx: number) => {
+            const displayNum = String(idx + 1).padStart(2, "0");
+            return (
+              <Box key={idx} className='row' data-reveal>
+                <Text component='span' className='num'>
+                  {displayNum}
+                </Text>
+                <Text component='span' className='nm'>
+                  {svc.title}
+                </Text>
+                <Text component='span' className='ds'>
+                  {svc.description}
+                </Text>
+                {svc.tags && svc.tags.length > 0 && (
+                  <Box component='span' className='chips'>
+                    {svc.tags.map((tag: string, tagIdx: number) => (
+                      <Box key={tagIdx} component='span' className='tag'>
+                        {tag}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
               </Box>
-              <Box component='span' className='tag'>
-                Textile
-              </Box>
-              <Box component='span' className='tag'>
-                Couture
-              </Box>
-            </Box>
-          </Box>
-          <Box className='row' data-reveal>
-            <Text component='span' className='num'>
-              02
-            </Text>
-            <Text component='span' className='nm'>
-              Tech &amp; Innovation
-            </Text>
-            <Text component='span' className='ds'>
-              Virtual art, AR activations, AI-generated work, media art and
-              digital commerce experiences.
-            </Text>
-            <Box component='span' className='chips'>
-              <Box component='span' className='tag'>
-                AR
-              </Box>
-              <Box component='span' className='tag'>
-                AI
-              </Box>
-              <Box component='span' className='tag'>
-                Digital Commerce
-              </Box>
-            </Box>
-          </Box>
-          <Box className='row' data-reveal>
-            <Text component='span' className='num'>
-              03
-            </Text>
-            <Text component='span' className='nm'>
-              Learning &amp; Workshops
-            </Text>
-            <Text component='span' className='ds'>
-              Printing workshops, fashion-tech bootcamps and mindful art
-              sessions for groups and communities.
-            </Text>
-            <Box component='span' className='chips'>
-              <Box component='span' className='tag'>
-                Workshops
-              </Box>
-              <Box component='span' className='tag'>
-                Bootcamps
-              </Box>
-              <Box component='span' className='tag'>
-                Wellbeing
-              </Box>
-            </Box>
-          </Box>
+            );
+          })}
         </Box>
       </Box>
     </Box>

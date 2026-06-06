@@ -1,14 +1,28 @@
 import * as React from "react";
 import { Box, Text } from "@mantine/core";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
+import { useExhibitions } from "@/hooks/use-sanity";
+
 
 export function FeaturedSeries() {
+  const { data: exhs = [] } = useExhibitions();
+
+  const featured = React.useMemo(() => {
+    if (exhs.length === 0) return null;
+    return exhs.find((exh: any) => 
+      exh.record?.cta?.label?.toLowerCase().includes("featured") || 
+      exh.record?.kicker?.toLowerCase().includes("featured")
+    ) || exhs[0];
+  }, [exhs]);
+
+  if (!featured) return null;
+
   return (
     <Box component="section" className="section wrap" style={{ background: "var(--bg)" }}>
       <Box className="feature" data-reveal>
         <ImagePlaceholder
-          src="https://picsum.photos/seed/lt-17-valentine-series-h/800/900"
-          alt="Valentine Series — hero piece"
+          src={featured.record.img}
+          alt={`${featured.name} — hero piece`}
           bloom
           style={{
             width: "100%",
@@ -17,21 +31,21 @@ export function FeaturedSeries() {
         />
         <Box>
           <span className="tag" style={{ marginBottom: "16px", display: "inline-block" }}>
-            Featured · 2025 · Nigeria
+            {featured.record.kicker} &middot; {featured.place}
           </span>
           <h2 className="h-lg" style={{ margin: "0 0 18px" }}>
-            Valentine Series
+            {featured.name}
           </h2>
           <Text className="lead" style={{ color: "var(--ink-soft)", margin: 0 }}>
-            A study in colour, contrast and intimacy. The Valentine Series brings together fabric painting, charcoal and digital couture into a single meditation on connection — gathering a community around a shared creative goal.
+            {featured.desc}
           </Text>
           <Box
             component="a"
-            href="/contact"
+            href={featured.record.cta.href}
             className="link-arrow"
             style={{ marginTop: "24px", display: "inline-flex" }}
           >
-            Enquire about this series
+            {featured.record.cta.label}
             <svg
               width="15"
               height="15"

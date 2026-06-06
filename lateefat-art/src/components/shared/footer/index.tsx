@@ -474,6 +474,14 @@ export function Footer() {
             >
               Privacy Policy
             </Anchor>
+            <Anchor
+              component={Link}
+              to='/terms'
+              className='footer-link'
+              style={{ fontSize: "0.6rem", letterSpacing: "0.03em" }}
+            >
+              Terms of Service
+            </Anchor>
             <Box
               style={{
                 display: "flex",

@@ -1,19 +1,133 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  getPressArticle,
-  pressOrder,
-  getPressArticle as getArticle,
-} from "@/data/press";
 import { Box, Text } from "@mantine/core";
+import { usePressArticle, usePressArticles } from "@/hooks/use-sanity";
+import { urlFor } from "@/lib/sanity/client";
+import { PortableText } from "@portabletext/react";
+import { pressComponents } from "@/components/shared/portable-text";
 
 export const Route = createFileRoute("/press_/$slug")({
   component: PressArticlePage,
 });
 
+
+// Render helper for local fallback mock data block format
+const renderFallbackBlock = (block: any, idx: number) => {
+  if ("p" in block) {
+    return (
+      <Text
+        key={idx}
+        component='p'
+        style={{
+          margin: "0 0 1.35em",
+          fontSize: "clamp(1.08rem, 1.35vw, 1.22rem)",
+          lineHeight: 1.75,
+          color: "var(--ink)",
+        }}
+      >
+        {block.p}
+      </Text>
+    );
+  }
+  if ("quote" in block) {
+    return (
+      <blockquote
+        key={idx}
+        className='art-quote'
+        style={{
+          margin: "clamp(34px, 4vw, 52px) 0",
+          padding: 0,
+          textAlign: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "var(--serif)",
+            fontStyle: "italic",
+            fontWeight: 400,
+            letterSpacing: "-.01em",
+            fontSize: "clamp(1.5rem,3vw,2.3rem)",
+            lineHeight: 1.22,
+            color: "var(--ink)",
+            margin: 0,
+            textWrap: "balance",
+          }}
+        >
+          {block.quote}
+        </Text>
+        {block.by && (
+          <cite
+            style={{
+              display: "block",
+              marginTop: "20px",
+              fontFamily: "var(--mono)",
+              fontStyle: "normal",
+              fontSize: ".68rem",
+              letterSpacing: ".18em",
+              textTransform: "uppercase",
+              color: "var(--ink-soft)",
+            }}
+          >
+            &mdash; {block.by}
+          </cite>
+        )}
+      </blockquote>
+    );
+  }
+  if ("img" in block) {
+    return (
+      <figure
+        key={idx}
+        className='art-fig'
+        style={{
+          margin: "clamp(30px,4vw,48px) 0",
+        }}
+      >
+        <Box
+          className='img'
+          style={{
+            borderRadius: "var(--radius)",
+            overflow: "hidden",
+            background: "var(--surface)",
+            aspectRatio: "3/2",
+          }}
+        >
+          <img
+            src={block.img}
+            alt={block.cap || ""}
+            loading='lazy'
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </Box>
+        {block.cap && (
+          <figcaption
+            style={{
+              marginTop: "12px",
+              fontFamily: "var(--mono)",
+              fontSize: ".68rem",
+              letterSpacing: ".08em",
+              textTransform: "uppercase",
+              color: "var(--ink-soft)",
+            }}
+          >
+            {block.cap}
+          </figcaption>
+        )}
+      </figure>
+    );
+  }
+  return null;
+};
+
 function PressArticlePage() {
   const { slug } = Route.useParams();
-  const data = getPressArticle(slug);
+  const { data: data, isLoading: isArticleLoading } = usePressArticle(slug);
+  const { data: allArticles = [], isLoading: isAllArticlesLoading } = usePressArticles();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -22,6 +136,25 @@ function PressArticlePage() {
     }, 50);
     return () => clearTimeout(timer);
   }, [slug]);
+
+  const loading = isArticleLoading || isAllArticlesLoading;
+
+  if (loading) {
+    return (
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+        }}
+      >
+        <Text style={{ fontFamily: "var(--mono)", fontSize: "0.85rem", letterSpacing: "0.15em" }}>
+          LOADING COVERAGE...
+        </Text>
+      </Box>
+    );
+  }
 
   if (!data) {
     return (
@@ -42,7 +175,7 @@ function PressArticlePage() {
             fontFamily: "var(--display)",
             fontWeight: 800,
             fontSize: "clamp(2rem,5vw,3.4rem)",
-            letterSpacing: "-0.03em",
+            letterSpacing: "-.03em",
             margin: "16px 0",
           }}
         >
@@ -71,7 +204,10 @@ function PressArticlePage() {
   }
 
   // Get other recommended articles
-  const others = pressOrder.filter((s) => s !== slug).slice(0, 3);
+  const others = allArticles.filter((art: any) => art.slug !== slug).slice(0, 3);
+
+  // Check if body content is in PortableText format or fallback mock array format
+  const isPortableText = Array.isArray(data.body) && data.body.length > 0 && "_type" in data.body[0];
 
   return (
     <Box
@@ -266,117 +402,11 @@ function PressArticlePage() {
             paddingBlock: "clamp(44px,6vw,84px)",
           }}
         >
-          {data.body.map((block, idx) => {
-            if ("p" in block) {
-              return (
-                <Text
-                  key={idx}
-                  component='p'
-                  style={{
-                    margin: "0 0 1.35em",
-                    fontSize: "clamp(1.08rem, 1.35vw, 1.22rem)",
-                    lineHeight: 1.75,
-                    color: "var(--ink)",
-                  }}
-                >
-                  {block.p}
-                </Text>
-              );
-            }
-            if ("quote" in block) {
-              return (
-                <blockquote
-                  key={idx}
-                  className='art-quote'
-                  style={{
-                    margin: "clamp(34px, 4vw, 52px) 0",
-                    padding: 0,
-                    textAlign: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "var(--serif)",
-                      fontStyle: "italic",
-                      fontWeight: 400,
-                      letterSpacing: "-.01em",
-                      fontSize: "clamp(1.5rem,3vw,2.3rem)",
-                      lineHeight: 1.22,
-                      color: "var(--ink)",
-                      margin: 0,
-                      textWrap: "balance",
-                    }}
-                  >
-                    {block.quote}
-                  </Text>
-                  {block.by && (
-                    <cite
-                      style={{
-                        display: "block",
-                        marginTop: "20px",
-                        fontFamily: "var(--mono)",
-                        fontStyle: "normal",
-                        fontSize: ".68rem",
-                        letterSpacing: ".18em",
-                        textTransform: "uppercase",
-                        color: "var(--ink-soft)",
-                      }}
-                    >
-                      &mdash; {block.by}
-                    </cite>
-                  )}
-                </blockquote>
-              );
-            }
-            if ("img" in block) {
-              return (
-                <figure
-                  key={idx}
-                  className='art-fig'
-                  style={{
-                    margin: "clamp(30px,4vw,48px) 0",
-                  }}
-                >
-                  <Box
-                    className='img'
-                    style={{
-                      borderRadius: "var(--radius)",
-                      overflow: "hidden",
-                      background: "var(--surface)",
-                      aspectRatio: "3/2",
-                    }}
-                  >
-                    <img
-                      src={block.img}
-                      alt={block.cap || ""}
-                      loading='lazy'
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-                  </Box>
-                  {block.cap && (
-                    <figcaption
-                      style={{
-                        marginTop: "12px",
-                        fontFamily: "var(--mono)",
-                        fontSize: ".68rem",
-                        letterSpacing: ".08em",
-                        textTransform: "uppercase",
-                        color: "var(--ink-soft)",
-                      }}
-                    >
-                      {block.cap}
-                    </figcaption>
-                  )}
-                </figure>
-              );
-            }
-            return null;
-          })}
+          {isPortableText ? (
+            <PortableText value={data.body} components={pressComponents} />
+          ) : (
+            data.body.map((block: any, idx: number) => renderFallbackBlock(block, idx))
+          )}
         </Box>
       </Box>
 
@@ -400,7 +430,7 @@ function PressArticlePage() {
                 marginTop: "26px",
               }}
             >
-              {data.gallery.map((src, i) => (
+              {data.gallery.map((src: string, i: number) => (
                 <Box
                   key={i}
                   className='g'
@@ -466,7 +496,7 @@ function PressArticlePage() {
               target='_blank'
               rel='noopener noreferrer'
             >
-              Read the original
+              {data.source.label || "Read the original"}
               <svg
                 width='15'
                 height='15'
@@ -488,7 +518,7 @@ function PressArticlePage() {
                 viewBox='0 0 15 15'
                 fill='none'
                 stroke='currentColor'
-                stroke-width='1.8'
+                strokeWidth='1.8'
                 style={{ marginLeft: "4px" }}
               >
                 <path d='M3 12L12 3M5 3h7v7' />
@@ -538,7 +568,7 @@ function PressArticlePage() {
                   viewBox='0 0 15 15'
                   fill='none'
                   stroke='currentColor'
-                  stroke-width='1.8'
+                  strokeWidth='1.8'
                   style={{ marginLeft: "4px" }}
                 >
                   <path d='M3 12L12 3M5 3h7v7' />
@@ -554,99 +584,94 @@ function PressArticlePage() {
                 gap: "clamp(22px,2.6vw,34px)",
               }}
             >
-              {others.map((s) => {
-                const o = getArticle(s);
-                if (!o) return null;
-
-                return (
-                  <Link
-                    key={s}
-                    className='art-more-card'
-                    to='/press/$slug'
-                    params={{ slug: s }}
+              {others.map((o: any) => (
+                <Link
+                  key={o.slug}
+                  className='art-more-card'
+                  to='/press/$slug'
+                  params={{ slug: o.slug }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  <Box
+                    className='img'
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      textDecoration: "none",
-                      color: "inherit",
+                      aspectRatio: "16/11",
+                      borderRadius: "var(--radius)",
+                      overflow: "hidden",
+                      background: "var(--bg)",
                     }}
                   >
-                    <Box
-                      className='img'
+                    <img
+                      src={o.hero}
+                      alt=''
+                      loading='lazy'
                       style={{
-                        aspectRatio: "16/11",
-                        borderRadius: "var(--radius)",
-                        overflow: "hidden",
-                        background: "var(--bg)",
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        display: "block",
+                        transition: "transform .7s var(--ease)",
                       }}
-                    >
-                      <img
-                        src={o.hero}
-                        alt=''
-                        loading='lazy'
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                          transition: "transform .7s var(--ease)",
-                        }}
-                      />
-                    </Box>
-                    <Box
-                      className='src'
+                    />
+                  </Box>
+                  <Box
+                    className='src'
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "9px",
+                      marginTop: "14px",
+                      fontFamily: "var(--mono)",
+                      fontSize: ".64rem",
+                      letterSpacing: ".12em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <span
+                      className='outlet'
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "9px",
-                        marginTop: "14px",
-                        fontFamily: "var(--mono)",
-                        fontSize: ".64rem",
-                        letterSpacing: ".12em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      <span
-                        className='outlet'
-                        style={{
-                          color: "var(--indigo-bright)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {o.outlet}
-                      </span>
-                      <span
-                        className='sep'
-                        style={{
-                          width: "3px",
-                          height: "3px",
-                          borderRadius: "50%",
-                          background: "var(--sand-line)",
-                        }}
-                      />
-                      <span
-                        className='date'
-                        style={{ color: "var(--ink-soft)" }}
-                      >
-                        {o.date}
-                      </span>
-                    </Box>
-                    <div
-                      className='t'
-                      style={{
-                        fontSize: "1.22rem",
+                        color: "var(--indigo-bright)",
                         fontWeight: 700,
-                        fontFamily: "var(--display)",
-                        letterSpacing: "-.02em",
-                        marginTop: "8px",
-                        lineHeight: 1.16,
                       }}
                     >
-                      {o.title}
-                    </div>
-                  </Link>
-                );
-              })}
+                      {o.outlet}
+                    </span>
+                    <span
+                      className='sep'
+                      style={{
+                        width: "3px",
+                        height: "3px",
+                        borderRadius: "50%",
+                        background: "var(--sand-line)",
+                      }}
+                    />
+                    <span
+                      className='date'
+                      style={{ color: "var(--ink-soft)" }}
+                    >
+                      {o.date}
+                    </span>
+                  </Box>
+                  <div
+                    className='t'
+                    style={{
+                      fontSize: "1.22rem",
+                      fontWeight: 700,
+                      fontFamily: "var(--display)",
+                      letterSpacing: "-.02em",
+                      marginTop: "8px",
+                      lineHeight: 1.16,
+                    }}
+                  >
+                    {o.title}
+                  </div>
+                </Link>
+              ))}
             </Box>
           </Box>
         </section>

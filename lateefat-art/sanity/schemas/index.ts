@@ -7,7 +7,9 @@ import galleryAlbum from './gallery/albums'
 import company from './site/company'
 import advertsSection from './site/adverts-section'
 import event from './site/event'
+import exhibition from './site/exhibition'
 import faq from './site/faq'
+import legalPage from './site/legal-page'
 import testimonial from './site/testimonial'
 import service from './site/service'
 
@@ -24,9 +26,12 @@ export const schemas = [
 
   // Site
   event,
+  exhibition,
   company,
   advertsSection,
   testimonial,
   faq,
   service,
+  legalPage,
 ]
+

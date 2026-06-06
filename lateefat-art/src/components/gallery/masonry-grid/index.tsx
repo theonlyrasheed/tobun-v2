@@ -3,196 +3,19 @@ import { Box, Text } from "@mantine/core";
 import { ImagePlaceholder } from "@/components/shared/image-placeholder";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
+import { useGallery } from "@/hooks/use-sanity";
 
-const GALLERY_ITEMS = [
-  {
-    seed: "lt-1-digital-couture-01",
-    title: "Form Beyond Fabric",
-    cat: "couture",
-    aspect: "3/4",
-    w: 1200,
-    h: 1600,
-    year: "2024",
-    subtitle: "Digital Couture",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-2-adire-indigo-study",
-    title: "Indigo Repetition",
-    cat: "textile",
-    aspect: "1/1",
-    w: 1400,
-    h: 1400,
-    year: "2019",
-    subtitle: "ADIRE",
-    variant: "light" as const,
-    color: "var(--cream)",
-  },
-  {
-    seed: "lt-3-clayton-community-",
-    title: "Clayton Hub",
-    cat: "mural",
-    aspect: "4/5",
-    w: 1200,
-    h: 1500,
-    year: "2025",
-    subtitle: "Mural",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-4-ai-feature",
-    title: "Synthetic Bloom",
-    cat: "ai",
-    aspect: "5/4",
-    w: 1500,
-    h: 1200,
-    year: "2025",
-    subtitle: "AI",
-    variant: "ochre" as const,
-    color: "var(--indigo-900)",
-  },
-  {
-    seed: "lt-5-charcoal-contrast-",
-    title: "The Art We Carry",
-    cat: "painting",
-    aspect: "2/3",
-    w: 1200,
-    h: 1800,
-    year: "2022",
-    subtitle: "Painting",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-6-digital-illustrati",
-    title: "Line Upon Line",
-    cat: "illustration",
-    aspect: "1/1",
-    w: 1400,
-    h: 1400,
-    year: "2023",
-    subtitle: "Illustration",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-7-editorial-photogra",
-    title: "Worn Stories",
-    cat: "photo",
-    aspect: "3/4",
-    w: 1200,
-    h: 1600,
-    year: "2024",
-    subtitle: "Photography",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-8-digital-couture-02",
-    title: "Runway, Rendered",
-    cat: "couture",
-    aspect: "4/5",
-    w: 1200,
-    h: 1500,
-    year: "2025",
-    subtitle: "Digital Couture",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-9-tie-dye-pattern",
-    title: "Four Yards",
-    cat: "textile",
-    aspect: "5/4",
-    w: 1500,
-    h: 1200,
-    year: "2017",
-    subtitle: "ADIRE",
-    variant: "light" as const,
-    color: "var(--cream)",
-  },
-  {
-    seed: "lt-10-visual-painting",
-    title: "Colors of Clothes",
-    cat: "painting",
-    aspect: "1/1",
-    w: 1400,
-    h: 1400,
-    year: "2021",
-    subtitle: "Painting",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-11-mural-heritage",
-    title: "Elevating Heritage",
-    cat: "mural",
-    aspect: "3/4",
-    w: 1200,
-    h: 1600,
-    year: "2024",
-    subtitle: "Mural",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-12-ai-illustration-hy",
-    title: "Minds on Earth",
-    cat: "ai illustration",
-    aspect: "4/5",
-    w: 1200,
-    h: 1500,
-    year: "2026",
-    subtitle: "AI · Illustration",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-13-studio-photography",
-    title: "In the Making",
-    cat: "photo",
-    aspect: "2/3",
-    w: 1200,
-    h: 1800,
-    year: "2023",
-    subtitle: "Photography",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-14-wearable-art",
-    title: "The Pocket Stories",
-    cat: "couture",
-    aspect: "1/1",
-    w: 1400,
-    h: 1400,
-    year: "2026",
-    subtitle: "Digital Couture",
-    variant: "ochre" as const,
-    color: "var(--indigo-900)",
-  },
-  {
-    seed: "lt-15-sketch-series",
-    title: "Sketch by Sketch",
-    cat: "illustration",
-    aspect: "5/4",
-    w: 1500,
-    h: 1200,
-    year: "2020",
-    subtitle: "Illustration",
-    variant: "default" as const,
-  },
-  {
-    seed: "lt-16-fabric-painting",
-    title: "Patterns Speak",
-    cat: "textile painting",
-    aspect: "4/5",
-    w: 1200,
-    h: 1500,
-    year: "2018",
-    subtitle: "Fabric",
-    variant: "default" as const,
-  },
-] as const;
 
 interface MasonryGridProps {
   activeFilter: string;
 }
 
 export function MasonryGrid({ activeFilter }: MasonryGridProps) {
+  const { data: items = [] } = useGallery();
+
   React.useEffect(() => {
+    if (items.length === 0) return;
+
     let lightbox = new PhotoSwipeLightbox({
       gallery: "#gallery-grid",
       children: "a.masonry-item",
@@ -203,7 +26,7 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
     return () => {
       lightbox.destroy();
     };
-  }, []);
+  }, [items]);
 
   return (
     <Box
@@ -222,16 +45,20 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
             paddingBlock: "clamp(34px, 4vw, 56px)",
           }}
         >
-          {GALLERY_ITEMS.map((item) => {
+          {items.map((item: any, idx: number) => {
             const hidden =
               activeFilter !== "all" &&
               !item.cat.split(" ").includes(activeFilter);
 
+            // Use direct src/largeSrc from Sanity queries, or fallback to picsum format if using fallback
+            const thumbnailSrc = item.src || `https://picsum.photos/seed/${item.seed}/800/900`;
+            const lightboxSrc = item.largeSrc || `https://picsum.photos/seed/${item.seed}/1600/1200`;
+
             return (
               <Box
-                key={item.seed}
+                key={item.seed || idx}
                 component="a"
-                href={`https://picsum.photos/seed/${item.seed}/1600/1200`}
+                href={lightboxSrc}
                 className="masonry-item"
                 data-pswp-width={item.w}
                 data-pswp-height={item.h}
@@ -242,9 +69,9 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
                 }}
               >
                 <ImagePlaceholder
-                  src={`https://picsum.photos/seed/${item.seed}/800/900`}
+                  src={thumbnailSrc}
                   alt={item.title}
-                  variant={item.variant}
+                  variant={item.variant || "default"}
                   bloom
                   aspectRatio={item.aspect}
                   style={{
@@ -254,7 +81,7 @@ export function MasonryGrid({ activeFilter }: MasonryGridProps) {
                 <Box
                   className="meta"
                   style={{
-                    color: (item as { color?: string }).color || "var(--on-dark)",
+                    color: item.color || "var(--on-dark)",
                   }}
                 >
                   <Text className="t">{item.title}</Text>

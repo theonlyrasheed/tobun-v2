@@ -3,16 +3,21 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'event',
-  title: 'Event (Flyer)',
+  title: 'Event',
   type: 'document',
   icon: CalendarIcon,
   fields: [
     defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      description: 'Used only to avoid duplicates (keep unique).',
-      options: {maxLength: 96},
+      options: {source: 'title', maxLength: 96},
       validation: (rule) =>
         rule.required().custom(async (value, context) => {
           const slug = (value as any)?.current
@@ -30,6 +35,42 @@ export default defineType({
         }),
     }),
     defineField({
+      name: 'date',
+      title: 'Date & Time',
+      type: 'datetime',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location / Country',
+      type: 'string',
+      description: 'e.g. “UK” or “Ghana”',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'badge',
+      title: 'Badge',
+      type: 'string',
+      description: 'e.g. “Free” or “Ticketed”',
+      initialValue: 'Free',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'desc',
+      title: 'Description',
+      type: 'text',
+      rows: 3,
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'href',
+      title: 'Registration Link',
+      type: 'string',
+      description: 'e.g. “/contact” or an external link',
+      initialValue: '/contact',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
@@ -45,10 +86,24 @@ export default defineType({
       ],
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'order',
+      title: 'Order',
+      type: 'number',
+      description: 'Lower numbers show first',
+      validation: (rule) => rule.min(0),
+    }),
   ],
   preview: {
     select: {
-      title: 'slug.current',
+      title: 'title',
+      subtitle: 'location',
       media: 'image',
     },
   },

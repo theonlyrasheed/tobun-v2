@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PressRouteImport } from './routes/press'
 import { Route as GalleryRouteImport } from './routes/gallery'
@@ -19,6 +20,11 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PressSlugRouteImport } from './routes/press_.$slug'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/press/$slug': typeof PressSlugRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/press': typeof PressRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/press_/$slug': typeof PressSlugRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/press'
     | '/privacy'
+    | '/terms'
     | '/press/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/press'
     | '/privacy'
+    | '/terms'
     | '/press/$slug'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/press'
     | '/privacy'
+    | '/terms'
     | '/press_/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -144,11 +156,19 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   PressRoute: typeof PressRoute
   PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   PressSlugRoute: typeof PressSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   PressRoute: PressRoute,
   PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   PressSlugRoute: PressSlugRoute,
 }
 export const routeTree = rootRouteImport

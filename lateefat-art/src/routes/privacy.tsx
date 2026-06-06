@@ -1,6 +1,9 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Box } from "@mantine/core";
+import { useLegalPage } from "@/hooks/use-sanity";
+import { PortableText } from "@portabletext/react";
+import { legalComponents } from "@/components/shared/portable-text";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyPage,
@@ -16,7 +19,18 @@ export const Route = createFileRoute("/privacy")({
   }),
 });
 
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 function PrivacyPage() {
+  const { data: page } = useLegalPage("privacy-policy");
+  const hasBody = Array.isArray(page?.body) && page.body.length > 0;
+
   return (
     <Box
       component="article"
@@ -65,7 +79,7 @@ function PrivacyPage() {
             className="h-lg"
             style={{ marginTop: "14px", marginBottom: "16px" }}
           >
-            Privacy <em className="accent-ochre">Policy</em>
+            {page?.title ?? <>Privacy <em className="accent-ochre">Policy</em></>}
           </h1>
           <p
             style={{
@@ -75,190 +89,107 @@ function PrivacyPage() {
               letterSpacing: "0.04em",
             }}
           >
-            Last updated: June 2026
+            Last updated:{" "}
+            {page?.lastUpdated ? formatDate(page.lastUpdated) : "June 2026"}
           </p>
         </Box>
 
-        {/* Intro */}
-        <p
-          className="lead"
-          style={{
-            color: "var(--ink-soft)",
-            marginBottom: "clamp(28px, 4vw, 48px)",
-          }}
-        >
-          Lateefat Modupeola Tobun ("<strong>we</strong>", "<strong>us</strong>
-          ", "<strong>our</strong>") is committed to protecting your privacy.
-          This policy explains what personal data we collect when you visit{" "}
-          <strong>tobunlateefat.com</strong>, how we use it, and your rights in
-          relation to it.
-        </p>
-
-        <Divider />
-
-        <Section title="1. Who we are">
-          <p>
-            The data controller is <strong>Lateefat Modupeola Tobun</strong>,
-            based in Bradford, United Kingdom. You can reach us at{" "}
-            <a
-              href="mailto:hello@tobunlateefat.com"
-              style={{ color: "var(--indigo)" }}
+        {hasBody ? (
+          <PortableText value={page!.body} components={legalComponents} />
+        ) : (
+          <>
+            {/* Intro */}
+            <p
+              className="lead"
+              style={{
+                color: "var(--ink-soft)",
+                marginBottom: "clamp(28px, 4vw, 48px)",
+              }}
             >
-              hello@tobunlateefat.com
-            </a>{" "}
-            for any privacy-related queries.
-          </p>
-        </Section>
+              Lateefat Modupeola Tobun ("<strong>we</strong>", "<strong>us</strong>
+              ", "<strong>our</strong>") is committed to protecting your privacy.
+              This policy explains what personal data we collect when you visit{" "}
+              <strong>tobunlateefat.com</strong>, how we use it, and your rights in
+              relation to it.
+            </p>
 
-        <Section title="2. Information we collect">
-          <p>We may collect the following categories of personal data:</p>
-          <ul>
-            <li>
-              <strong>Contact enquiries</strong> — your name, email address,
-              telephone number (optional) and message content when you submit the
-              contact form.
-            </li>
-            <li>
-              <strong>Newsletter sign-ups</strong> — your email address when you
-              opt in to our mailing list via the footer form.
-            </li>
-            <li>
-              <strong>Usage data</strong> — anonymised browsing analytics
-              (pages visited, session duration, device type) to help us
-              understand how our website is used.
-            </li>
-          </ul>
-          <p>
-            We do <strong>not</strong> collect payment card data directly; any
-            purchases are handled by a third-party processor whose own privacy
-            notice will apply.
-          </p>
-        </Section>
+            <Divider />
 
-        <Section title="3. How we use your data">
-          <p>We use the data we collect to:</p>
-          <ul>
-            <li>Respond to your enquiry or message.</li>
-            <li>
-              Send occasional newsletters about new work, exhibitions and events
-              (only if you opted in — you may unsubscribe at any time).
-            </li>
-            <li>
-              Improve our website content based on aggregated, anonymised usage
-              patterns.
-            </li>
-            <li>Comply with legal obligations when required.</li>
-          </ul>
-          <p>
-            Our lawful basis for processing contact enquiries is{" "}
-            <em>legitimate interests</em> (responding to your message). For
-            newsletters, our basis is your <em>consent</em>.
-          </p>
-        </Section>
+            <Section title="1. Who we are">
+              <p>
+                The data controller is <strong>Lateefat Modupeola Tobun</strong>,
+                based in Bradford, United Kingdom. You can reach us at{" "}
+                <a href="mailto:hello@tobunlateefat.com" style={{ color: "var(--indigo)" }}>
+                  hello@tobunlateefat.com
+                </a>{" "}
+                for any privacy-related queries.
+              </p>
+            </Section>
 
-        <Section title="4. Cookies & analytics">
-          <p>
-            Our site uses a small number of technical cookies necessary for the
-            website to function (e.g. session state). We may also use a
-            privacy-first analytics tool (no cross-site tracking, no advertising
-            profiling) to collect aggregated page-view data.
-          </p>
-          <p>
-            You can disable non-essential cookies through your browser settings
-            at any time without affecting your use of the site.
-          </p>
-        </Section>
+            <Section title="2. Information we collect">
+              <p>We may collect the following categories of personal data:</p>
+              <ul>
+                <li><strong>Contact enquiries</strong> — your name, email address, telephone number (optional) and message content when you submit the contact form.</li>
+                <li><strong>Newsletter sign-ups</strong> — your email address when you opt in to our mailing list via the footer form.</li>
+                <li><strong>Usage data</strong> — anonymised browsing analytics (pages visited, session duration, device type) to help us understand how our website is used.</li>
+              </ul>
+              <p>We do <strong>not</strong> collect payment card data directly; any purchases are handled by a third-party processor whose own privacy notice will apply.</p>
+            </Section>
 
-        <Section title="5. Data sharing">
-          <p>
-            We do not sell, trade or rent your personal data. We may share data
-            with trusted service providers (e.g. email delivery, hosting)
-            strictly to operate this website — they are contractually bound to
-            handle it securely and only as instructed.
-          </p>
-          <p>
-            We may disclose data when required by law or to protect our legal
-            rights.
-          </p>
-        </Section>
+            <Section title="3. How we use your data">
+              <p>We use the data we collect to:</p>
+              <ul>
+                <li>Respond to your enquiry or message.</li>
+                <li>Send occasional newsletters about new work, exhibitions and events (only if you opted in — you may unsubscribe at any time).</li>
+                <li>Improve our website content based on aggregated, anonymised usage patterns.</li>
+                <li>Comply with legal obligations when required.</li>
+              </ul>
+              <p>Our lawful basis for processing contact enquiries is <em>legitimate interests</em> (responding to your message). For newsletters, our basis is your <em>consent</em>.</p>
+            </Section>
 
-        <Section title="6. Retention">
-          <p>
-            We retain contact enquiry data for up to <strong>24 months</strong>{" "}
-            to allow for any follow-up correspondence, then securely delete it.
-            Newsletter subscriber data is retained until you unsubscribe.
-            Anonymised analytics data may be retained indefinitely.
-          </p>
-        </Section>
+            <Section title="4. Cookies & analytics">
+              <p>Our site uses a small number of technical cookies necessary for the website to function (e.g. session state). We may also use a privacy-first analytics tool (no cross-site tracking, no advertising profiling) to collect aggregated page-view data.</p>
+              <p>You can disable non-essential cookies through your browser settings at any time without affecting your use of the site.</p>
+            </Section>
 
-        <Section title="7. Your rights">
-          <p>
-            Under UK GDPR and the Data Protection Act 2018, you have the right
-            to:
-          </p>
-          <ul>
-            <li>
-              <strong>Access</strong> the personal data we hold about you.
-            </li>
-            <li>
-              <strong>Rectify</strong> inaccurate data.
-            </li>
-            <li>
-              <strong>Erasure</strong> ("right to be forgotten") in certain
-              circumstances.
-            </li>
-            <li>
-              <strong>Restrict</strong> how we process your data.
-            </li>
-            <li>
-              <strong>Object</strong> to processing based on legitimate
-              interests.
-            </li>
-            <li>
-              <strong>Data portability</strong> where processing is automated
-              and consent-based.
-            </li>
-          </ul>
-          <p>
-            To exercise any of these rights, please email{" "}
-            <a
-              href="mailto:hello@tobunlateefat.com"
-              style={{ color: "var(--indigo)" }}
-            >
-              hello@tobunlateefat.com
-            </a>
-            . We will respond within <strong>30 days</strong>.
-          </p>
-          <p>
-            You also have the right to lodge a complaint with the{" "}
-            <a
-              href="https://ico.org.uk"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "var(--indigo)" }}
-            >
-              Information Commissioner's Office (ICO)
-            </a>
-            , the UK supervisory authority for data protection.
-          </p>
-        </Section>
+            <Section title="5. Data sharing">
+              <p>We do not sell, trade or rent your personal data. We may share data with trusted service providers (e.g. email delivery, hosting) strictly to operate this website — they are contractually bound to handle it securely and only as instructed.</p>
+              <p>We may disclose data when required by law or to protect our legal rights.</p>
+            </Section>
 
-        <Section title="8. Third-party links">
-          <p>
-            Our website may include links to third-party websites (e.g. social
-            media). We are not responsible for the privacy practices of those
-            sites and encourage you to read their own policies.
-          </p>
-        </Section>
+            <Section title="6. Retention">
+              <p>We retain contact enquiry data for up to <strong>24 months</strong> to allow for any follow-up correspondence, then securely delete it. Newsletter subscriber data is retained until you unsubscribe. Anonymised analytics data may be retained indefinitely.</p>
+            </Section>
 
-        <Section title="9. Changes to this policy">
-          <p>
-            We may update this policy from time to time. The "last updated" date
-            at the top will always reflect the most recent revision. Continued
-            use of the site following any changes constitutes your acceptance of
-            the updated policy.
-          </p>
-        </Section>
+            <Section title="7. Your rights">
+              <p>Under UK GDPR and the Data Protection Act 2018, you have the right to:</p>
+              <ul>
+                <li><strong>Access</strong> the personal data we hold about you.</li>
+                <li><strong>Rectify</strong> inaccurate data.</li>
+                <li><strong>Erasure</strong> ("right to be forgotten") in certain circumstances.</li>
+                <li><strong>Restrict</strong> how we process your data.</li>
+                <li><strong>Object</strong> to processing based on legitimate interests.</li>
+                <li><strong>Data portability</strong> where processing is automated and consent-based.</li>
+              </ul>
+              <p>To exercise any of these rights, please email{" "}
+                <a href="mailto:hello@tobunlateefat.com" style={{ color: "var(--indigo)" }}>hello@tobunlateefat.com</a>. We will respond within <strong>30 days</strong>.
+              </p>
+              <p>You also have the right to lodge a complaint with the{" "}
+                <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" style={{ color: "var(--indigo)" }}>
+                  Information Commissioner's Office (ICO)
+                </a>, the UK supervisory authority for data protection.
+              </p>
+            </Section>
+
+            <Section title="8. Third-party links">
+              <p>Our website may include links to third-party websites (e.g. social media). We are not responsible for the privacy practices of those sites and encourage you to read their own policies.</p>
+            </Section>
+
+            <Section title="9. Changes to this policy">
+              <p>We may update this policy from time to time. The "last updated" date at the top will always reflect the most recent revision. Continued use of the site following any changes constitutes your acceptance of the updated policy.</p>
+            </Section>
+          </>
+        )}
 
         <Divider />
 
@@ -288,6 +219,21 @@ function PrivacyPage() {
             </Link>{" "}
             and we'll be happy to help.
           </p>
+        </Box>
+
+        {/* Cross-page navigation */}
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "12px",
+            flexWrap: "wrap",
+            marginTop: "clamp(36px, 5vw, 56px)",
+          }}
+        >
+          <Link to="/terms" className="legal-nav-link">
+            Terms of Service →
+          </Link>
         </Box>
       </Box>
 
@@ -326,6 +272,22 @@ function PrivacyPage() {
           border: none;
           border-top: 1px solid var(--sand-line);
           margin: clamp(28px, 4vw, 48px) 0;
+        }
+        .legal-nav-link {
+          font-family: var(--mono);
+          font-size: 0.78rem;
+          letter-spacing: 0.04em;
+          color: var(--ink-soft);
+          text-decoration: none;
+          padding: 9px 18px;
+          border: 1px solid var(--sand-line);
+          border-radius: 100px;
+          transition: border-color 0.2s, color 0.2s;
+        }
+        .legal-nav-link:hover {
+          border-color: var(--indigo);
+          color: var(--indigo);
+          text-decoration: none !important;
         }
       `}</style>
     </Box>

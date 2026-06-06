@@ -1,6 +1,15 @@
+import * as React from "react";
 import { Box, Text } from "@mantine/core";
 
+import { useFAQs } from "@/hooks/use-sanity";
+import { PortableText } from "@portabletext/react";
+
+
 export function FAQ() {
+  const { data: faqs = [] } = useFAQs();
+
+  if (faqs.length === 0) return null;
+
   return (
     <Box component="section" className="section cream-2-block">
       <Box className="wrap faq-wrap">
@@ -15,61 +24,21 @@ export function FAQ() {
           </Text>
         </Box>
         <Box className="faq-list" data-reveal>
-          <Box component="details" className="faq" open>
-            <Box component="summary">
-              Do you take on commissions?
-              <Box component="span" className="ic" />
+          {faqs.map((faq: any, idx: number) => (
+            <Box key={idx} component="details" className="faq" open={idx === 0 ? true : undefined}>
+              <Box component="summary">
+                {faq.question}
+                <Box component="span" className="ic" />
+              </Box>
+              <Box className="faq-a">
+                {Array.isArray(faq.answer) ? (
+                  <PortableText value={faq.answer} />
+                ) : (
+                  faq.answer
+                )}
+              </Box>
             </Box>
-            <Box className="faq-a">
-              Yes — I take a limited number of couture, textile, mural and digital
-              commissions each year. Share your idea, timeline and space, and I'll
-              tell you honestly whether it's a fit.
-            </Box>
-          </Box>
-          <Box component="details" className="faq">
-            <Box component="summary">
-              Can you run a workshop for my group?
-              <Box component="span" className="ic" />
-            </Box>
-            <Box className="faq-a">
-              Absolutely. I run printing workshops, fashion-tech bootcamps and
-              mindful art sessions for schools, companies and communities — in
-              person across the UK and remotely worldwide.
-            </Box>
-          </Box>
-          <Box component="details" className="faq">
-            <Box component="summary">
-              How does AI fit into your practice?
-              <Box component="span" className="ic" />
-            </Box>
-            <Box className="faq-a">
-              As a collaborator, never a shortcut. I use AI and data tools to extend
-              hand-made work into sustainable, digital wearable art — the concept,
-              craft and cultural story always lead.
-            </Box>
-          </Box>
-          <Box component="details" className="faq">
-            <Box component="summary">
-              Where are you based, and do you ship?
-              <Box component="span" className="ic" />
-            </Box>
-            <Box className="faq-a">
-              I'm based in Bradford, United Kingdom, and work internationally.
-              Original pieces and prints ship worldwide; bespoke and large-scale works
-              are arranged case by case.
-            </Box>
-          </Box>
-          <Box component="details" className="faq">
-            <Box component="summary">
-              What's the timeline for a project?
-              <Box component="span" className="ic" />
-            </Box>
-            <Box className="faq-a">
-              It depends on scope — a print can be a couple of weeks, while couture or
-              murals run one to three months. We'll map clear milestones before any
-              work starts.
-            </Box>
-          </Box>
+          ))}
         </Box>
       </Box>
     </Box>

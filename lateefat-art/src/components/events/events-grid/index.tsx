@@ -1,61 +1,7 @@
+import * as React from "react";
 import { Link } from "@tanstack/react-router";
+import { useEvents } from "@/hooks/use-sanity";
 
-const EVENTS = [
-  {
-    yr: "2026",
-    date: "Mar 2026 · UK",
-    title: "The Pocket Stories",
-    desc: "Wearable couture, ADIRE printing and storytelling for the whole community.",
-    badge: "Free",
-    img: "https://picsum.photos/seed/lt-19-the-pocket-stories/800/900",
-    href: "/contact",
-  },
-  {
-    yr: "2025",
-    date: "Sep 2025 · UK",
-    title: "Mindful Regulation",
-    desc: "Using art as a therapeutic tool to regulate emotion and find calm.",
-    badge: "Free",
-    img: "https://picsum.photos/seed/lt-20-mindful-regulation/800/900",
-    href: "/contact",
-  },
-  {
-    yr: "2024",
-    date: "May 2024 · Ghana",
-    title: "Elevating Heritage",
-    desc: "A hands-on textile-printing workshop reconnecting craft and identity.",
-    badge: "Ticketed",
-    img: "https://picsum.photos/seed/lt-21-elevating-heritage/800/900",
-    href: "/contact",
-  },
-  {
-    yr: "2023",
-    date: "Nov 2023 · UK",
-    title: "The Art We Carry",
-    desc: "A reflective session on identity, weight and belonging through charcoal.",
-    badge: "Free",
-    img: "https://picsum.photos/seed/lt-22-the-art-we-carry/800/900",
-    href: "/contact",
-  },
-  {
-    yr: "2022",
-    date: "Jul 2022 · UK",
-    title: "Fashion-Tech Bootcamp",
-    desc: "Hands-on intro to digital couture, illustration and AI tools.",
-    badge: "Ticketed",
-    img: "https://picsum.photos/seed/lt-23-fashion-tech-bootc/800/900",
-    href: "/contact",
-  },
-  {
-    yr: "2020",
-    date: "2020 · UK",
-    title: "The First Workshop",
-    desc: "The session that started it all — 40+ participants, one shared goal.",
-    badge: "Free",
-    img: "https://picsum.photos/seed/lt-24-first-workshop/800/900",
-    href: "/contact",
-  },
-] as const;
 
 interface EventsGridProps {
   selectedYear: string;
@@ -63,9 +9,22 @@ interface EventsGridProps {
 }
 
 export function EventsGrid({ selectedYear, setSelectedYear }: EventsGridProps) {
-  const filteredEvents = EVENTS.filter(
-    (ev) => selectedYear === "all" || ev.yr === selectedYear
-  );
+  const { data: events = [] } = useEvents();
+
+  // Compute available years dynamically
+  const years = React.useMemo(() => {
+    const ySet = new Set<string>();
+    events.forEach((ev: any) => {
+      if (ev.yr) ySet.add(ev.yr);
+    });
+    return Array.from(ySet).sort((a, b) => b.localeCompare(a));
+  }, [events]);
+
+  const filteredEvents = React.useMemo(() => {
+    return events.filter(
+      (ev: any) => selectedYear === "all" || ev.yr === selectedYear
+    );
+  }, [events, selectedYear]);
 
   return (
     <>
@@ -77,7 +36,7 @@ export function EventsGrid({ selectedYear, setSelectedYear }: EventsGridProps) {
           >
             All years
           </button>
-          {["2026", "2025", "2024", "2023", "2022", "2021", "2020"].map((y) => (
+          {years.map((y) => (
             <button
               key={y}
               className={selectedYear === y ? "on" : ""}
@@ -91,7 +50,7 @@ export function EventsGrid({ selectedYear, setSelectedYear }: EventsGridProps) {
 
       <div className="wrap">
         <div className="ev-grid">
-          {filteredEvents.map((ev, idx) => (
+          {filteredEvents.map((ev: any, idx: number) => (
             <article key={idx} className="ev-card" data-yr={ev.yr} data-reveal>
               <div className="ph bloom">
                 <img src={ev.img} alt={ev.title} loading="lazy" />
@@ -104,9 +63,15 @@ export function EventsGrid({ selectedYear, setSelectedYear }: EventsGridProps) {
                 <div className="c-title">{ev.title}</div>
                 <p className="c-desc">{ev.desc}</p>
                 <div className="c-foot">
-                  <Link to={ev.href} className="link-arrow">
-                    Register
-                  </Link>
+                  {ev.href.startsWith("http") ? (
+                    <a href={ev.href} target="_blank" rel="noopener noreferrer" className="link-arrow">
+                      Register
+                    </a>
+                  ) : (
+                    <Link to={ev.href} className="link-arrow">
+                      Register
+                    </Link>
+                  )}
                 </div>
               </div>
             </article>

@@ -60,6 +60,13 @@ export default defineType({
       validation: (rule) => rule.required().min(10),
     }),
     defineField({
+      name: 'tags',
+      title: 'Tags / Chips',
+      type: 'array',
+      of: [{type: 'string'}],
+      description: 'e.g. “Illustration”, “Textile”, “Couture”',
+    }),
+    defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
