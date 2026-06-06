@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
   createRootRouteWithContext,
+  useRouterState,
 } from "@tanstack/react-router";
 import { sanityQ } from "@/sanity/query-builder";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
@@ -138,8 +139,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootComponent() {
+  const routerState = useRouterState();
+  const isPending = routerState.status === "pending";
+
   return (
     <RootDocument>
+      {isPending && <div className="top-loader" aria-hidden="true" />}
       <Outlet />
     </RootDocument>
   );

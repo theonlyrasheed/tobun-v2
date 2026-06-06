@@ -108,3 +108,29 @@
 .mobile-menu.open .nav-links a:nth-child(6){animation-delay:.40s}
 @keyframes mmRise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .mobile-menu.open .nav-links a { animation: none; } }
+
+/* ---------- Route top loader ---------- */
+.top-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--gold);
+  z-index: 100000;
+  transform: translateX(-100%);
+  animation: progressLoader 2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes progressLoader {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(-30%);
+  }
+  100% {
+    transform: translateX(-5%);
+  }
+}
+
