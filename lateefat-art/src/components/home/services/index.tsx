@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Box, Text } from "@mantine/core";
+import { Link } from "@tanstack/react-router";
+import { Box, Text, Anchor } from "@mantine/core";
 import { useServices } from "@/hooks/use-sanity";
-
 
 export function Services() {
   const { data: services = [] } = useServices();
@@ -24,13 +24,36 @@ export function Services() {
               Services &amp; collaboration
             </Text>
           </Box>
-          <Text component='p' className='lead' style={{ maxWidth: "34ch" }}>
-            Fusing art and digital innovation into immersive experiences — and
-            empowering creators through hands-on workshops.
-          </Text>
+          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '12px' }}>
+            <Text component='p' className='lead' style={{ maxWidth: "34ch", margin: 0 }}>
+              Fusing art and digital innovation into immersive experiences — and
+              empowering creators through hands-on workshops.
+            </Text>
+            <Anchor
+              component={Link}
+              to='/about'
+              hash='specialties'
+              underline='never'
+              className='link-arrow'
+              style={{ display: 'inline-flex', alignItems: 'center' }}
+            >
+              View all services
+              <svg
+                width='15'
+                height='15'
+                viewBox='0 0 15 15'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1.8'
+                style={{ marginLeft: '4px' }}
+              >
+                <path d='M3 12L12 3M5 3h7v7' />
+              </svg>
+            </Anchor>
+          </Box>
         </Box>
         <Box className='svc'>
-          {services.map((svc: any, idx: number) => {
+          {services.slice(0, 4).map((svc: any, idx: number) => {
             const displayNum = String(idx + 1).padStart(2, "0");
             return (
               <Box key={idx} className='row' data-reveal>
@@ -60,3 +83,4 @@ export function Services() {
     </Box>
   );
 }
+

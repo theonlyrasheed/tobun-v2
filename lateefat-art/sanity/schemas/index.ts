@@ -13,6 +13,7 @@ import legalPage from './site/legal-page'
 import siteSettings from './site/site-settings'
 import testimonial from './site/testimonial'
 import service from './site/service'
+import timelineMilestone from './site/timeline'
 
 export const schemas = [
   // Blog
@@ -35,5 +36,7 @@ export const schemas = [
   service,
   legalPage,
   siteSettings,
+  timelineMilestone,
 ]
+
 

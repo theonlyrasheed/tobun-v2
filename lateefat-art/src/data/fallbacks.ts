@@ -5,6 +5,7 @@ import type {
   SiteEvent,
   Exhibition,
   GalleryItem,
+  TimelineMilestone,
 } from "@/types/sanity";
 
 export const fallbackFAQs: FAQ[] = [
@@ -109,25 +110,52 @@ export const fallbackTestimonials: Testimonial[] = [
 
 export const fallbackServices: Service[] = [
   {
-    title: "Creative Services",
+    title: "Digital Couture",
     description:
-      "Digital illustration, textile & visual art, fashion-tech commissions and custom couture pieces.",
-    tags: ["Illustration", "Textile", "Couture"],
+      "Garments as art objects — illustrated and rendered digitally, where pattern meets the body.",
+    tags: ["Couture", "Fashion-Tech"],
     order: 1,
+    image: "https://picsum.photos/seed/ltcouture/800/1000",
   },
   {
-    title: "Tech & Innovation",
+    title: "Fabric Painting & ADIRE",
     description:
-      "Virtual art, AR activations, AI-generated work, media art and digital commerce experiences.",
-    tags: ["AR", "AI", "Digital Commerce"],
+      "Tie-and-dye and textile work as a narrative medium — indigo that preserves culture and tells stories.",
+    tags: ["Textile", "ADIRE"],
     order: 2,
+    image: "https://picsum.photos/seed/ltadire/800/1000",
   },
   {
-    title: "Learning & Workshops",
+    title: "Mural Art",
     description:
-      "Printing workshops, fashion-tech bootcamps and mindful art sessions for groups and communities.",
-    tags: ["Workshops", "Bootcamps", "Wellbeing"],
+      "Large-scale public works rooted in community and place — art that belongs to a street.",
+    tags: ["Mural", "Community"],
     order: 3,
+    image: "https://picsum.photos/seed/ltmural/800/1000",
+  },
+  {
+    title: "Visual & Charcoal",
+    description:
+      "Painting and expressive contrast on canvas and paper — the hand behind every pixel.",
+    tags: ["Painting", "Charcoal"],
+    order: 4,
+    image: "https://picsum.photos/seed/ltpaint/800/1000",
+  },
+  {
+    title: "AI Features",
+    description:
+      "Artificial intelligence as a creative collaborator, not a shortcut — sustainable, digital wearable art.",
+    tags: ["AI", "Innovation"],
+    order: 5,
+    image: "https://picsum.photos/seed/ltai/800/1000",
+  },
+  {
+    title: "Digital Illustration",
+    description:
+      "Line upon line — building wearable form, sketch by sketch, toward the runway.",
+    tags: ["Illustration", "Sketch"],
+    order: 6,
+    image: "https://picsum.photos/seed/ltsketch/800/1000",
   },
 ];
 
@@ -527,5 +555,38 @@ export const fallbackGalleryItems: GalleryItem[] = [
     year: "2025",
     subtitle: "Textile Painting",
     variant: "default",
+  },
+];
+
+export const fallbackTimelineMilestones: TimelineMilestone[] = [
+  {
+    year: "Roots",
+    title: "Colour & indigo",
+    description: "Creativity began through colour, brush strokes, charcoal contrast and ADIRE — fabric as both medium and message.",
+    order: 1,
+  },
+  {
+    year: "2017",
+    title: "Four yards of fabric",
+    description: "Experimenting with tie-and-dye on a single piece, I began to imagine form beyond flat material — no mannequins, no digital tools.",
+    order: 2,
+  },
+  {
+    year: "2020",
+    title: "The first workshop",
+    description: "Over 40 participants — a pivotal moment that confirmed art as a shared experience for connection, empowerment and healing.",
+    order: 3,
+  },
+  {
+    year: "2023",
+    title: "Studying intelligence",
+    description: "Two MSc degrees, including Applied AI & Data Analytics, reframed technology as a collaborator for sustainable, digital wearable art.",
+    order: 4,
+  },
+  {
+    year: "2025",
+    title: "Art as healing",
+    description: "Recent work centres on mindful regulation — creativity as a therapeutic tool to help people find calm and emotional balance.",
+    order: 5,
   },
 ];

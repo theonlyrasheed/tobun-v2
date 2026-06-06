@@ -1,34 +1,8 @@
 import * as React from "react";
-
-const TIMELINE_STEPS = [
-  {
-    yr: "Roots",
-    ti: "Colour & indigo",
-    de: "Creativity began through colour, brush strokes, charcoal contrast and ADIRE — fabric as both medium and message.",
-  },
-  {
-    yr: "2017",
-    ti: "Four yards of fabric",
-    de: "Experimenting with tie-and-dye on a single piece, I began to imagine form beyond flat material — no mannequins, no digital tools.",
-  },
-  {
-    yr: "2020",
-    ti: "The first workshop",
-    de: "Over 40 participants — a pivotal moment that confirmed art as a shared experience for connection, empowerment and healing.",
-  },
-  {
-    yr: "2023",
-    ti: "Studying intelligence",
-    de: "Two MSc degrees, including Applied AI & Data Analytics, reframed technology as a collaborator for sustainable, digital wearable art.",
-  },
-  {
-    yr: "2025",
-    ti: "Art as healing",
-    de: "Recent work centres on mindful regulation — creativity as a therapeutic tool to help people find calm and emotional balance.",
-  },
-] as const;
+import { useTimeline } from "@/hooks/use-sanity";
 
 export function JourneyTimeline() {
+  const { data: timelineSteps = [] } = useTimeline();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const trackRef = React.useRef<HTMLDivElement>(null);
   const fillRef = React.useRef<HTMLDivElement>(null);
@@ -53,7 +27,7 @@ export function JourneyTimeline() {
       return;
     }
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || timelineSteps.length === 0) return;
 
     const max = track.scrollWidth - track.clientWidth;
     const sl = track.scrollLeft;
@@ -79,11 +53,11 @@ export function JourneyTimeline() {
       }
     });
     setActiveIndex(best);
-  }, []);
+  }, [timelineSteps]);
 
   React.useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || timelineSteps.length === 0) return;
 
     const onScroll = () => requestAnimationFrame(updateProgress);
 
@@ -95,7 +69,7 @@ export function JourneyTimeline() {
       track.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", updateProgress);
     };
-  }, [updateProgress]);
+  }, [updateProgress, timelineSteps]);
 
   // Drag handlers
   const dragStart = React.useRef({ isDown: false, sx: 0, sl0: 0 });
@@ -133,6 +107,8 @@ export function JourneyTimeline() {
     };
   }, [onPointerMove, onPointerUp]);
 
+  if (timelineSteps.length === 0) return null;
+
   return (
     <section
       ref={containerRef}
@@ -150,8 +126,6 @@ export function JourneyTimeline() {
         </div>
       </div>
 
-      {/* Track sits outside .wrap so it can bleed edge-to-edge, but we
-          cap and centre it at --maxw so it never exceeds the content width */}
       <div className="jrn-outer" data-reveal>
         <div
           ref={trackRef}
@@ -162,16 +136,16 @@ export function JourneyTimeline() {
           <div className="jrn-inner">
             <div className="jrn-line" />
             <div ref={fillRef} className="jrn-fill" />
-            {TIMELINE_STEPS.map((step, i) => (
+            {timelineSteps.map((step, i) => (
               <div
-                key={step.yr}
+                key={step.year || i}
                 className={`jrn-step ${isMobile || i === activeIndex ? "on" : ""}`}
                 onClick={() => !isMobile && setActiveIndex(i)}
               >
                 <span className="jrn-dot" />
-                <div className="jrn-yr">{step.yr}</div>
-                <div className="jrn-ti">{step.ti}</div>
-                <p className="jrn-de">{step.de}</p>
+                <div className="jrn-yr">{step.year}</div>
+                <div className="jrn-ti">{step.title}</div>
+                <p className="jrn-de">{step.description}</p>
               </div>
             ))}
           </div>

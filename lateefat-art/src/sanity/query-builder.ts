@@ -11,6 +11,7 @@ import {
   pressArticleBySlugQuery,
   legalPageBySlugQuery,
   siteSettingsQuery,
+  timelineMilestonesQuery,
 } from './queries'
 import {
   fallbackFAQs,
@@ -19,9 +20,10 @@ import {
   fallbackEvents,
   fallbackExhibitions,
   fallbackGalleryItems,
+  fallbackTimelineMilestones,
 } from '@/data/fallbacks'
 import { pressArticles } from '@/data/press'
-import type { FAQ, Testimonial, Service, SiteEvent, EventStatus, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
+import type { FAQ, Testimonial, Service, SiteEvent, EventStatus, Exhibition, GalleryItem, LegalPage, SiteSettings, TimelineMilestone } from '@/types/sanity'
 import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
@@ -120,8 +122,18 @@ export const sanityQ = {
   services: {
     key: () => ['services'] as const,
     fetch: async (): Promise<Service[]> => {
-      const data = await tryFetch<Service[]>(servicesQuery)
-      return data?.length ? data : fallbackServices
+      const data = await tryFetch<any[]>(servicesQuery)
+      if (data?.length) {
+        return data.map((item) => ({
+          title: item.title,
+          description: item.description,
+          tags: item.tags || [],
+          order: item.order,
+          slug: item.slug || '',
+          image: item.image ? urlFor(item.image).url() : undefined,
+        }))
+      }
+      return fallbackServices
     },
   },
 
@@ -260,6 +272,22 @@ export const sanityQ = {
       key: (slug: string) => ['legal', slug] as const,
       fetch: (slug: string): Promise<LegalPage | null> =>
         tryFetch<LegalPage>(legalPageBySlugQuery, { slug }),
+    },
+  },
+
+  timeline: {
+    key: () => ['timeline'] as const,
+    fetch: async (): Promise<TimelineMilestone[]> => {
+      const data = await tryFetch<any[]>(timelineMilestonesQuery)
+      if (data?.length) {
+        return data.map((item) => ({
+          year: item.year,
+          title: item.title,
+          description: item.description,
+          order: item.order,
+        }))
+      }
+      return fallbackTimelineMilestones
     },
   },
 

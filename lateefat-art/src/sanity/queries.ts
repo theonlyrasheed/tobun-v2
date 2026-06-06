@@ -15,7 +15,7 @@ export const testimonialsQuery = `
 /* ── Services ─────────────────────────────────────────────────── */
 export const servicesQuery = `
   *[_type == "service"] | order(order asc) {
-    title, description, tags, order
+    title, description, tags, order, image, "slug": slug.current
   }
 `
 
@@ -69,6 +69,14 @@ export const siteSettingsQuery = `
     seoTitle, seoDescription
   }
 `
+
+/* ── Timeline Milestones ───────────────────────────────────────── */
+export const timelineMilestonesQuery = `
+  *[_type == "timelineMilestone"] | order(order asc) {
+    year, title, description, order
+  }
+`
+
 
 /* ── Press ─────────────────────────────────────────────────────── */
 export const pressArticlesQuery = `

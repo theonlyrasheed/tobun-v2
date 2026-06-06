@@ -17,7 +17,17 @@ export interface Service {
   description: string
   tags: string[]
   order?: number
+  image?: any
+  slug?: string
 }
+
+export interface TimelineMilestone {
+  year: string
+  title: string
+  description: string
+  order?: number
+}
+
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'expired'
 

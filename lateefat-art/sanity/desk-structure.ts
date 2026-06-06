@@ -28,7 +28,7 @@ const GROUPED_TYPES = [
   'adverts_section',
   'legalPage',
   'siteSettings',
-  // 'services_section',
+  'timelineMilestone',
 ]
 
 export const deskStructure = (S: StructureBuilder) =>
@@ -90,6 +90,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .title('Services')
                 .icon(TagIcon)
                 .child(S.documentTypeList('service').title('Services')),
+              S.listItem()
+                .title('Timeline Milestones')
+                .icon(CalendarIcon)
+                .child(S.documentTypeList('timelineMilestone').title('Timeline Milestones')),
               S.listItem()
                 .title('Events')
                 .icon(CalendarIcon)

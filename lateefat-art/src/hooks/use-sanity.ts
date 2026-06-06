@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { sanityQ } from '@/sanity/query-builder'
-import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
+import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage, SiteSettings, TimelineMilestone } from '@/types/sanity'
 import type { PressArticle } from '@/data/press'
 
 const STALE = 5 * 60 * 1000       /* 5 min */
@@ -85,5 +85,13 @@ export function useSiteSettings() {
     queryKey: sanityQ.siteSettings.key(),
     queryFn: sanityQ.siteSettings.fetch,
     staleTime: STALE_LONG,
+  })
+}
+
+export function useTimeline() {
+  return useQuery<TimelineMilestone[]>({
+    queryKey: sanityQ.timeline.key(),
+    queryFn: sanityQ.timeline.fetch,
+    staleTime: STALE,
   })
 }
