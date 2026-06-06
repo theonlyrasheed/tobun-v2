@@ -5,8 +5,21 @@ import { usePressArticle, usePressArticles } from "@/hooks/use-sanity";
 import { urlFor } from "@/sanity/client";
 import { PortableText } from "@portabletext/react";
 import { pressComponents } from "@/components/shared/portable-text";
+import { sanityQ } from "@/sanity/query-builder";
 
 export const Route = createFileRoute("/press_/$slug")({
+  loaderDeps: ({ params }) => ({ slug: params.slug }),
+  loader: ({ context: { queryClient }, deps: { slug } }) =>
+    Promise.all([
+      queryClient.ensureQueryData({
+        queryKey: sanityQ.press.detail.key(slug),
+        queryFn: () => sanityQ.press.detail.fetch(slug),
+      }),
+      queryClient.ensureQueryData({
+        queryKey: sanityQ.press.all.key(),
+        queryFn: sanityQ.press.all.fetch,
+      }),
+    ]),
   component: PressArticlePage,
 });
 

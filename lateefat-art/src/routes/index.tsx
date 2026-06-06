@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { sanityQ } from "@/sanity/query-builder";
 import { Preloader } from "@/components/home/preloader";
 import { HomeHero } from "@/components/home/hero";
 import { AboutTeaser } from "@/components/home/about-teaser";
@@ -10,6 +11,13 @@ import { FAQ } from "@/components/home/faq";
 import { RecognitionBand } from "@/components/home/recognition-band";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context: { queryClient } }) =>
+    Promise.all([
+      queryClient.ensureQueryData({ queryKey: sanityQ.faqs.key(), queryFn: sanityQ.faqs.fetch }),
+      queryClient.ensureQueryData({ queryKey: sanityQ.testimonials.key(), queryFn: sanityQ.testimonials.fetch }),
+      queryClient.ensureQueryData({ queryKey: sanityQ.services.key(), queryFn: sanityQ.services.fetch }),
+      queryClient.ensureQueryData({ queryKey: sanityQ.events.key(), queryFn: sanityQ.events.fetch }),
+    ]),
   component: HomePage,
 });
 

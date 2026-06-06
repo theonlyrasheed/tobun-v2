@@ -6,6 +6,7 @@ import {
   Scripts,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
+import { sanityQ } from "@/sanity/query-builder";
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { mantineTheme, cssVariablesResolver } from "@/theme";
@@ -43,6 +44,11 @@ export const ThemeContext = React.createContext<{
 }>({ theme: "light", toggle: () => {} });
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData({
+      queryKey: sanityQ.siteSettings.key(),
+      queryFn: sanityQ.siteSettings.fetch,
+    }),
   head: () => ({
     meta: [
       { charSet: "utf-8" },

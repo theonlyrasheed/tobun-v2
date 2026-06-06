@@ -1,10 +1,16 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { sanityQ } from "@/sanity/query-builder";
 import { GalleryHero } from "@/components/gallery/hero";
 import { FilterBar } from "@/components/gallery/filter-bar";
 import { MasonryGrid } from "@/components/gallery/masonry-grid";
 
 export const Route = createFileRoute("/gallery")({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData({
+      queryKey: sanityQ.gallery.key(),
+      queryFn: sanityQ.gallery.fetch,
+    }),
   component: GalleryPage,
 });
 
