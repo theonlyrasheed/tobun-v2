@@ -6,8 +6,8 @@ export default defineCliConfig({
     dataset: process.env.VITE_SANITY_DATASET || 'production',
   },
   deployment: {
+    appId: 'n4maqy081c8lquop40kvmn8k',
     autoUpdates: true,
-    appId: process.env.VITE_SANITY_APP_ID || 'h5yd89jt8u5qfuajq3is2ngs',
   },
   /**
    * Configure Sanity TypeGen to emit types into the frontend app.

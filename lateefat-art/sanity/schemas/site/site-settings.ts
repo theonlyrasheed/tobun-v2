@@ -7,6 +7,7 @@ export default defineType({
   type: 'document',
   icon: CogIcon,
   // Singleton — only one document of this type should exist
+  // @ts-expect-error __experimental_actions is valid at runtime but not in Sanity v3 typings
   __experimental_actions: ['update', 'publish'],
   fields: [
     defineField({

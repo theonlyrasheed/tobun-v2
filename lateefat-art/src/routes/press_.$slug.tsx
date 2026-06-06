@@ -403,7 +403,7 @@ function PressArticlePage() {
           }}
         >
           {isPortableText ? (
-            <PortableText value={data.body} components={pressComponents} />
+            <PortableText value={data.body as any} components={pressComponents} />
           ) : (
             data.body.map((block: any, idx: number) => renderFallbackBlock(block, idx))
           )}
