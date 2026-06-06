@@ -1,11 +1,11 @@
-import {SettingsIcon} from '@sanity/icons'
+import {CogIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'siteSettings',
   title: 'Site Settings',
   type: 'document',
-  icon: SettingsIcon,
+  icon: CogIcon,
   // Singleton — only one document of this type should exist
   __experimental_actions: ['update', 'publish'],
   fields: [

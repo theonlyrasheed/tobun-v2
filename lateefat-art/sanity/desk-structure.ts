@@ -5,7 +5,7 @@ import {
   DocumentTextIcon,
   HelpCircleIcon,
   ImageIcon,
-  SettingsIcon,
+  CogIcon,
   TagIcon,
   UserIcon,
   UsersIcon,
@@ -126,7 +126,7 @@ export const deskStructure = (S: StructureBuilder) =>
       // Singleton — always opens the same document
       S.listItem()
         .title('Site Settings')
-        .icon(SettingsIcon)
+        .icon(CogIcon)
         .child(
           S.document()
             .schemaType('siteSettings')
