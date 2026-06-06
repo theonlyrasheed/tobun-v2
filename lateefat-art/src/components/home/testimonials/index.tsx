@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Text } from "@mantine/core";
+import { Avatar, Box, Text } from "@mantine/core";
 import { useTestimonials } from "@/hooks/use-sanity";
 
 
@@ -34,21 +34,14 @@ export function Testimonials() {
             <Box className='tst-mark'>&ldquo;</Box>
             <Text component='blockquote'>{tst.quote}</Text>
             <Box component='figcaption'>
-              {tst.avatarUrl && (
-                <Box component='span' className='tst-av'>
-                  <Box
-                    component='img'
-                    src={tst.avatarUrl}
-                    alt={tst.name}
-                    style={{
-                      borderRadius: "50%",
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-              )}
+              <Avatar
+                src={tst.avatarUrl || null}
+                name={tst.name}
+                color="auto"
+                radius="xl"
+                size={44}
+                style={{ flexShrink: 0 }}
+              />
               <Box component='span' className='tst-meta'>
                 <Text component='span' className='tn'>
                   {tst.name}
