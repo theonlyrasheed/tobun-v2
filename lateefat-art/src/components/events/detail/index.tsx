@@ -5,10 +5,13 @@ import { PortableText } from "@portabletext/react";
 import { legalComponents } from "@/components/shared/portable-text";
 
 /* ── Status badge ────────────────────────────────────────────── */
-const STATUS_CONFIG: Record<EventStatus, { label: string; color: string; bg: string }> = {
-  upcoming: { label: "Upcoming",  color: "var(--on-dark)", bg: "var(--clay)"      },
-  ongoing:  { label: "Ongoing",   color: "#fff",           bg: "#2da44e"          },
-  expired:  { label: "Past event", color: "#fff",           bg: "#bc382e"          },
+const STATUS_CONFIG: Record<
+  EventStatus,
+  { label: string; color: string; bg: string }
+> = {
+  upcoming: { label: "Upcoming", color: "var(--on-dark)", bg: "var(--clay)" },
+  ongoing: { label: "Ongoing", color: "#fff", bg: "#2da44e" },
+  expired: { label: "Past event", color: "#fff", bg: "#bc382e" },
 };
 
 function StatusBadge({ status }: { status: EventStatus }) {
@@ -47,37 +50,121 @@ function StatusBadge({ status }: { status: EventStatus }) {
   );
 }
 
+/* ── Luma checkout button ────────────────────────────────────── */
+/**
+ * Luma's checkout script scans the DOM on load.
+ * Because React renders *after* script injection we must call
+ * window.luma.initCheckout() once the button is in the DOM.
+ *
+ * Per Luma docs the script tag id must be exactly "luma-checkout"
+ * and data-luma-event-id must be the evt-XXXXX segment.
+ *
+ * Supported URL formats:
+ *   https://luma.com/event/evt-wRomNbQSv9vhcOG  →  evt-wRomNbQSv9vhcOG  ✓ preferred
+ *   https://lu.ma/event/evt-wRomNbQSv9vhcOG     →  evt-wRomNbQSv9vhcOG  ✓
+ *   https://luma.com/e6g9a3x5                   →  e6g9a3x5 (slug fallback)
+ */
+function extractLumaId(url: string): string {
+  const clean = url.split(/[?#]/)[0].replace(/\/$/, "")
+  // Prefer the evt-XXXXX segment if present
+  const evtMatch = clean.match(/\/(evt-[A-Za-z0-9]+)/)
+  if (evtMatch) return evtMatch[1]
+  // Fallback: last path segment (slug-based URLs)
+  return clean.split("/").pop() ?? ""
+}
+
+function LumaCheckout({ url }: { url: string }) {
+  const eventId = extractLumaId(url)
+
+  React.useEffect(() => {
+    function init() {
+      const w = window as any
+      w.luma?.initCheckout?.()
+    }
+
+    const existing = document.getElementById("luma-checkout")
+    if (existing) {
+      init()
+    } else {
+      const script = document.createElement("script")
+      script.id = "luma-checkout"
+      script.src = "https://embed.lu.ma/checkout-button.js"
+      script.async = true
+      script.onload = init
+      document.head.appendChild(script)
+    }
+  }, [url])
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <p className="ev-booking-note">
+        RSVP via Luma — you'll get an instant confirmation and reminders before the event.
+      </p>
+      <a
+        href={url}
+        className="luma-checkout--button btn btn-ochre"
+        data-luma-action="checkout"
+        data-luma-event-id={eventId}
+        style={{ alignSelf: "flex-start", textDecoration: "none" }}
+      >
+        Register now
+      </a>
+    </div>
+  )
+}
+
 /* ── Booking embed ───────────────────────────────────────────── */
-function BookingEmbed({ bookingUrl, title, status }: { bookingUrl: string; title: string; status: EventStatus }) {
-  const isCalCom    = bookingUrl.includes("cal.com");
-  const isCalendly  = bookingUrl.includes("calendly.com");
-  const isLuma      = bookingUrl.includes("lu.ma");
-  const isExternal  = bookingUrl.startsWith("http");
-  const isDisabled  = status === "expired";
+function BookingEmbed({
+  bookingUrl,
+  title,
+  status,
+}: {
+  bookingUrl: string;
+  title: string;
+  status: EventStatus;
+}) {
+  // Match both lu.ma (short domain) and luma.com (full domain)
+  const isLuma = /lu\.ma|luma\.com/.test(bookingUrl);
+  const isCalCom = bookingUrl.includes("cal.com");
+  const isCalendly = bookingUrl.includes("calendly.com");
+  const isExternal = bookingUrl.startsWith("http");
+  const isDisabled = status === "expired";
 
   if (isDisabled) {
     return (
-      <div className="ev-booking-closed">
+      <div className='ev-booking-closed'>
         <p>Registrations for this event are now closed.</p>
-        <Link to="/events" className="link-arrow" style={{ marginTop: "12px" }}>
+        <Link to='/events' className='link-arrow' style={{ marginTop: "12px" }}>
           View upcoming events
         </Link>
       </div>
     );
   }
 
-  if (isCalCom) {
-    // Cal.com inline embed via their script tag
+  if (isLuma) {
     return (
-      <div className="ev-booking-embed">
-        <p className="ev-booking-note">
+      <div className='ev-booking-embed'>
+        <LumaCheckout url={bookingUrl} />
+      </div>
+    );
+  }
+
+  if (isCalCom) {
+    return (
+      <div className='ev-booking-embed'>
+        <p className='ev-booking-note'>
           Book your place via Cal.com — select a time that works for you.
         </p>
         <iframe
           src={`${bookingUrl}?embed=true`}
-          style={{ width: "100%", minHeight: "620px", border: 0, borderRadius: "var(--radius)" }}
+          style={{
+            width: "100%",
+            minHeight: "620px",
+            border: 0,
+            borderRadius: "var(--radius)",
+          }}
           title={`Book — ${title}`}
-          loading="lazy"
+          loading='lazy'
         />
       </div>
     );
@@ -85,50 +172,46 @@ function BookingEmbed({ bookingUrl, title, status }: { bookingUrl: string; title
 
   if (isCalendly) {
     return (
-      <div className="ev-booking-embed">
-        <p className="ev-booking-note">Reserve your spot via Calendly.</p>
+      <div className='ev-booking-embed'>
+        <p className='ev-booking-note'>Reserve your spot via Calendly.</p>
         <iframe
           src={`${bookingUrl}?embed_domain=lateefat.art&embed_type=Inline&hide_gdpr_banner=1`}
-          style={{ width: "100%", minHeight: "660px", border: 0, borderRadius: "var(--radius)" }}
+          style={{
+            width: "100%",
+            minHeight: "660px",
+            border: 0,
+            borderRadius: "var(--radius)",
+          }}
           title={`Book — ${title}`}
-          loading="lazy"
+          loading='lazy'
         />
       </div>
     );
   }
 
-  if (isLuma) {
-    const lumaId = bookingUrl.replace(/.*lu\.ma\//, "");
-    return (
-      <div className="ev-booking-embed">
-        <p className="ev-booking-note">RSVP via Luma to secure your spot and get reminders.</p>
-        <iframe
-          src={`https://lu.ma/embed/event/${lumaId}?simple=1`}
-          style={{ width: "100%", minHeight: "480px", border: 0, borderRadius: "var(--radius)" }}
-          allowFullScreen
-          title={`RSVP — ${title}`}
-          loading="lazy"
-        />
-      </div>
-    );
-  }
-
-  // Generic external URL — show a prominent CTA button
+  // Generic external URL — prominent CTA button
   return (
-    <div className="ev-booking-cta">
-      <p className="ev-booking-note">
+    <div className='ev-booking-cta'>
+      <p className='ev-booking-note'>
         Ready to join? Click below to complete your registration.
       </p>
       <a
         href={isExternal ? bookingUrl : `https://${bookingUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn btn-ochre"
+        target='_blank'
+        rel='noopener noreferrer'
+        className='btn btn-ochre'
         style={{ alignSelf: "flex-start" }}
       >
         Register now
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M3 8.5h11M9 3.5l5 5-5 5" />
+        <svg
+          width='17'
+          height='17'
+          viewBox='0 0 17 17'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='1.8'
+        >
+          <path d='M3 8.5h11M9 3.5l5 5-5 5' />
         </svg>
       </a>
     </div>
@@ -142,21 +225,23 @@ interface EventDetailProps {
 
 export function EventDetail({ event }: EventDetailProps) {
   const bookingUrl = event.bookingUrl || event.href;
-  const hasBooking = bookingUrl && bookingUrl !== "/contact" && bookingUrl !== "#";
-  const isExpired  = event.status === "expired";
+  const hasBooking =
+    bookingUrl && bookingUrl !== "/contact" && bookingUrl !== "#";
+  const isExpired = event.status === "expired";
 
   return (
     <>
       {/* ── Hero ── */}
       <section
-        className="ev-detail-hero"
+        className='ev-detail-hero'
         style={{
           position: "relative",
           minHeight: "clamp(420px, 62vh, 680px)",
           overflow: "hidden",
           display: "flex",
           alignItems: "center",
-          padding: "calc(var(--header-h) + 40px) var(--gut) clamp(40px, 6vh, 80px)",
+          padding:
+            "calc(var(--header-h) + 40px) var(--gut) clamp(40px, 6vh, 80px)",
           color: "var(--on-dark)",
           background: "var(--deep)",
         }}
@@ -168,6 +253,7 @@ export function EventDetail({ event }: EventDetailProps) {
             inset: 0,
             zIndex: 0,
             overflow: "hidden",
+            pointerEvents: "none",
           }}
         >
           <img
@@ -186,16 +272,23 @@ export function EventDetail({ event }: EventDetailProps) {
             style={{
               position: "absolute",
               inset: 0,
-              background: "radial-gradient(circle at 70% 30%, rgba(197, 137, 64, 0.15), transparent 60%)",
+              background:
+                "radial-gradient(circle at 70% 30%, rgba(197, 137, 64, 0.15), transparent 60%)",
             }}
           />
         </div>
 
-        <div className="wrap ev-hero-grid">
-          <div className="ev-hero-content">
+        <div
+          className="wrap ev-hero-grid"
+          style={{
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          <div className='ev-hero-content'>
             {/* Back */}
             <Link
-              to="/events"
+              to='/events'
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -209,13 +302,27 @@ export function EventDetail({ event }: EventDetailProps) {
                 textDecoration: "none",
               }}
             >
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M10 6.5H3M6.5 3L3 6.5l3.5 3.5" />
+              <svg
+                width='13'
+                height='13'
+                viewBox='0 0 13 13'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='1.8'
+              >
+                <path d='M10 6.5H3M6.5 3L3 6.5l3.5 3.5' />
               </svg>
               All events
             </Link>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginBottom: "14px",
+              }}
+            >
               <StatusBadge status={event.status} />
               <span
                 style={{
@@ -231,8 +338,13 @@ export function EventDetail({ event }: EventDetailProps) {
             </div>
 
             <h1
-              className="h-xl"
-              style={{ color: "var(--on-dark)", margin: "0 0 18px", maxWidth: "22ch", lineHeight: 1.1 }}
+              className='h-xl'
+              style={{
+                color: "var(--on-dark)",
+                margin: "0 0 18px",
+                maxWidth: "22ch",
+                lineHeight: 1.1,
+              }}
             >
               {event.title}
             </h1>
@@ -254,11 +366,11 @@ export function EventDetail({ event }: EventDetailProps) {
             </div>
           </div>
 
-          <div className="ev-hero-media">
+          <div className='ev-hero-media'>
             <img
               src={event.img}
               alt={event.title}
-              className="ev-hero-flyer"
+              className='ev-hero-flyer'
               style={{
                 filter: isExpired ? "grayscale(40%)" : undefined,
               }}
@@ -274,7 +386,7 @@ export function EventDetail({ event }: EventDetailProps) {
           padding: "clamp(40px, 7vh, 96px) var(--gut)",
         }}
       >
-        <div className="wrap ev-detail-body">
+        <div className='wrap ev-detail-body'>
           {/* Left — description */}
           <div>
             <p
@@ -293,7 +405,7 @@ export function EventDetail({ event }: EventDetailProps) {
             {/* Rich text body rendered via shared PortableText if present */}
             {event.body && event.body.length > 0 && (
               <div
-                className="prose"
+                className='prose'
                 style={{
                   fontSize: "1rem",
                   lineHeight: 1.75,
@@ -316,27 +428,69 @@ export function EventDetail({ event }: EventDetailProps) {
                 color: "var(--fg-soft)",
               }}
             >
-              <dt style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", paddingTop: "2px" }}>Date</dt>
+              <dt
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  paddingTop: "2px",
+                }}
+              >
+                Date
+              </dt>
               <dd style={{ margin: 0 }}>{event.date}</dd>
 
               {event.location && (
                 <>
-                  <dt style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", paddingTop: "2px" }}>Location</dt>
+                  <dt
+                    style={{
+                      fontFamily: "var(--mono)",
+                      fontSize: "0.62rem",
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      paddingTop: "2px",
+                    }}
+                  >
+                    Location
+                  </dt>
                   <dd style={{ margin: 0 }}>{event.location}</dd>
                 </>
               )}
 
-              <dt style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", paddingTop: "2px" }}>Admission</dt>
+              <dt
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  paddingTop: "2px",
+                }}
+              >
+                Admission
+              </dt>
               <dd style={{ margin: 0 }}>{event.badge}</dd>
 
-              <dt style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", paddingTop: "2px" }}>Status</dt>
-              <dd style={{ margin: 0 }}><StatusBadge status={event.status} /></dd>
+              <dt
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  paddingTop: "2px",
+                }}
+              >
+                Status
+              </dt>
+              <dd style={{ margin: 0 }}>
+                <StatusBadge status={event.status} />
+              </dd>
             </dl>
           </div>
 
           {/* Right — booking */}
           <div
-            className="ev-booking-sidebar"
+            className='ev-booking-sidebar'
             style={{
               background: "var(--surface)",
               border: "1px solid var(--sand-line)",
@@ -377,13 +531,31 @@ export function EventDetail({ event }: EventDetailProps) {
               />
             ) : (
               <div>
-                <p style={{ fontSize: "0.875rem", color: "var(--fg-soft)", marginBottom: "16px" }}>
-                  Interested in attending? Get in touch and we'll confirm your registration.
+                <p
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "var(--fg-soft)",
+                    marginBottom: "16px",
+                  }}
+                >
+                  Interested in attending? Get in touch and we'll confirm your
+                  registration.
                 </p>
-                <Link to="/contact" className="btn btn-ochre" style={{ display: "inline-flex" }}>
+                <Link
+                  to='/contact'
+                  className='btn btn-ochre'
+                  style={{ display: "inline-flex" }}
+                >
                   Enquire about this event
-                  <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <path d="M3 8.5h11M9 3.5l5 5-5 5" />
+                  <svg
+                    width='17'
+                    height='17'
+                    viewBox='0 0 17 17'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeWidth='1.8'
+                  >
+                    <path d='M3 8.5h11M9 3.5l5 5-5 5' />
                   </svg>
                 </Link>
               </div>
@@ -488,6 +660,28 @@ export function EventDetail({ event }: EventDetailProps) {
             position: sticky;
             top: calc(var(--header-h) + 24px);
           }
+        }
+
+        /* Luma checkout button style overrides to match our btn-ochre styling */
+        .luma-checkout--button {
+          background: var(--clay-soft) !important;
+          color: var(--deep) !important;
+          font-family: var(--body) !important;
+          font-weight: 600 !important;
+          padding: 15px 26px !important;
+          border-radius: 100px !important;
+          font-size: 1rem !important;
+          box-shadow: none !important;
+          border: 1px solid transparent !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 0.7em !important;
+          text-decoration: none !important;
+          transition: transform 0.2s var(--ease), background 0.2s !important;
+        }
+        .luma-checkout--button:hover {
+          background: var(--clay-deep) !important;
+          transform: translateY(-2px) !important;
         }
       `}</style>
     </>
