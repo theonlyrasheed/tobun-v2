@@ -59,6 +59,25 @@ export function Footer() {
       icon: <Linkedin size={18} strokeWidth={1.3} />,
       label: "LinkedIn",
     },
+    settings?.twitter && {
+      href: settings?.twitter,
+      icon: (
+        <svg
+          width='18'
+          height='18'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='1.3'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        >
+          <path d='M4 4l11.733 16h4.267l-11.733 -16z' />
+          <path d='M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772' />
+        </svg>
+      ),
+      label: "Twitter / X",
+    },
   ].filter(Boolean) as { href: string; icon: React.ReactNode; label: string }[];
 
   const form = useForm({
@@ -90,6 +109,14 @@ export function Footer() {
           text-decoration: none !important;
         }
         .footer-link:hover {
+          color: var(--on-dark) !important;
+        }
+        .footer-bottom-link {
+          color: color-mix(in oklab, var(--on-dark) 42%, transparent) !important;
+          transition: color 0.2s !important;
+          text-decoration: none !important;
+        }
+        .footer-bottom-link:hover {
           color: var(--on-dark) !important;
         }
         .footer-cta-btn {
@@ -401,16 +428,16 @@ export function Footer() {
               }}
             >
               <Box component='li'>
-                <Anchor
-                  href={`mailto:${email}`}
-                  className='footer-link'
-                >
+                <Anchor href={`mailto:${email}`} className='footer-link'>
                   {email}
                 </Anchor>
               </Box>
               {phone && (
                 <Box component='li'>
-                  <Anchor href={`tel:${phone.replace(/\s/g, '')}`} className='footer-link'>
+                  <Anchor
+                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    className='footer-link'
+                  >
                     {phone}
                   </Anchor>
                 </Box>
@@ -419,7 +446,8 @@ export function Footer() {
                 <Box
                   component='li'
                   style={{
-                    color: "color-mix(in oklab, var(--on-dark) 80%, transparent)",
+                    color:
+                      "color-mix(in oklab, var(--on-dark) 80%, transparent)",
                     fontSize: "0.96rem",
                   }}
                 >
@@ -466,7 +494,7 @@ export function Footer() {
             fontFamily: "var(--mono)",
             fontSize: "0.6rem",
             letterSpacing: "0.03em",
-            color: "color-mix(in oklab, var(--on-dark) 52%, transparent)",
+            color: "color-mix(in oklab, var(--on-dark) 42%, transparent)",
           }}
         >
           <Text component='span'>
@@ -483,7 +511,7 @@ export function Footer() {
             <Anchor
               component={Link}
               to='/privacy'
-              className='footer-link'
+              className='footer-bottom-link'
               style={{ fontSize: "0.6rem", letterSpacing: "0.03em" }}
             >
               Privacy Policy
@@ -491,7 +519,7 @@ export function Footer() {
             <Anchor
               component={Link}
               to='/terms'
-              className='footer-link'
+              className='footer-bottom-link'
               style={{ fontSize: "0.6rem", letterSpacing: "0.03em" }}
             >
               Terms of Service
