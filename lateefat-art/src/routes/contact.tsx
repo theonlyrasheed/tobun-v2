@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Box, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useSiteSettings } from "@/hooks/use-sanity";
+import { sendContactEmail } from "@/utils/send-contact";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
@@ -18,6 +19,8 @@ interface ContactFormValues {
 
 function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const { data: settings } = useSiteSettings();
 
   const email = settings?.email ?? "hello@tobunlateefat.com";
@@ -39,55 +42,182 @@ function ContactPage() {
     },
   });
 
-  const handleSubmit = (values: ContactFormValues) => {
-    // In a real application, you would send this to a backend/email API here
-    console.log("Form submitted:", values);
-    setSubmitted(true);
-    form.reset();
+  const handleSubmit = async (values: ContactFormValues) => {
+    setLoading(true);
+    setErrorMsg(null);
+    setSubmitted(false);
+
+    try {
+      const res = await sendContactEmail({ data: values });
+      if (res.success) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        setErrorMsg(res.error || "Failed to send email. Please try again.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to connect to the server.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Box
-      component="section"
-      className="section wrap"
+      component='section'
+      className='section wrap'
       style={{
         background: "var(--bg)",
         color: "var(--fg)",
         paddingBottom: "clamp(48px, 7vw, 110px)",
       }}
     >
-      <Box className="ct-wrap">
+      <Box className='ct-wrap'>
         {/* Contact Info Column */}
-        <Box className="ct-hero" data-screen-label="Contact">
-          <span className="kicker">Contact</span>
-          <h1 className="display" style={{ margin: "18px 0 22px" }}>
-            Say <em className="accent-ochre">hello.</em>
+        <Box className='ct-hero' data-screen-label='Contact'>
+          <span className='kicker'>Contact</span>
+          <h1 className='display' style={{ margin: "18px 0 22px" }}>
+            Say <em className='accent-ochre'>hello.</em>
           </h1>
-          <p className="lead" style={{ maxWidth: "40ch", color: "var(--ink-soft)" }}>
-            Stay connected and explore creative opportunities with Lateefat Art — commissions, collaborations, exhibitions or media. Every conversation begins with a simple hello.
+          <p
+            className='lead'
+            style={{ maxWidth: "40ch", color: "var(--ink-soft)" }}
+          >
+            Stay connected and explore creative opportunities with Lateefat Art
+            — commissions, collaborations, exhibitions or media. Every
+            conversation begins with a simple hello.
           </p>
-          <Box className="ct-info" style={{ marginTop: "36px" }}>
-            <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)" }}>
-              <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Studio</span>
-              <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>{location}</span>
-            </Box>
-            <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)" }}>
-              <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Phone</span>
-              <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>
-                <a href={`tel:${phone.replace(/\s/g, '')}`} style={{ textDecoration: "none", color: "inherit" }}>{phone}</a>
+          <Box className='ct-info' style={{ marginTop: "36px" }}>
+            <Box
+              className='row'
+              style={{
+                display: "flex",
+                gap: "18px",
+                alignItems: "flex-start",
+                padding: "20px 0",
+                borderTop: "1px solid var(--sand-line)",
+              }}
+            >
+              <span
+                className='k'
+                style={{
+                  minWidth: "96px",
+                  fontWeight: 700,
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.68rem",
+                  letterSpacing: ".14em",
+                  textTransform: "uppercase",
+                  color: "var(--indigo-bright)",
+                }}
+              >
+                Studio
+              </span>
+              <span
+                className='v'
+                style={{
+                  fontWeight: 600,
+                  fontFamily: "var(--display)",
+                  fontSize: "clamp(1.1rem,1.8vw,1.4rem)",
+                }}
+              >
+                {location}
               </span>
             </Box>
-            <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)", borderBottom: "1px solid var(--sand-line)" }}>
-              <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Email</span>
-              <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>
-                <a href={`mailto:${email}`} style={{ textDecoration: "none", color: "inherit" }}>{email}</a>
+            <Box
+              className='row'
+              style={{
+                display: "flex",
+                gap: "18px",
+                alignItems: "flex-start",
+                padding: "20px 0",
+                borderTop: "1px solid var(--sand-line)",
+              }}
+            >
+              <span
+                className='k'
+                style={{
+                  minWidth: "96px",
+                  fontWeight: 700,
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.68rem",
+                  letterSpacing: ".14em",
+                  textTransform: "uppercase",
+                  color: "var(--indigo-bright)",
+                }}
+              >
+                Phone
+              </span>
+              <span
+                className='v'
+                style={{
+                  fontWeight: 600,
+                  fontFamily: "var(--display)",
+                  fontSize: "clamp(1.1rem,1.8vw,1.4rem)",
+                }}
+              >
+                <a
+                  href={`tel:${phone.replace(/\s/g, "")}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {phone}
+                </a>
+              </span>
+            </Box>
+            <Box
+              className='row'
+              style={{
+                display: "flex",
+                gap: "18px",
+                alignItems: "flex-start",
+                padding: "20px 0",
+                borderTop: "1px solid var(--sand-line)",
+                borderBottom: "1px solid var(--sand-line)",
+              }}
+            >
+              <span
+                className='k'
+                style={{
+                  minWidth: "96px",
+                  fontWeight: 700,
+                  fontFamily: "var(--mono)",
+                  fontSize: "0.68rem",
+                  letterSpacing: ".14em",
+                  textTransform: "uppercase",
+                  color: "var(--indigo-bright)",
+                }}
+              >
+                Email
+              </span>
+              <span
+                className='v'
+                style={{
+                  fontWeight: 600,
+                  fontFamily: "var(--display)",
+                  fontSize: "clamp(1.1rem,1.8vw,1.4rem)",
+                }}
+              >
+                <a
+                  href={`mailto:${email}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {email}
+                </a>
               </span>
             </Box>
           </Box>
         </Box>
 
         {/* Message Form Column */}
-        <Box className="form-card" data-reveal style={{ background: "var(--cream-2)", border: "1px solid var(--sand-line)", borderRadius: "var(--radius)", padding: "clamp(26px,4vw,48px)" }}>
+        <Box
+          className='form-card'
+          data-reveal
+          style={{
+            background: "var(--cream-2)",
+            border: "1px solid var(--sand-line)",
+            borderRadius: "var(--radius)",
+            padding: "clamp(26px,4vw,48px)",
+          }}
+        >
           {/* Success Banner */}
           <Box
             className={`form-ok${submitted ? " show" : ""}`}
@@ -105,108 +235,170 @@ function ContactPage() {
             }}
           >
             <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              width='20'
+              height='20'
+              viewBox='0 0 20 20'
+              fill='none'
+              stroke='currentColor'
+              strokeWidth='2'
             >
-              <path d="M4 10.5l4 4 8-9" />
+              <path d='M4 10.5l4 4 8-9' />
             </svg>
             Thank you — your message is on its way. I'll be in touch soon.
           </Box>
 
+          {/* Error Banner */}
+          {errorMsg && (
+            <Box
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                background: "rgba(255, 107, 107, 0.12)",
+                border: "1px solid #ff6b6b",
+                borderRadius: "var(--radius)",
+                padding: "16px 18px",
+                fontWeight: 600,
+                color: "#ff6b6b",
+                marginBottom: "20px",
+              }}
+            >
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+              >
+                <circle cx='12' cy='12' r='10' />
+                <line x1='12' y1='8' x2='12' y2='12' />
+                <line x1='12' y1='16' x2='12.01' y2='16' />
+              </svg>
+              {errorMsg}
+            </Box>
+          )}
+
           <form onSubmit={form.onSubmit(handleSubmit)}>
-            <Box className="fld-row">
-              <Box className="fld">
-                <label htmlFor="name">Full name *</label>
+            <Box className='fld-row'>
+              <Box className='fld'>
+                <label htmlFor='name'>Full name *</label>
                 <input
-                  id="name"
-                  placeholder="Your name"
+                  id='name'
+                  placeholder='Your name'
                   {...form.getInputProps("name")}
                   style={{
                     borderColor: form.errors.name ? "red" : undefined,
                   }}
                 />
                 {form.errors.name && (
-                  <Text size="xs" color="red" style={{ marginTop: "4px" }}>
+                  <Text size='xs' color='red' style={{ marginTop: "4px" }}>
                     {form.errors.name}
                   </Text>
                 )}
               </Box>
 
-              <Box className="fld">
-                <label htmlFor="tel">Telephone</label>
+              <Box className='fld'>
+                <label htmlFor='tel'>Telephone</label>
                 <input
-                  id="tel"
-                  placeholder="Optional"
+                  id='tel'
+                  placeholder='Optional'
                   {...form.getInputProps("tel")}
                 />
               </Box>
             </Box>
 
-            <Box className="fld">
-              <label htmlFor="email">Email *</label>
+            <Box className='fld'>
+              <label htmlFor='email'>Email *</label>
               <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
+                id='email'
+                type='email'
+                placeholder='you@example.com'
                 {...form.getInputProps("email")}
                 style={{
                   borderColor: form.errors.email ? "red" : undefined,
                 }}
               />
               {form.errors.email && (
-                <Text size="xs" color="red" style={{ marginTop: "4px" }}>
+                <Text size='xs' color='red' style={{ marginTop: "4px" }}>
                   {form.errors.email}
                 </Text>
               )}
             </Box>
 
-            <Box className="fld">
-              <label htmlFor="subject">I'm reaching out about</label>
+            <Box className='fld'>
+              <label htmlFor='subject'>I'm reaching out about</label>
               <input
-                id="subject"
-                placeholder="Commission · Collaboration · Exhibition · Media"
+                id='subject'
+                placeholder='Commission · Collaboration · Exhibition · Media'
                 {...form.getInputProps("subject")}
               />
             </Box>
 
-            <Box className="fld">
-              <label htmlFor="msg">Message *</label>
+            <Box className='fld'>
+              <label htmlFor='msg'>Message *</label>
               <textarea
-                id="msg"
+                id='msg'
                 rows={5}
-                placeholder="Tell me a little about your project or idea…"
+                placeholder='Tell me a little about your project or idea…'
                 {...form.getInputProps("msg")}
                 style={{
                   borderColor: form.errors.msg ? "red" : undefined,
                 }}
               />
               {form.errors.msg && (
-                <Text size="xs" color="red" style={{ marginTop: "4px" }}>
+                <Text size='xs' color='red' style={{ marginTop: "4px" }}>
                   {form.errors.msg}
                 </Text>
               )}
             </Box>
 
-            <p className="privacy" style={{ fontSize: "0.82rem", color: "var(--ink-soft)", margin: "4px 0 22px" }}>
-              To respond to your enquiry, your details will be processed in accordance with our <Link to="/privacy" style={{ color: "var(--indigo)", textDecoration: "underline", textUnderlineOffset: "2px" }}>Privacy Policy</Link>.
+            <p
+              className='privacy'
+              style={{
+                fontSize: "0.82rem",
+                color: "var(--ink-soft)",
+                margin: "4px 0 22px",
+              }}
+            >
+              To respond to your enquiry, your details will be processed in
+              accordance with our{" "}
+              <Link
+                to='/privacy'
+                style={{
+                  color: "var(--indigo)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: "2px",
+                }}
+              >
+                Privacy Policy
+              </Link>
+              .
             </p>
 
-            <button type="submit" className="btn btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-              Send message
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 17 17"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <path d="M3 8.5h11M9 3.5l5 5-5 5" />
-              </svg>
+            <button
+              type='submit'
+              className='btn btn-primary'
+              disabled={loading}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              {loading ? "Sending..." : "Send message"}
+              {!loading && (
+                <svg
+                  width='17'
+                  height='17'
+                  viewBox='0 0 17 17'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='1.8'
+                >
+                  <path d='M3 8.5h11M9 3.5l5 5-5 5' />
+                </svg>
+              )}
             </button>
           </form>
         </Box>
