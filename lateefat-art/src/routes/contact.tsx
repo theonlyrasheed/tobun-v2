@@ -42,6 +42,16 @@ function ContactPage() {
     },
   });
 
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSubmit = async (values: ContactFormValues) => {
     setLoading(true);
     setErrorMsg(null);
@@ -52,6 +62,13 @@ function ContactPage() {
       if (res.success) {
         setSubmitted(true);
         form.reset();
+        
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+          setSubmitted(false);
+        }, 7000); // Auto close after 7 seconds
       } else {
         setErrorMsg(res.error || "Failed to send email. Please try again.");
       }
@@ -224,7 +241,8 @@ function ContactPage() {
             style={{
               display: submitted ? "flex" : "none",
               alignItems: "center",
-              gap: "12px",
+              justifyContent: "space-between",
+              gap: "16px",
               background: "color-mix(in oklab, var(--ochre) 22%, transparent)",
               border: "1px solid var(--ochre)",
               borderRadius: "var(--radius)",
@@ -234,17 +252,51 @@ function ContactPage() {
               marginBottom: "20px",
             }}
           >
-            <svg
-              width='20'
-              height='20'
-              viewBox='0 0 20 20'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
+            <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <svg
+                width='20'
+                height='20'
+                viewBox='0 0 20 20'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                style={{ flexShrink: 0 }}
+              >
+                <path d='M4 10.5l4 4 8-9' />
+              </svg>
+              <span>Thank you — your message is on its way. I'll be in touch soon.</span>
+            </Box>
+            <button
+              type="button"
+              onClick={() => setSubmitted(false)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "inherit",
+                cursor: "pointer",
+                padding: "4px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: 0.7,
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+              aria-label="Close message"
             >
-              <path d='M4 10.5l4 4 8-9' />
-            </svg>
-            Thank you — your message is on its way. I'll be in touch soon.
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
           </Box>
 
           {/* Error Banner */}
