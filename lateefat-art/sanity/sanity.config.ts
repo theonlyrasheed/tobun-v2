@@ -8,7 +8,7 @@ export default defineConfig({
   name: 'default',
   title: 'Lateefat Art',
 
-  projectId: process.env.VITE_SANITY_PROJECT_ID || 'qjs5xtv7',
+  projectId: process.env.VITE_SANITY_PROJECT_ID || 'f5jgmo2u',
   dataset: process.env.VITE_SANITY_DATASET || 'production',
 
   plugins: [structureTool({structure: deskStructure}), visionTool()],
