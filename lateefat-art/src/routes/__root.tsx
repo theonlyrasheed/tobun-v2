@@ -4,6 +4,7 @@ import {
   HeadContent,
   Outlet,
   Scripts,
+  ScrollRestoration,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { sanityQ } from "@/sanity/query-builder";
@@ -49,21 +50,63 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       queryKey: sanityQ.siteSettings.key(),
       queryFn: sanityQ.siteSettings.fetch,
     }),
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      {
-        title: "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier",
-      },
-      {
-        name: "description",
-        content:
-          "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.",
-      },
+  head: ({ loaderData }) => {
+    const seoTitle = loaderData?.seoTitle || "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier";
+    const seoDesc = loaderData?.seoDescription || "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.";
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          title: seoTitle,
+        },
+        {
+          name: "description",
+          content: seoDesc,
+        },
+        // Open Graph / Facebook Share Metadata
+        {
+          property: "og:title",
+          content: seoTitle,
+        },
+        {
+          property: "og:description",
+          content: seoDesc,
+        },
+        {
+          property: "og:image",
+          content: "/assets/img/portrait.png",
+        },
+        {
+          property: "og:type",
+          content: "website",
+        },
+        // Twitter Card Metadata
+        {
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          name: "twitter:title",
+          content: seoTitle,
+        },
+        {
+          name: "twitter:description",
+          content: seoDesc,
+        },
+        {
+          name: "twitter:image",
+          content: "/assets/img/portrait.png",
+        },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
-  }),
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/assets/img/portrait.png" },
+      { rel: "apple-touch-icon", href: "/assets/img/portrait.png" }
+    ],
+  };
+},
   errorComponent: ({ error }) => (
     <RootDocument>
       <div style={{ padding: "2rem" }}>
@@ -128,6 +171,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Cursor />
           </MantineProvider>
         </ThemeContext.Provider>
+        <ScrollRestoration />
         <Scripts />
       </body>
     </html>
