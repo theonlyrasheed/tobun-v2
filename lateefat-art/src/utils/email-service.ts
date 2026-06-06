@@ -172,7 +172,7 @@ export async function sendContactEnquiry(data: ContactEmailData): Promise<{ succ
 
   try {
     const { error } = await resend.emails.send({
-      from: 'Lateefat Art Website <website@tobunlateefat.com>',
+      from: 'Lateefat Art <noreply@tobunlateefat.com>',
       to: toEmail,
       replyTo: data.email,
       subject,
