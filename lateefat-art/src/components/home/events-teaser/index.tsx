@@ -1,7 +1,55 @@
+import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Box, Text, Anchor } from "@mantine/core";
+import { useEvents, useExhibitions } from "@/hooks/use-sanity";
 
 export function EventsTeaser() {
+  const { data: events = [] } = useEvents();
+  const { data: exhibitions = [] } = useExhibitions();
+
+  const items = React.useMemo(() => {
+    const combined: Array<{
+      img: string;
+      tag: string;
+      title: string;
+      desc: string;
+      to: string;
+      params?: any;
+      dateVal: number;
+    }> = [];
+
+    // Map events
+    events.forEach((ev) => {
+      combined.push({
+        img: ev.img,
+        tag: `${ev.yr} · ${ev.location || "Event"}`,
+        title: ev.title,
+        desc: ev.desc,
+        to: ev.slug ? "/events/$slug" : "/events",
+        params: ev.slug ? { slug: ev.slug } : undefined,
+        dateVal: ev.rawDate ? new Date(ev.rawDate).getTime() : 0,
+      });
+    });
+
+    // Map exhibitions
+    exhibitions.forEach((exh) => {
+      const yearNum = parseInt(exh.year) || 2025;
+      combined.push({
+        img: exh.record.img,
+        tag: `${exh.year} · ${exh.place || "Exhibition"}`,
+        title: exh.name,
+        desc: exh.desc,
+        to: "/exhibitions",
+        dateVal: new Date(`${yearNum}-07-01`).getTime(),
+      });
+    });
+
+    // Sort by dateVal descending (most recent first)
+    combined.sort((a, b) => b.dateVal - a.dateVal);
+
+    return combined.slice(0, 3);
+  }, [events, exhibitions]);
+
   return (
     <Box component='section' className='section wrap'>
       <Box className='eyebrow-row'>
@@ -37,91 +85,48 @@ export function EventsTeaser() {
         </Anchor>
       </Box>
       <Box className='mini-row'>
-        <Anchor
-          component={Link}
-          to='/events'
-          underline='never'
-          className='mini'
-          data-reveal
-        >
-          <Box className='mimg' data-cursor='view'>
-            <Box
-              component='img'
-              src='https://picsum.photos/seed/ltpocket/640/440'
-              alt='The Pocket Stories'
-            />
-          </Box>
-          <Box>
-            <Box
-              component='span'
-              className='tag'
-              style={{ marginBottom: "10px" }}
-            >
-              2026 · UK
+        {items.map((item, i) => (
+          <Anchor
+            key={i}
+            component={Link}
+            to={item.to as any}
+            params={item.params}
+            underline='never'
+            className='mini'
+            data-reveal
+          >
+            <Box className='mimg' data-cursor='view'>
+              <Box
+                component='img'
+                src={item.img}
+                alt={item.title}
+              />
             </Box>
-            <Box className='mt'>The Pocket Stories</Box>
-            <Text component='p' className='md'>
-              Collecting memories, weaving stories — a free community gathering.
-            </Text>
-          </Box>
-        </Anchor>
-        <Anchor
-          component={Link}
-          to='/exhibitions'
-          underline='never'
-          className='mini'
-          data-reveal
-        >
-          <Box className='mimg' data-cursor='view'>
-            <Box
-              component='img'
-              src='https://picsum.photos/seed/ltvalentine/640/440'
-              alt='Valentine Series'
-            />
-          </Box>
-          <Box>
-            <Box
-              component='span'
-              className='tag'
-              style={{ marginBottom: "10px" }}
-            >
-              2025 · Nigeria
+            <Box>
+              <Box
+                component='span'
+                className='tag'
+                style={{ marginBottom: "10px" }}
+              >
+                {item.tag}
+              </Box>
+              <Box className='mt'>{item.title}</Box>
+              <Text component='p' className='md ev-teaser-desc'>
+                {item.desc}
+              </Text>
             </Box>
-            <Box className='mt'>Valentine Series</Box>
-            <Text component='p' className='md'>
-              A curated exhibition of colour, contrast and form.
-            </Text>
-          </Box>
-        </Anchor>
-        <Anchor
-          component={Link}
-          to='/events'
-          underline='never'
-          className='mini'
-          data-reveal
-        >
-          <Box className='mimg' data-cursor='view'>
-            <Box
-              component='img'
-              src='https://picsum.photos/seed/ltheritage/640/440'
-              alt='Elevating Heritage'
-            />
-          </Box>
-          <Box>
-            <Box
-              component='span'
-              className='tag'
-              style={{ marginBottom: "10px" }}
-            >
-              2024 · Ghana
-            </Box>
-            <Box className='mt'>Elevating Heritage</Box>
-            <Text component='p' className='md'>
-              A hands-on printing workshop reconnecting craft and identity.
-            </Text>
-          </Box>
-        </Anchor>
+          </Anchor>
+        ))}
       </Box>
+      <style>{`
+        .ev-teaser-desc {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      `}</style>
     </Box>
   );
 }

@@ -7,8 +7,6 @@ export function RecognitionBand() {
       component='section'
       className='section press-band'
       data-screen-label='Home — Recognition'
-      data-cursor='view'
-      data-cursor-label='View press'
       style={{ position: "relative" }}
     >
       <Box className='pb-bg'>
@@ -21,17 +19,33 @@ export function RecognitionBand() {
       </Box>
       <Box className='pb-scrim' />
       <Anchor
-        component={Link}
-        to='/press'
+        href='https://guardian.ng/art/lateefat-tobun-leads-art-and-fashion-tech-innovation-at-uk-creative-workshop/#'
+        target='_blank'
+        rel='noopener noreferrer'
         className='pb-link'
-        aria-label='View all press'
+        aria-label='Read on The Guardian'
+        data-cursor='view'
+        data-cursor-label='Read article'
       />
-      <Box className='wrap'>
-        <Box className='pb-head'>
-          <Text component='span' className='kicker'>
+      <Box className='wrap' style={{ zIndex: 4, pointerEvents: "none" }}>
+        <Box className='pb-head' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+          <Text component='span' className='kicker' style={{ pointerEvents: 'auto' }}>
             Recognition
           </Text>
-          <Box component='span' className='link-arrow'>
+          <Anchor
+            component={Link}
+            to='/press'
+            className='link-arrow'
+            style={{
+              pointerEvents: "auto",
+              position: "relative",
+              zIndex: 10,
+              textDecoration: "none"
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             View all press
             <svg
               width='15'
@@ -40,21 +54,23 @@ export function RecognitionBand() {
               fill='none'
               stroke='currentColor'
               strokeWidth='1.8'
+              style={{ marginLeft: '4px' }}
             >
               <path d='M3 12L12 3M5 3h7v7' />
             </svg>
-          </Box>
+          </Anchor>
         </Box>
-        <Text component='blockquote' className='pb-quote' data-reveal>
+        <Text component='blockquote' className='pb-quote' data-reveal style={{ pointerEvents: 'auto' }}>
           <span className='mark'>&ldquo;</span>
           Lateefat Tobun leads art and fashion-tech innovation at a UK creative
           workshop &mdash; reimagining tradition for a digital world.
           <span className='mark'>&ldquo;</span>
         </Text>
-        <Box component='cite' className='pb-cite' data-reveal>
+        <Box component='cite' className='pb-cite' data-reveal style={{ pointerEvents: 'auto' }}>
           The Guardian &middot; October 2025
         </Box>
       </Box>
     </Box>
   );
 }
+

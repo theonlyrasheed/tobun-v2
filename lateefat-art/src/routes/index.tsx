@@ -17,6 +17,8 @@ export const Route = createFileRoute("/")({
       queryClient.ensureQueryData({ queryKey: sanityQ.testimonials.key(), queryFn: sanityQ.testimonials.fetch }),
       queryClient.ensureQueryData({ queryKey: sanityQ.services.key(), queryFn: sanityQ.services.fetch }),
       queryClient.ensureQueryData({ queryKey: sanityQ.events.key(), queryFn: sanityQ.events.fetch }),
+      queryClient.ensureQueryData({ queryKey: sanityQ.gallery.key(), queryFn: sanityQ.gallery.fetch }),
+      queryClient.ensureQueryData({ queryKey: sanityQ.exhibitions.key(), queryFn: sanityQ.exhibitions.fetch }),
     ]),
   component: HomePage,
 });
