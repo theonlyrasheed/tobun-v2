@@ -1166,13 +1166,13 @@
     gap: 2vh;
   }
   .why-figure {
-    grid-row: 2;
+    grid-row: 1;
     grid-column: 1;
     width: min(72vw, 360px);
     margin-top: 0;
   }
   .why-word.l {
-    grid-row: 1;
+    grid-row: 2;
     grid-column: 1;
     justify-self: center;
     text-align: center;
