@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import { Text, Box } from '@mantine/core'
-import { urlFor } from '@/lib/sanity/client'
+import { urlFor } from '@/sanity/client'
 
 /* ── Press / editorial components ─────────────────────────────── */
 export const pressComponents: PortableTextComponents = {

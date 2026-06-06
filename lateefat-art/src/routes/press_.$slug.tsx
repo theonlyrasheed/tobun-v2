@@ -2,7 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Box, Text } from "@mantine/core";
 import { usePressArticle, usePressArticles } from "@/hooks/use-sanity";
-import { urlFor } from "@/lib/sanity/client";
+import { urlFor } from "@/sanity/client";
 import { PortableText } from "@portabletext/react";
 import { pressComponents } from "@/components/shared/portable-text";
 

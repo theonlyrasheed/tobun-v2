@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { sanityQ } from '@/lib/sanity/query-builder'
-import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage } from '@/types/sanity'
+import { sanityQ } from '@/sanity/query-builder'
+import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
 import type { PressArticle } from '@/data/press'
 
 const STALE = 5 * 60 * 1000       /* 5 min */
@@ -77,5 +77,13 @@ export function useLegalPage(slug: string) {
     queryFn: () => sanityQ.legalPages.detail.fetch(slug),
     staleTime: STALE_LONG,
     enabled: !!slug,
+  })
+}
+
+export function useSiteSettings() {
+  return useQuery<SiteSettings | null>({
+    queryKey: sanityQ.siteSettings.key(),
+    queryFn: sanityQ.siteSettings.fetch,
+    staleTime: STALE_LONG,
   })
 }

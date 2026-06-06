@@ -5,6 +5,7 @@ import {
   DocumentTextIcon,
   HelpCircleIcon,
   ImageIcon,
+  SettingsIcon,
   TagIcon,
   UserIcon,
   UsersIcon,
@@ -26,6 +27,7 @@ const GROUPED_TYPES = [
   'service',
   'adverts_section',
   'legalPage',
+  'siteSettings',
   // 'services_section',
 ]
 
@@ -117,6 +119,19 @@ export const deskStructure = (S: StructureBuilder) =>
                 .icon(DocumentTextIcon)
                 .child(S.documentTypeList('legalPage').title('Legal Pages')),
             ]),
+        ),
+
+      S.divider(),
+
+      // Singleton — always opens the same document
+      S.listItem()
+        .title('Site Settings')
+        .icon(SettingsIcon)
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+            .title('Site Settings'),
         ),
 
       S.divider(),

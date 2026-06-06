@@ -70,3 +70,18 @@ export interface LegalPage {
   lastUpdated?: string
   body: any[]
 }
+
+export interface SiteSettings {
+  artistName: string
+  tagline?: string
+  bio?: string
+  email: string
+  phone?: string
+  location?: string
+  instagram?: string
+  linkedin?: string
+  twitter?: string
+  facebook?: string
+  seoTitle?: string
+  seoDescription?: string
+}

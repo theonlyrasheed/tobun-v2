@@ -37,14 +37,30 @@ export const exhibitionsQuery = `
 /* ── Gallery ──────────────────────────────────────────────────── */
 export const galleryQuery = `
   *[_type == "gallery"] {
-    ...,
+    "slug": slug.current,
+    title,
     "album": album->,
+    variant,
+    color,
+    created_at,
+    featured,
+    main_image,
     "imageWidth": main_image.asset->metadata.dimensions.width,
     "imageHeight": main_image.asset->metadata.dimensions.height
-  } | order(created_at desc)
+  } | order(featured desc, created_at desc)
 `
 
-/* ── Press ────────────────────────────────────────────────────── */
+/* ── Site Settings ────────────────────────────────────────────── */
+export const siteSettingsQuery = `
+  *[_type == "siteSettings"][0] {
+    artistName, tagline, bio,
+    email, phone, location,
+    instagram, linkedin, twitter, facebook,
+    seoTitle, seoDescription
+  }
+`
+
+/* ── Press ─────────────────────────────────────────────────────── */
 export const pressArticlesQuery = `
   *[_type == "post"] | order(published_at desc) {
     "slug": slug.current,

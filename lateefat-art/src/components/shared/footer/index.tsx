@@ -6,6 +6,7 @@ import { Instagram, Linkedin, ArrowRight } from "lucide-react";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
+import { useSiteSettings } from "@/hooks/use-sanity";
 
 const EXPLORE_LINKS = [
   { href: "/", label: "Home" },
@@ -17,18 +18,9 @@ const EXPLORE_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-const SOCIAL = [
-  {
-    href: "#",
-    icon: <Instagram size={18} strokeWidth={1.3} />,
-    label: "Instagram",
-  },
-  {
-    href: "#",
-    icon: <Linkedin size={18} strokeWidth={1.3} />,
-    label: "LinkedIn",
-  },
-] as const;
+const FALLBACK_EMAIL = "hello@tobunlateefat.com";
+const FALLBACK_PHONE = "+44 7846 002310";
+const FALLBACK_LOCATION = "Bradford, United Kingdom";
 
 const schema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -50,6 +42,24 @@ function ArrowIcon() {
 export function Footer() {
   const [done, setDone] = React.useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const { data: settings } = useSiteSettings();
+
+  const email = settings?.email ?? FALLBACK_EMAIL;
+  const phone = settings?.phone ?? FALLBACK_PHONE;
+  const location = settings?.location ?? FALLBACK_LOCATION;
+
+  const social = [
+    settings?.instagram && {
+      href: settings.instagram,
+      icon: <Instagram size={18} strokeWidth={1.3} />,
+      label: "Instagram",
+    },
+    settings?.linkedin && {
+      href: settings.linkedin,
+      icon: <Linkedin size={18} strokeWidth={1.3} />,
+      label: "LinkedIn",
+    },
+  ].filter(Boolean) as { href: string; icon: React.ReactNode; label: string }[];
 
   const form = useForm({
     mode: "controlled",
@@ -392,26 +402,30 @@ export function Footer() {
             >
               <Box component='li'>
                 <Anchor
-                  href='mailto:hello@tobunlateefat.com'
+                  href={`mailto:${email}`}
                   className='footer-link'
                 >
-                  hello@tobunlateefat.com
+                  {email}
                 </Anchor>
               </Box>
-              <Box component='li'>
-                <Anchor href='tel:+447846002310' className='footer-link'>
-                  +44 7846 002310
-                </Anchor>
-              </Box>
-              <Box
-                component='li'
-                style={{
-                  color: "color-mix(in oklab, var(--on-dark) 80%, transparent)",
-                  fontSize: "0.96rem",
-                }}
-              >
-                Bradford, United Kingdom
-              </Box>
+              {phone && (
+                <Box component='li'>
+                  <Anchor href={`tel:${phone.replace(/\s/g, '')}`} className='footer-link'>
+                    {phone}
+                  </Anchor>
+                </Box>
+              )}
+              {location && (
+                <Box
+                  component='li'
+                  style={{
+                    color: "color-mix(in oklab, var(--on-dark) 80%, transparent)",
+                    fontSize: "0.96rem",
+                  }}
+                >
+                  {location}
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
@@ -489,20 +503,18 @@ export function Footer() {
                 gap: "12px",
               }}
             >
-              {SOCIAL.map((s, idx) => {
-                return (
-                  <Anchor
-                    key={idx}
-                    href={s.href}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    aria-label={s.label}
-                    className='footer-social-link'
-                  >
-                    {s.icon}
-                  </Anchor>
-                );
-              })}
+              {social.map((s, idx) => (
+                <Anchor
+                  key={idx}
+                  href={s.href}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  aria-label={s.label}
+                  className='footer-social-link'
+                >
+                  {s.icon}
+                </Anchor>
+              ))}
             </Box>
           </Box>
         </Box>

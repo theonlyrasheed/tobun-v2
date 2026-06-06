@@ -9,6 +9,7 @@ import {
   pressArticlesQuery,
   pressArticleBySlugQuery,
   legalPageBySlugQuery,
+  siteSettingsQuery,
 } from './queries'
 import {
   fallbackFAQs,
@@ -19,7 +20,7 @@ import {
   fallbackGalleryItems,
 } from '@/data/fallbacks'
 import { pressArticles } from '@/data/press'
-import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage } from '@/types/sanity'
+import type { FAQ, Testimonial, Service, SiteEvent, Exhibition, GalleryItem, LegalPage, SiteSettings } from '@/types/sanity'
 import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
@@ -153,7 +154,7 @@ export const sanityQ = {
           const w = item.imageWidth || 1200
           const h = item.imageHeight || 900
           return {
-            seed: item.slug?.current || Math.random().toString(36).substring(7),
+            seed: item.slug || Math.random().toString(36).substring(7),
             title: item.title,
             cat: item.album?.slug?.current || 'other',
             aspect: calcAspect(w, h),
@@ -163,7 +164,8 @@ export const sanityQ = {
             subtitle: item.album?.title || 'Artwork',
             src: urlFor(item.main_image).width(800).url(),
             largeSrc: urlFor(item.main_image).width(1600).url(),
-            variant: 'default' as const,
+            variant: (item.variant as GalleryItem['variant']) || 'default',
+            ...(item.color ? { color: item.color } : {}),
           }
         })
       }
@@ -230,6 +232,12 @@ export const sanityQ = {
       fetch: (slug: string): Promise<LegalPage | null> =>
         tryFetch<LegalPage>(legalPageBySlugQuery, { slug }),
     },
+  },
+
+  siteSettings: {
+    key: () => ['site-settings'] as const,
+    fetch: (): Promise<SiteSettings | null> =>
+      tryFetch<SiteSettings>(siteSettingsQuery),
   },
 
 }

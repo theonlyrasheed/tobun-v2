@@ -10,6 +10,7 @@ import event from './site/event'
 import exhibition from './site/exhibition'
 import faq from './site/faq'
 import legalPage from './site/legal-page'
+import siteSettings from './site/site-settings'
 import testimonial from './site/testimonial'
 import service from './site/service'
 
@@ -33,5 +34,6 @@ export const schemas = [
   faq,
   service,
   legalPage,
+  siteSettings,
 ]
 

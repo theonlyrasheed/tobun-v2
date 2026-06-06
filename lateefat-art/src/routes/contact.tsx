@@ -2,6 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Box, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useSiteSettings } from "@/hooks/use-sanity";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
@@ -17,6 +18,11 @@ interface ContactFormValues {
 
 function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false);
+  const { data: settings } = useSiteSettings();
+
+  const email = settings?.email ?? "hello@tobunlateefat.com";
+  const phone = settings?.phone ?? "+44 7846 002310";
+  const location = settings?.location ?? "Bradford, United Kingdom";
 
   const form = useForm<ContactFormValues>({
     initialValues: {
@@ -63,18 +69,18 @@ function ContactPage() {
           <Box className="ct-info" style={{ marginTop: "36px" }}>
             <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)" }}>
               <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Studio</span>
-              <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>Bradford,<br />United Kingdom</span>
+              <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>{location}</span>
             </Box>
             <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)" }}>
               <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Phone</span>
               <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>
-                <a href="tel:+447846002310" style={{ textDecoration: "none", color: "inherit" }}>+44 7846 002310</a>
+                <a href={`tel:${phone.replace(/\s/g, '')}`} style={{ textDecoration: "none", color: "inherit" }}>{phone}</a>
               </span>
             </Box>
             <Box className="row" style={{ display: "flex", gap: "18px", alignItems: "flex-start", padding: "20px 0", borderTop: "1px solid var(--sand-line)", borderBottom: "1px solid var(--sand-line)" }}>
               <span className="k" style={{ minWidth: "96px", fontWeight: 700, fontFamily: "var(--mono)", fontSize: "0.68rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--indigo-bright)" }}>Email</span>
               <span className="v" style={{ fontWeight: 600, fontFamily: "var(--display)", fontSize: "clamp(1.1rem,1.8vw,1.4rem)" }}>
-                <a href="mailto:hello@tobunlateefat.com" style={{ textDecoration: "none", color: "inherit" }}>hello@tobunlateefat.com</a>
+                <a href={`mailto:${email}`} style={{ textDecoration: "none", color: "inherit" }}>{email}</a>
               </span>
             </Box>
           </Box>

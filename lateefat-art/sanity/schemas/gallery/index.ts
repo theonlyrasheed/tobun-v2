@@ -1,5 +1,5 @@
 import {ImageIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'gallery',
@@ -9,27 +9,23 @@ export default defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Artwork Title',
       type: 'string',
       validation: (rule) => rule.required(),
     }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      description: 'Auto-fills from title — click Generate.',
       options: {source: 'title', maxLength: 96},
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: 'album',
-      title: 'Album',
-      type: 'reference',
-      to: [{type: 'gallery_album'}],
-      validation: (rule) => rule.required(),
-    }),
+
     defineField({
       name: 'main_image',
-      title: 'Main image',
+      title: 'Image',
       type: 'image',
       options: {hotspot: true},
       fields: [
@@ -38,91 +34,63 @@ export default defineType({
           title: 'Alt text',
           type: 'string',
           validation: (rule) =>
-            rule.required().warning('Alt text is important for accessibility/SEO'),
+            rule.required().warning('Alt text is required for accessibility/SEO'),
         }),
       ],
       validation: (rule) => rule.required(),
     }),
+
     defineField({
-      name: 'more_images',
-      title: 'More images',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'image',
-          options: {hotspot: true},
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Alt text',
-              type: 'string',
-              validation: (rule) =>
-                rule.required().warning('Alt text is important for accessibility/SEO'),
-            }),
-          ],
-        }),
-      ],
+      name: 'album',
+      title: 'Album / Category',
+      type: 'reference',
+      to: [{type: 'gallery_album'}],
+      description: 'Determines the filter category shown in the gallery.',
+      validation: (rule) => rule.required(),
     }),
+
     defineField({
-      name: 'excerpt',
-      title: 'Short description',
-      type: 'text',
-      rows: 3,
+      name: 'variant',
+      title: 'Card Variant',
+      type: 'string',
+      description: 'Controls background treatment on the masonry card.',
+      options: {
+        list: [
+          {title: 'Default (dark)', value: 'default'},
+          {title: 'Light (cream)', value: 'light'},
+          {title: 'Ochre (warm gold)', value: 'ochre'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'default',
+      validation: (rule) => rule.required(),
     }),
+
     defineField({
-      name: 'description',
-      title: 'Description',
-      type: 'block_content',
+      name: 'color',
+      title: 'Text / Overlay Colour',
+      type: 'string',
+      description:
+        'Optional CSS colour override for the card text (e.g. "var(--cream)" or "#fff"). Leave blank to use the variant default.',
+      hidden: ({document}) => document?.variant === 'default' || !document?.variant,
     }),
-    defineField({
-      name: 'size',
-      title: 'Size',
-      type: 'object',
-      fields: [
-        defineField({name: 'heightCm', title: 'Height (cm)', type: 'number'}),
-        defineField({name: 'widthCm', title: 'Width (cm)', type: 'number'}),
-        defineField({name: 'depthCm', title: 'Depth (cm)', type: 'number'}),
-        defineField({
-          name: 'notes',
-          title: 'Notes',
-          type: 'string',
-          description: 'e.g. “Framed”, “Unframed”, “Canvas”',
-        }),
-      ],
-    }),
+
     defineField({
       name: 'created_at',
-      title: 'Date',
+      title: 'Artwork Date',
       type: 'date',
+      description: 'Year is extracted from this for the gallery filter.',
+      initialValue: () => new Date().toISOString().split('T')[0],
     }),
+
     defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'currency',
-          title: 'Currency',
-          type: 'string',
-          options: {
-            list: [
-              {title: 'Nigerian Naira (NGN)', value: 'NGN'},
-              {title: 'US Dollar (USD)', value: 'USD'},
-              {title: 'British Pound (GBP)', value: 'GBP'},
-              {title: 'Euro (EUR)', value: 'EUR'},
-            ],
-            layout: 'radio',
-          },
-          initialValue: 'NGN',
-        }),
-        defineField({
-          name: 'amount',
-          title: 'Amount',
-          type: 'number',
-          validation: (rule) => rule.min(0),
-        }),
-      ],
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Pin to the top of the gallery.',
+      initialValue: false,
     }),
+
     defineField({
       name: 'availability',
       title: 'Availability',
@@ -136,28 +104,52 @@ export default defineType({
         layout: 'radio',
       },
       initialValue: 'available',
-      validation: (rule) => rule.required(),
     }),
+
     defineField({
-      name: 'featured',
-      title: 'Featured',
-      type: 'boolean',
-      initialValue: false,
+      name: 'price',
+      title: 'Price',
+      type: 'object',
+      hidden: ({document}) => document?.availability === 'not_for_sale',
+      fields: [
+        defineField({
+          name: 'amount',
+          title: 'Amount',
+          type: 'number',
+          validation: (rule) => rule.min(0),
+        }),
+        defineField({
+          name: 'currency',
+          title: 'Currency',
+          type: 'string',
+          options: {
+            list: [
+              {title: 'GBP £', value: 'GBP'},
+              {title: 'USD $', value: 'USD'},
+              {title: 'EUR €', value: 'EUR'},
+              {title: 'NGN ₦', value: 'NGN'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'GBP',
+        }),
+      ],
     }),
   ],
+
   preview: {
     select: {
       title: 'title',
       media: 'main_image',
-      category_title: 'category.title',
+      album: 'album.title',
       availability: 'availability',
     },
-    prepare({title, media, category_title, availability}) {
-      const bits = [category_title, availability].filter(Boolean)
+    prepare({title, media, album, availability}) {
+      const bits = [album, availability].filter(Boolean)
       return {
         title,
         media,
-        subtitle: bits.length ? bits.join(' • ') : undefined,
+        subtitle: bits.length ? bits.join(' · ') : undefined,
       }
     },
   },
