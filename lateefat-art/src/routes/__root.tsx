@@ -55,9 +55,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     } else {
       try {
         const serverModule = "@tanstack/react-start/server";
-        const { getRequestHeader } = await import(serverModule);
-        const forwardedHost = getRequestHeader("x-forwarded-host");
-        const hostHeader = getRequestHeader("host");
+        const { getRequestHeaders } = await import(serverModule);
+        const headers = getRequestHeaders() as Record<string, string | string[] | undefined>;
+        const forwardedHost = headers["x-forwarded-host"];
+        const hostHeader = headers["host"];
         const rawHost = forwardedHost || hostHeader;
         const host = Array.isArray(rawHost) ? rawHost[0] : rawHost;
         const cleanHost = host ? host.split(":")[0] : "";
