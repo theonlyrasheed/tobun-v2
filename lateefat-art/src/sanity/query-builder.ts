@@ -34,9 +34,13 @@ async function isDevHost() {
   }
   try {
     const serverModule = "@tanstack/react-start/server"
-    const { getRequestHost } = await import(serverModule)
-    const host = getRequestHost()
-    return host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"))
+    const { getRequestHeader } = await import(serverModule)
+    const forwardedHost = getRequestHeader("x-forwarded-host")
+    const hostHeader = getRequestHeader("host")
+    const rawHost = forwardedHost || hostHeader
+    const host = Array.isArray(rawHost) ? rawHost[0] : rawHost
+    const cleanHost = host ? host.split(":")[0] : ""
+    return cleanHost === "dev.tobunlateefat.com" || cleanHost.endsWith(".dev.tobunlateefat.com")
   } catch (e) {
     return false
   }

@@ -55,9 +55,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     } else {
       try {
         const serverModule = "@tanstack/react-start/server";
-        const { getRequestHost } = await import(serverModule);
-        const host = getRequestHost();
-        isDev = host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"));
+        const { getRequestHeader } = await import(serverModule);
+        const forwardedHost = getRequestHeader("x-forwarded-host");
+        const hostHeader = getRequestHeader("host");
+        const rawHost = forwardedHost || hostHeader;
+        const host = Array.isArray(rawHost) ? rawHost[0] : rawHost;
+        const cleanHost = host ? host.split(":")[0] : "";
+        isDev = cleanHost === "dev.tobunlateefat.com" || cleanHost.endsWith(".dev.tobunlateefat.com");
       } catch (e) {
         console.error("Failed to check server host", e);
       }
