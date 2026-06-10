@@ -47,20 +47,45 @@ export const ThemeContext = React.createContext<{
 }>({ theme: "light", toggle: () => {} });
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  loader: ({ context: { queryClient } }) => {
-    if (import.meta.env.VITE_MAINTENANCE_MODE === "true") {
-      return null;
+  loader: async ({ context: { queryClient } }) => {
+    let isDev = false;
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      isDev = hostname === "dev.tobunlateefat.com" || hostname.endsWith(".dev.tobunlateefat.com");
+    } else {
+      try {
+        const { getRequestHost } = await import("@tanstack/react-start/server");
+        const host = getRequestHost();
+        isDev = host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"));
+      } catch (e) {
+        console.error("Failed to check server host", e);
+      }
     }
-    return queryClient
+
+    if (isDev) {
+      const settings = await queryClient
+        .ensureQueryData({
+          queryKey: sanityQ.siteSettings.key(),
+          queryFn: sanityQ.siteSettings.fetch,
+        })
+        .catch(() => null);
+      return { settings, isDev };
+    }
+
+    if (import.meta.env.VITE_MAINTENANCE_MODE === "true") {
+      return { settings: null, isDev };
+    }
+    const settings = await queryClient
       .ensureQueryData({
         queryKey: sanityQ.siteSettings.key(),
         queryFn: sanityQ.siteSettings.fetch,
       })
       .catch(() => null);
+    return { settings, isDev };
   },
   head: ({ loaderData }) => {
-    const seoTitle = loaderData?.seoTitle || "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier";
-    const seoDesc = loaderData?.seoDescription || "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.";
+    const seoTitle = loaderData?.settings?.seoTitle || "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier";
+    const seoDesc = loaderData?.settings?.seoDescription || "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.";
 
     return {
       meta: [
@@ -164,8 +189,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const themeCtx = useTheme();
   const loaderData = Route.useLoaderData();
   const isMaintenance =
-    import.meta.env.VITE_MAINTENANCE_MODE === "true" ||
-    loaderData?.maintenanceMode === true;
+    !loaderData?.isDev &&
+    (import.meta.env.VITE_MAINTENANCE_MODE === "true" ||
+      loaderData?.settings?.maintenanceMode === true);
 
   return (
     <html lang='en' data-theme='light'>

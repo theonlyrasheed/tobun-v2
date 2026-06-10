@@ -27,8 +27,23 @@ import type { FAQ, Testimonial, Service, SiteEvent, EventStatus, Exhibition, Gal
 import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
+async function isDevHost() {
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname
+    return hostname === "dev.tobunlateefat.com" || hostname.endsWith(".dev.tobunlateefat.com")
+  }
+  try {
+    const { getRequestHost } = await import("@tanstack/react-start/server")
+    const host = getRequestHost()
+    return host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"))
+  } catch (e) {
+    return false
+  }
+}
+
 async function tryFetch<T>(query: string, params?: Record<string, unknown>): Promise<T | null> {
-  if (import.meta.env.VITE_MAINTENANCE_MODE === "true") {
+  const isDev = await isDevHost()
+  if (!isDev && import.meta.env.VITE_MAINTENANCE_MODE === "true") {
     return null
   }
   try {
