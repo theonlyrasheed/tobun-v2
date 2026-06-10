@@ -17,6 +17,7 @@ import { Footer } from "@/components/shared/footer";
 import { Cursor } from "@/components/shared/cursor";
 import { useReveal } from "@/components/shared/reveal";
 import { FavIcon } from "@/components/shared/favicon";
+import { MaintenanceView } from "@/components/shared/maintenance";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -46,11 +47,17 @@ export const ThemeContext = React.createContext<{
 }>({ theme: "light", toggle: () => {} });
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  loader: ({ context: { queryClient } }) =>
-    queryClient.ensureQueryData({
-      queryKey: sanityQ.siteSettings.key(),
-      queryFn: sanityQ.siteSettings.fetch,
-    }),
+  loader: ({ context: { queryClient } }) => {
+    if (import.meta.env.VITE_MAINTENANCE_MODE === "true") {
+      return null;
+    }
+    return queryClient
+      .ensureQueryData({
+        queryKey: sanityQ.siteSettings.key(),
+        queryFn: sanityQ.siteSettings.fetch,
+      })
+      .catch(() => null);
+  },
   head: ({ loaderData }) => {
     const seoTitle = loaderData?.seoTitle || "Lateefat Tobun — Multidisciplinary Artist & Digital Couturier";
     const seoDesc = loaderData?.seoDescription || "Portfolio of Lateefat Modupeola Tobun — multidisciplinary visual artist and digital couturier based in the UK.";
@@ -155,6 +162,10 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const themeCtx = useTheme();
+  const loaderData = Route.useLoaderData();
+  const isMaintenance =
+    import.meta.env.VITE_MAINTENANCE_MODE === "true" ||
+    loaderData?.maintenanceMode === true;
 
   return (
     <html lang='en' data-theme='light'>
@@ -167,12 +178,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <ThemeContext.Provider value={themeCtx}>
           <MantineProvider theme={mantineTheme} defaultColorScheme='light' cssVariablesResolver={cssVariablesResolver}>
             <Notifications position='top-right' />
-            <NavBar />
-            <AppShell>
-              <main>{children}</main>
-            </AppShell>
-            <Footer />
-            <Cursor />
+            {isMaintenance ? (
+              <MaintenanceView theme={themeCtx.theme} toggleTheme={themeCtx.toggle} />
+            ) : (
+              <>
+                <NavBar />
+                <AppShell>
+                  <main>{children}</main>
+                </AppShell>
+                <Footer />
+                <Cursor />
+              </>
+            )}
           </MantineProvider>
         </ThemeContext.Provider>
         <Scripts />

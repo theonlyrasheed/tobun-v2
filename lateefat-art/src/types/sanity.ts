@@ -95,6 +95,7 @@ export interface LegalPage {
 
 export interface SiteSettings {
   artistName: string
+  maintenanceMode?: boolean
   tagline?: string
   bio?: string
   email: string

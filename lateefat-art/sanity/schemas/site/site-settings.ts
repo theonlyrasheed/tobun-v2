@@ -31,6 +31,13 @@ export default defineType({
       rows: 3,
       description: 'One-paragraph bio used in the About teaser and SEO description.',
     }),
+    defineField({
+      name: 'maintenanceMode',
+      title: 'Maintenance Mode',
+      type: 'boolean',
+      description: 'Activate to lock the site down and display the Under Maintenance page.',
+      initialValue: false,
+    }),
 
     defineField({
       name: 'email',

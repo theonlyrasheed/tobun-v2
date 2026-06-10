@@ -28,6 +28,9 @@ import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
 async function tryFetch<T>(query: string, params?: Record<string, unknown>): Promise<T | null> {
+  if (import.meta.env.VITE_MAINTENANCE_MODE === "true") {
+    return null
+  }
   try {
     return await sanityClient.fetch<T>(query, params ?? {})
   } catch (err) {

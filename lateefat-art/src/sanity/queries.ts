@@ -67,7 +67,8 @@ export const siteSettingsQuery = `
     artistName, tagline, bio,
     email, phone, location,
     instagram, linkedin, twitter, facebook,
-    seoTitle, seoDescription
+    seoTitle, seoDescription,
+    maintenanceMode
   }
 `
 
