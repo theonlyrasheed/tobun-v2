@@ -54,7 +54,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       isDev = hostname === "dev.tobunlateefat.com" || hostname.endsWith(".dev.tobunlateefat.com");
     } else {
       try {
-        const { getRequestHost } = await import("@tanstack/react-start/server");
+        const serverModule = "@tanstack/react-start/server";
+        const { getRequestHost } = await import(serverModule);
         const host = getRequestHost();
         isDev = host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"));
       } catch (e) {

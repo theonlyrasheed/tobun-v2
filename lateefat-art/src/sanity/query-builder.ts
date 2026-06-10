@@ -33,7 +33,8 @@ async function isDevHost() {
     return hostname === "dev.tobunlateefat.com" || hostname.endsWith(".dev.tobunlateefat.com")
   }
   try {
-    const { getRequestHost } = await import("@tanstack/react-start/server")
+    const serverModule = "@tanstack/react-start/server"
+    const { getRequestHost } = await import(serverModule)
     const host = getRequestHost()
     return host === "dev.tobunlateefat.com" || (host !== undefined && host.endsWith(".dev.tobunlateefat.com"))
   } catch (e) {
