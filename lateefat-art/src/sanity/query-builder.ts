@@ -27,6 +27,15 @@ import type { FAQ, Testimonial, Service, SiteEvent, EventStatus, Exhibition, Gal
 import type { PressArticle } from '@/data/press'
 
 /* ── Helper ───────────────────────────────────────────────────── */
+function getHeaderSafe(headers: any, name: string): string | undefined {
+  if (!headers) return undefined;
+  if (typeof headers.get === "function") {
+    return headers.get(name) || undefined;
+  }
+  const val = headers[name] || headers[name.toLowerCase()];
+  return Array.isArray(val) ? val[0] : val;
+}
+
 async function isDevHost() {
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname
@@ -35,11 +44,10 @@ async function isDevHost() {
   try {
     const serverModule = "@tanstack/react-start/server"
     const { getRequestHeaders } = await import(serverModule)
-    const headers = getRequestHeaders() as Record<string, string | string[] | undefined>
-    const forwardedHost = headers["x-forwarded-host"]
-    const hostHeader = headers["host"]
-    const rawHost = forwardedHost || hostHeader
-    const host = Array.isArray(rawHost) ? rawHost[0] : rawHost
+    const headers = getRequestHeaders()
+    const forwardedHost = getHeaderSafe(headers, "x-forwarded-host")
+    const hostHeader = getHeaderSafe(headers, "host")
+    const host = forwardedHost || hostHeader
     const cleanHost = host ? host.split(":")[0] : ""
     return cleanHost === "dev.tobunlateefat.com" || cleanHost.endsWith(".dev.tobunlateefat.com")
   } catch (e) {
