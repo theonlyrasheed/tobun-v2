@@ -1,6 +1,0 @@
-{
-  "name": "@lateefat/variables",
-  "exports": {
-    ".": "./index.css"
-  }
-}

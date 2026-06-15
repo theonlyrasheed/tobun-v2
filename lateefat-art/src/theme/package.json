@@ -1,6 +1,0 @@
-{
-  "name": "@lateefat/theme",
-  "exports": {
-    ".": "./index.ts"
-  }
-}

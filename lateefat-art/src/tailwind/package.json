@@ -1,6 +1,0 @@
-{
-  "name": "@lateefat/tailwind",
-  "exports": {
-    ".": "./index.js"
-  }
-}
