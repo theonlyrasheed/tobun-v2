@@ -131,8 +131,11 @@
   }
 
   .rotating {
+    /* animation: rotate-text 8s linear infinite;
+    transform-origin: 100px 100px; Center of the SVG (100, 100) */
+    transform-box: view-box;
+    transform-origin: 100px 100px;
     animation: rotate-text 8s linear infinite;
-    transform-origin: 100px 100px; /* Center of the SVG (100, 100) */
   }
 
   @keyframes rotate-text {
@@ -140,6 +143,15 @@
       transform: rotate(0deg);
     }
     100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
       transform: rotate(360deg);
     }
   }
