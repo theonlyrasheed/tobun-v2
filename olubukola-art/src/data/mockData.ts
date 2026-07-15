@@ -15,17 +15,17 @@ import {
 export const stats: StatCardProps[] = [
   {
     // value: faker.number.int({ min: 500, max: 1000 }) + "+",
-    value: "600+",
+    value: "150+",
     label: "Customers",
   },
   {
     // value: faker.number.int({ min: 30, max: 50 }) + "+",
-    value: "34+",
+    value: "50+",
     label: "Commissions",
   },
   {
     // value: faker.number.int({ min: 15, max: 25 }) + "+",
-    value: "18+",
+    value: "10+",
     label: "Global",
   },
 ];

@@ -165,9 +165,9 @@ function AboutPage() {
               </Title>
 
               <Box className="flex flex-wrap sm:flex-nowrap items-center justify-center mt-[10px]">
-                <StatBadge value="600+" label="Customers" />
-                <StatBadge value="18+" label="Countries" />
-                <StatBadge value="34+" label="Commissions" />
+                <StatBadge value="150+" label="Customers" />
+                <StatBadge value="10+" label="Countries" />
+                <StatBadge value="50+" label="Commissions" />
               </Box>
 
               <Box className="flex justify-center -mt-8 md:-mt-14">
