@@ -15,6 +15,7 @@ import {
 import { IconArrowLeft } from "@tabler/icons-react";
 import { MAX_WIDTH } from "@/utils/constants";
 import clsx from "clsx";
+import { PAGES } from "@/utils/enums";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -116,7 +117,11 @@ function AboutPage() {
         <Divider my={{ base: 40, md: 60 }} color="gray.2" />
 
         {/* Benefits / Core values */}
-        <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 35, md: 70 }}>
+        <SimpleGrid
+          cols={{ base: 1, md: 2 }}
+          spacing={{ base: 35, md: 70 }}
+          id={PAGES.CORE_VALUES}
+        >
           <Stack gap="xl">
             <Stack gap={6}>
               <Text
@@ -386,7 +391,7 @@ function StatBadge({ value, label }: { value: string; label: string }) {
           <text
             fill="#111827"
             fontSize="14"
-            letterSpacing="2px"
+            letterSpacing="3px"
             className="rotating"
           >
             {offsets.map((offset) => (

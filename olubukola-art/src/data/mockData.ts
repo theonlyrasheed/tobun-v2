@@ -14,11 +14,20 @@ import {
 // Generate realistic stats
 export const stats: StatCardProps[] = [
   {
-    value: faker.number.int({ min: 500, max: 1000 }) + "+",
+    // value: faker.number.int({ min: 500, max: 1000 }) + "+",
+    value: "600+",
     label: "Customers",
   },
-  { value: faker.number.int({ min: 30, max: 50 }) + "+", label: "Commissions" },
-  { value: faker.number.int({ min: 15, max: 25 }) + "+", label: "Global" },
+  {
+    // value: faker.number.int({ min: 30, max: 50 }) + "+",
+    value: "34+",
+    label: "Commissions",
+  },
+  {
+    // value: faker.number.int({ min: 15, max: 25 }) + "+",
+    value: "18+",
+    label: "Global",
+  },
 ];
 
 // Convert Sanity blog posts to the expected format
@@ -35,7 +44,7 @@ export const blogPosts: BlogPostProps[] = placeholderBlogPosts.map(
       day: "numeric",
     }),
     readTime: faker.number.int({ min: 3, max: 15 }),
-  })
+  }),
 );
 
 // Convert Sanity testimonials to the expected format
@@ -46,7 +55,7 @@ export const testimonials: TestimonialProps[] = placeholderTestimonials.map(
     text: testimonial.quote,
     rating: testimonial.rating || 5,
     avatar: "/images/testimonials/avatar.jpg",
-  })
+  }),
 );
 
 // Convert Sanity FAQs to the expected format

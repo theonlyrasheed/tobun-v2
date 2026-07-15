@@ -95,8 +95,8 @@ const WorkGraphicDesignsAtmCardRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/profile': typeof ProfileRoute
   '/': typeof WorkIndexRoute
+  '/profile': typeof ProfileRoute
   '/graphic-designs/atm-card': typeof WorkGraphicDesignsAtmCardRoute
   '/graphic-designs/illustration': typeof WorkGraphicDesignsIllustrationRoute
   '/mobile-apps/laurienla-cake': typeof WorkMobileAppsLaurienlaCakeRoute
@@ -104,9 +104,9 @@ export interface FileRoutesByFullPath {
   '/mobile-apps/tulip-app': typeof WorkMobileAppsTulipAppRoute
   '/websites/heikenma-solar': typeof WorkWebsitesHeikenmaSolarRoute
   '/websites/little-luminaries': typeof WorkWebsitesLittleLuminariesRoute
-  '/graphic-designs': typeof WorkGraphicDesignsIndexRoute
-  '/mobile-apps': typeof WorkMobileAppsIndexRoute
-  '/websites': typeof WorkWebsitesIndexRoute
+  '/graphic-designs/': typeof WorkGraphicDesignsIndexRoute
+  '/mobile-apps/': typeof WorkMobileAppsIndexRoute
+  '/websites/': typeof WorkWebsitesIndexRoute
 }
 export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
@@ -141,8 +141,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/profile'
     | '/'
+    | '/profile'
     | '/graphic-designs/atm-card'
     | '/graphic-designs/illustration'
     | '/mobile-apps/laurienla-cake'
@@ -150,9 +150,9 @@ export interface FileRouteTypes {
     | '/mobile-apps/tulip-app'
     | '/websites/heikenma-solar'
     | '/websites/little-luminaries'
-    | '/graphic-designs'
-    | '/mobile-apps'
-    | '/websites'
+    | '/graphic-designs/'
+    | '/mobile-apps/'
+    | '/websites/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/profile'
@@ -201,7 +201,7 @@ declare module '@tanstack/react-router' {
     '/_work': {
       id: '/_work'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof WorkRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -215,21 +215,21 @@ declare module '@tanstack/react-router' {
     '/_work/websites/': {
       id: '/_work/websites/'
       path: '/websites'
-      fullPath: '/websites'
+      fullPath: '/websites/'
       preLoaderRoute: typeof WorkWebsitesIndexRouteImport
       parentRoute: typeof WorkRoute
     }
     '/_work/mobile-apps/': {
       id: '/_work/mobile-apps/'
       path: '/mobile-apps'
-      fullPath: '/mobile-apps'
+      fullPath: '/mobile-apps/'
       preLoaderRoute: typeof WorkMobileAppsIndexRouteImport
       parentRoute: typeof WorkRoute
     }
     '/_work/graphic-designs/': {
       id: '/_work/graphic-designs/'
       path: '/graphic-designs'
-      fullPath: '/graphic-designs'
+      fullPath: '/graphic-designs/'
       preLoaderRoute: typeof WorkGraphicDesignsIndexRouteImport
       parentRoute: typeof WorkRoute
     }

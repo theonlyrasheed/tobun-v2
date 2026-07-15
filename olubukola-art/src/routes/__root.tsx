@@ -97,10 +97,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <Notifications position='top-right' />
-          <section className='relative flex min-h-screen flex-col'>
+          <Notifications position="top-right" />
+          <section className="relative flex min-h-screen flex-col">
             <Header />
-            <main className='z-10 bg-white sm:shadow-lg'>{children}</main>
+            <main className="z-10 bg-white sm:shadow-lg">{children}</main>
             <Footer />
           </section>
           {/* <TanStackRouterDevtools position='bottom-right' /> */}

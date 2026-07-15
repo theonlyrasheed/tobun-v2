@@ -3,6 +3,7 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { useAdvertsSection } from "@/builders";
+import { PAGES } from "@/utils/enums";
 
 export function AdsSection() {
   const { data } = useAdvertsSection();
@@ -44,10 +45,14 @@ export function AdsSection() {
   const next = () => setActive((idx) => (idx + 1) % ads.length);
 
   return (
-    <Box className='ads-fade' style={{ backgroundColor: "white" }}>
+    <Box
+      className="ads-fade"
+      style={{ backgroundColor: "white" }}
+      id={PAGES.ADS}
+    >
       <Box
-        className='ads-fade-viewport'
-        aria-label='Ads'
+        className="ads-fade-viewport"
+        aria-label="Ads"
         mih={{ base: 100, md: 530 }}
       >
         {ads.map((ad, idx) => {
@@ -55,7 +60,7 @@ export function AdsSection() {
           return (
             <Box
               key={ad.key}
-              className='ads-fade-item'
+              className="ads-fade-item"
               style={{
                 // Disable the global keyframe animation from styles.css.
                 // We control visibility with React state + transitions.
@@ -66,7 +71,7 @@ export function AdsSection() {
                 pointerEvents: isActive ? "auto" : "none",
               }}
             >
-              <Image src={ad.src} alt={ad.alt} fit='cover' />
+              <Image src={ad.src} alt={ad.alt} fit="cover" />
             </Box>
           );
         })}
@@ -74,20 +79,20 @@ export function AdsSection() {
         {ads.length > 1 ? (
           <>
             <ActionIcon
-              variant='filled'
-              radius='xl'
-              size='lg'
-              aria-label='Previous advert'
+              variant="filled"
+              radius="xl"
+              size="lg"
+              aria-label="Previous advert"
               onClick={prev}
               style={{ position: "absolute", left: 12, top: "50%" }}
             >
               <IconChevronLeft size={18} />
             </ActionIcon>
             <ActionIcon
-              variant='filled'
-              radius='xl'
-              size='lg'
-              aria-label='Next advert'
+              variant="filled"
+              radius="xl"
+              size="lg"
+              aria-label="Next advert"
               onClick={next}
               style={{ position: "absolute", right: 12, top: "50%" }}
             >

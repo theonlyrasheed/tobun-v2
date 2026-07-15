@@ -6,6 +6,8 @@ export enum PAGES {
   BLOG = "blog",
   FAQS = "faqs",
   CONTACT = "contact",
+  CORE_VALUES = "core-values",
+  ADS = "ads",
 }
 
 export enum SOCIAL_MEDIA {
@@ -15,7 +17,8 @@ export enum SOCIAL_MEDIA {
   EMAIL = "olubukolaart@gmail.com",
   DEFAULT_EMAIL = "booking@olubukola.com",
   NO_REPLY_EMAIL = "noreply@olubukola.com",
-  PHONE = "+2348148148813",
+  // PHONE = "+2348148148813",
+  PHONE = "+2348091792326",
   NEWSLETTER = "https://kit.com",
 }
 
