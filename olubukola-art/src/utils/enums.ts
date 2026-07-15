@@ -18,7 +18,9 @@ export enum SOCIAL_MEDIA {
   DEFAULT_EMAIL = "booking@olubukola.com",
   NO_REPLY_EMAIL = "noreply@olubukola.com",
   // PHONE = "+2348148148813",
-  PHONE = "+2348091792326",
+  PHONE = "+2349061678333",
+  WHATSAPP = "+2348158148813",
+  // WHATSAPP = "https://wa.me/2348091792326",
   NEWSLETTER = "https://kit.com",
 }
 
