@@ -270,3 +270,15 @@ export const featuredFaqs = faqs.filter((faq) => faq.featured);
 export const upcomingEvents = events
   .filter((event) => new Date(event.date!) > new Date())
   .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
+
+// Placeholder stats section (shown on the hero and About page until Sanity loads)
+export const statsSection = {
+  _id: "stats-section-placeholder",
+  _type: "stats_section",
+  enabled: true,
+  stats: [
+    { value: "150+", label: "Customers" },
+    { value: "50+", label: "Commissions" },
+    { value: "10+", label: "Global" },
+  ],
+};

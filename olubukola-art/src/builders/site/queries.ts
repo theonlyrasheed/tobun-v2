@@ -134,3 +134,17 @@ export const advertsSectionQuery =
     []
   )
 }`);
+
+export const statsSectionQuery =
+  defineQuery(`*[_type == "stats_section" && enabled == true][0] {
+  _id,
+  _type,
+  "enabled": coalesce(enabled, true),
+  "stats": coalesce(
+    stats[]{
+      "value": coalesce(value, ""),
+      "label": coalesce(label, "")
+    },
+    []
+  )
+}`);

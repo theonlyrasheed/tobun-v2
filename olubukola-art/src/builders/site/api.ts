@@ -21,6 +21,7 @@ import {
   featuredFaqsQuery,
   upcomingEventsQuery,
   advertsSectionQuery,
+  statsSectionQuery,
 } from "./queries";
 
 export const serviceApi = {
@@ -118,6 +119,17 @@ export const advertsApi = {
     } catch (error) {
       console.error("Error fetching adverts section:", error);
       throw new Error("Failed to fetch adverts section");
+    }
+  },
+};
+
+export const statsApi = {
+  async getStatsSection(): Promise<any> {
+    try {
+      return await sanityClient.fetch(statsSectionQuery);
+    } catch (error) {
+      console.error("Error fetching stats section:", error);
+      throw new Error("Failed to fetch stats section");
     }
   },
 };

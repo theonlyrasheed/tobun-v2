@@ -10,6 +10,7 @@ import {
   getUpcomingEvents,
   getAllCompanies,
   getAdvertsSection,
+  getStatsSection,
 } from "./server-fns";
 import {
   services,
@@ -20,6 +21,7 @@ import {
   featuredServices,
   featuredFaqs,
   upcomingEvents,
+  statsSection,
 } from "./placeholder";
 
 export const useServices = () => {
@@ -104,5 +106,13 @@ export const useAdvertsSection = () => {
     queryKey: ["adverts-section"],
     queryFn: getAdvertsSection,
     placeholderData: null,
+  });
+};
+
+export const useStatsSection = () => {
+  return useQuery({
+    queryKey: ["stats-section"],
+    queryFn: getStatsSection,
+    placeholderData: statsSection,
   });
 };

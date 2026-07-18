@@ -16,5 +16,7 @@ export {
   faqApi,
   eventApi,
   companyApi,
+  advertsApi,
+  statsApi,
 } from "./site/api";
 export * from "./site/hooks";

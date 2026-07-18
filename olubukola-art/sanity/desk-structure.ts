@@ -1,6 +1,7 @@
 import {
   BookIcon,
   CalendarIcon,
+  ChartUpwardIcon,
   CommentIcon,
   HelpCircleIcon,
   ImageIcon,
@@ -23,6 +24,7 @@ const GROUPED_TYPES = [
   'faq',
   'service',
   'adverts_section',
+  'stats_section',
   // 'services_section',
 ]
 
@@ -85,6 +87,10 @@ export const deskStructure = (S: StructureBuilder) =>
                 .title('Services')
                 .icon(TagIcon)
                 .child(S.documentTypeList('service').title('Services')),
+              S.listItem()
+                .title('Stats')
+                .icon(ChartUpwardIcon)
+                .child(S.documentTypeList('stats_section').title('Stats')),
               S.listItem()
                 .title('Events')
                 .icon(CalendarIcon)

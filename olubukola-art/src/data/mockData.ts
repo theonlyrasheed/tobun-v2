@@ -4,31 +4,7 @@ import {
   testimonials as placeholderTestimonials,
   faqs as placeholderFaqs,
 } from "@/builders/site/placeholder";
-import {
-  BlogPostProps,
-  TestimonialProps,
-  FAQItemProps,
-  StatCardProps,
-} from "@/types";
-
-// Generate realistic stats
-export const stats: StatCardProps[] = [
-  {
-    // value: faker.number.int({ min: 500, max: 1000 }) + "+",
-    value: "150+",
-    label: "Customers",
-  },
-  {
-    // value: faker.number.int({ min: 30, max: 50 }) + "+",
-    value: "50+",
-    label: "Commissions",
-  },
-  {
-    // value: faker.number.int({ min: 15, max: 25 }) + "+",
-    value: "10+",
-    label: "Global",
-  },
-];
+import { BlogPostProps, TestimonialProps, FAQItemProps } from "@/types";
 
 // Convert Sanity blog posts to the expected format
 export const blogPosts: BlogPostProps[] = placeholderBlogPosts.map(

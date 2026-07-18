@@ -16,12 +16,16 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { MAX_WIDTH } from "@/utils/constants";
 import clsx from "clsx";
 import { PAGES } from "@/utils/enums";
+import { useStatsSection } from "@/builders/site/hooks";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
 function AboutPage() {
+  const { data: statsData } = useStatsSection();
+  const stats = statsData?.stats ?? [];
+
   return (
     <Stack gap={0}>
       <Image src="/svgs/about-us-hero.svg" alt="About Hero" />
@@ -165,9 +169,13 @@ function AboutPage() {
               </Title>
 
               <Box className="flex flex-wrap sm:flex-nowrap items-center justify-center mt-[10px]">
-                <StatBadge value="150+" label="Customers" />
-                <StatBadge value="10+" label="Countries" />
-                <StatBadge value="50+" label="Commissions" />
+                {stats.map((stat) => (
+                  <StatBadge
+                    key={stat.label}
+                    value={stat.value}
+                    label={stat.label}
+                  />
+                ))}
               </Box>
 
               <Box className="flex justify-center -mt-8 md:-mt-14">
