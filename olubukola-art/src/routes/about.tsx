@@ -169,7 +169,7 @@ function AboutPage() {
               </Title>
 
               <Box className="flex flex-wrap sm:flex-nowrap items-center justify-center mt-[10px]">
-                {stats.map((stat) => (
+                {stats.map((stat: { label: string; value: string }) => (
                   <StatBadge
                     key={stat.label}
                     value={stat.value}

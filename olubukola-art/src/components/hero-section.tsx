@@ -91,7 +91,7 @@ export function HeroSection() {
             </Text>
 
             <Box className="flex flex-wrap gap-[18px] max-w-2xl">
-              {stats.map((stat: any) => (
+              {stats.map((stat: { label: string; value: string }) => (
                 <Box
                   key={stat.label}
                   className={clsx(
