@@ -75,8 +75,8 @@ export function Footer() {
                   </Text>
                   <Text
                     component={Link}
-                    to={PAGES.HOME}
-                    hash={PAGES.BLOG}
+                    to={PAGES.BLOG}
+                    // hash={PAGES.BLOG}
                     fz={14}
                     c="dimmed"
                     className="font-poppins"

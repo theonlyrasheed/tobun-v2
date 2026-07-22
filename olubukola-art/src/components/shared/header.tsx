@@ -21,7 +21,8 @@ export function Header() {
     { label: "About Us", to: PAGES.ABOUT },
     { label: "Services", to: PAGES.HOME, hash: PAGES.SERVICES },
     { label: "Gallery", to: PAGES.GALLERY },
-    { label: "Blog", to: PAGES.HOME, hash: PAGES.BLOG },
+    // { label: "Blog", to: PAGES.HOME, hash: PAGES.BLOG },
+    { label: "Blog", to: PAGES.BLOG },
     { label: "FAQs", to: PAGES.HOME, hash: PAGES.FAQS },
   ];
   const [opened, setOpened] = useState(false);
