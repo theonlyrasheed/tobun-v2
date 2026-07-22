@@ -2,6 +2,7 @@ import { Button, Card, Image, Stack, Text, Title } from "@mantine/core";
 import { ServiceCardProps } from "@/types";
 import clsx from "clsx";
 import type { AllServicesQueryResult } from "@/builders/sanity.types";
+import { optimizeImageUrl } from "@/utils/sanity";
 
 type ServiceCardComponentProps = ServiceCardProps & {
   skeleton?: boolean;
@@ -23,7 +24,8 @@ export function ServiceCard(props: ServiceCardComponentProps) {
     >
       <Card.Section inheritPadding pt='lg' className={clsx({ skeleton })}>
         <Image
-          src={image.url}
+          src={optimizeImageUrl(image.url, { width: 700 })}
+          loading='lazy'
           h={250}
           w='100%'
           maw={520}

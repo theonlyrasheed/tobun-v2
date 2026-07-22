@@ -6,6 +6,7 @@ import { usePost, usePosts } from "@/builders/blog/hooks";
 import type { BlogPostProps } from "@/types";
 import { getPostBySlug } from "@/builders/blog/server-fns";
 import { seo } from "@/utils/seo";
+import { optimizeImageUrl } from "@/utils/sanity";
 
 export const Route = createFileRoute("/blog/$slug")({
   ssr: true,
@@ -18,7 +19,8 @@ export const Route = createFileRoute("/blog/$slug")({
       ? `${loaderData.title} | Olubukola Art`
       : "Blog | Olubukola Art";
     const description = post?.excerpt || undefined;
-    const image = post?.main_image?.url || undefined;
+    const image =
+      optimizeImageUrl(post?.main_image?.url, { width: 1200 }) || undefined;
 
     return {
       meta: [
@@ -89,10 +91,11 @@ function BlogPostRoute() {
       slug: p.slug,
       title: p.title,
       authorName: p.author?.name ?? undefined,
-      authorImage: p.author?.image?.url ?? undefined,
+      authorImage: optimizeImageUrl(p.author?.image?.url, { width: 150 }) ?? undefined,
       excerpt: p.excerpt || "",
       image:
-        p.main_image?.url ?? `https://picsum.photos/549/622?random=${i + 200}`,
+        optimizeImageUrl(p.main_image?.url, { width: 700 }) ??
+        `https://picsum.photos/549/622?random=${i + 200}`,
       date: p._createdAt,
       readTime: (p as any).readingTime ?? 1,
     }));

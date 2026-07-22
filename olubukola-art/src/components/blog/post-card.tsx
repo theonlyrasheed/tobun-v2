@@ -55,6 +55,7 @@ export function BlogPostCard({ post, skeleton }: BlogPostCardProps) {
             alt={post.title}
             fit='cover'
             radius='sm'
+            loading='lazy'
           />
           <ActionIcon
             variant='transparent'

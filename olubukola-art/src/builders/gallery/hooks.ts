@@ -4,6 +4,7 @@ import {
   getFeaturedGalleries,
   getGalleryBySlug,
   getGalleriesByAlbum,
+  getGalleriesByAlbumPaginated,
   getAvailableGalleries,
   getGalleriesPaginated,
   getAllGalleryAlbums,
@@ -146,17 +147,18 @@ export const useGalleriesByAlbumInfinite = (
   return useInfiniteQuery({
     queryKey: ["galleries", "album", albumId, "infinite"],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
-      const data = await getGalleriesByAlbum({ data: albumId });
-      // For album filtering, we slice the results for pagination
-      const startIndex = pageParam;
-      const endIndex = startIndex + limit;
-      const paginatedData = data.slice(startIndex, endIndex);
+      // Fetches one page (limit items) straight from Sanity instead of
+      // pulling the whole album and slicing client-side, so switching
+      // tabs on large albums doesn't download every image at once.
+      const data = await getGalleriesByAlbumPaginated({
+        data: { albumId, limit, offset: pageParam },
+      });
 
       return {
-        data: paginatedData,
-        hasMore: endIndex < data.length,
-        nextOffset: endIndex,
-      } as unknown as InfiniteGalleryResponse;
+        data,
+        hasMore: data.length === limit,
+        nextOffset: pageParam + limit,
+      } as InfiniteGalleryResponse;
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage: InfiniteGalleryResponse) => {

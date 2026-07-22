@@ -22,6 +22,7 @@ import { useTestimonials } from "@/builders";
 
 import type { AllTestimonialsQueryResult } from "@/builders/sanity.types";
 import type { TestimonialProps } from "@/types";
+import { optimizeImageUrl } from "@/utils/sanity";
 
 const transformTestimonialApi = (
   testimonial: AllTestimonialsQueryResult[0],
@@ -31,7 +32,7 @@ const transformTestimonialApi = (
     name: testimonial.name,
     text: testimonial.quote,
     rating: testimonial.rating,
-    avatar: testimonial.avatar?.url ?? "",
+    avatar: optimizeImageUrl(testimonial.avatar?.url, { width: 100 }) ?? "",
   };
 };
 

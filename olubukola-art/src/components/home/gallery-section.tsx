@@ -23,6 +23,11 @@ import { FeaturedGalleriesQueryResult } from "@/builders/sanity.types";
 
 import type { ArtworkCardProps } from "@/types";
 import clsx from "clsx";
+import { optimizeImageUrl } from "@/utils/sanity";
+
+// Cards render at up to 520px wide (see maw={520} below) — request a
+// resized image instead of shipping the full-resolution original.
+const CARD_IMAGE_WIDTH = 700;
 
 const transformGalleryApi = (
   gallery: FeaturedGalleriesQueryResult[0],
@@ -32,7 +37,9 @@ const transformGalleryApi = (
     title: gallery.title,
     description: gallery.excerpt || "---",
     artist: "Olubukola's Art",
-    image: gallery.main_image?.url,
+    image: optimizeImageUrl(gallery.main_image?.url, {
+      width: CARD_IMAGE_WIDTH,
+    }),
     size: {
       height: gallery.size?.height ?? 0,
       width: gallery.size?.width ?? 0,
@@ -217,6 +224,7 @@ const GalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
           alt={gallery.title}
           fit='cover'
           radius='sm'
+          loading='lazy'
           className={clsx({ skeleton })}
         />
         <Text
@@ -288,6 +296,7 @@ const SimpleGalleryCard = ({ gallery, index, skeleton }: GalleryCardProps) => (
           alt={gallery.title}
           fit='cover'
           radius='sm'
+          loading='lazy'
         />
       </Box>
     </Card.Section>

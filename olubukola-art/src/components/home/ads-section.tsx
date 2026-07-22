@@ -4,6 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useAdvertsSection } from "@/builders";
 import { PAGES } from "@/utils/enums";
+import { optimizeImageUrl } from "@/utils/sanity";
+
+// Full-bleed carousel, but no need to ship 4K+ originals.
+const AD_IMAGE_WIDTH = 1600;
 
 export function AdsSection() {
   const { data } = useAdvertsSection();
@@ -17,7 +21,7 @@ export function AdsSection() {
       items
         ?.map((it, idx) => ({
           key: it.slug ?? `${it.image?.url ?? "ad"}-${idx}`,
-          src: it.image?.url ?? "",
+          src: optimizeImageUrl(it.image?.url, { width: AD_IMAGE_WIDTH }) ?? "",
           alt: it.image?.alt ?? "Advert",
         }))
         .filter((x) => Boolean(x.src)) ?? []

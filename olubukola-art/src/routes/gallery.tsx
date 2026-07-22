@@ -27,6 +27,13 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import "photoswipe/style.css";
+import { optimizeImageUrl } from "@/utils/sanity";
+
+// Grid thumbnails render at up to 520px wide (see maw={520} below) — request
+// a resized image instead of shipping the full-resolution original. The
+// lightbox gets a larger variant since it's shown full-screen, one at a time.
+const GRID_THUMB_WIDTH = 700;
+const LIGHTBOX_WIDTH = 1600;
 
 const transformGalleryApi = (
   gallery: AllGalleriesQueryResult[0]
@@ -36,7 +43,12 @@ const transformGalleryApi = (
     title: gallery.title,
     description: gallery.excerpt || "---",
     artist: "Olubukola's Art",
-    image: gallery.main_image?.url,
+    image: optimizeImageUrl(gallery.main_image?.url, {
+      width: GRID_THUMB_WIDTH,
+    }),
+    fullImage: optimizeImageUrl(gallery.main_image?.url, {
+      width: LIGHTBOX_WIDTH,
+    }),
     size: {
       height: 0,
       width: 0,
@@ -145,7 +157,7 @@ function GalleryPage() {
 
   return (
     <Stack gap={0} flex={1}>
-      <Image src='/svgs/gallery-hero.svg' alt='Gallery Hero' />
+      <Image src='/images/gallery-hero.webp' alt='Gallery Hero' loading='eager' />
       <Container
         size='full'
         py={{ base: 30, md: 60 }}
@@ -166,6 +178,7 @@ function GalleryPage() {
           onChange={(value) => setActiveTab(value || "all")}
           defaultValue='all'
           tabs={tabs}
+          skeleton={isPlaceholderData}
           mih={400}
         >
           <Tabs.Panel value={activeTab} pt='xl' className='w-full'>
@@ -198,8 +211,8 @@ function GalleryPage() {
                       }}
                     >
                       <a
-                        href={artwork.image || undefined}
-                        data-pswp-src={artwork.image}
+                        href={artwork.fullImage || artwork.image || undefined}
+                        data-pswp-src={artwork.fullImage || artwork.image}
                         data-pswp-width='600'
                         data-pswp-height='800'
                         target='_blank'
@@ -219,6 +232,7 @@ function GalleryPage() {
                           alt={artwork.title}
                           fit='cover'
                           radius='sm'
+                          loading='lazy'
                         />
                       </a>
                       <ActionIcon

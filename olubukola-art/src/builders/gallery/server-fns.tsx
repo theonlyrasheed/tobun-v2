@@ -26,6 +26,22 @@ export const getGalleriesByAlbum = createServerFn({ method: "GET" })
     return await galleryApi.getGalleriesByAlbum(albumId);
   });
 
+export const getGalleriesByAlbumPaginated = createServerFn({ method: "GET" })
+  .inputValidator(
+    (params: { albumId: string; limit?: number; offset?: number }) => ({
+      albumId: params.albumId,
+      limit: params.limit || 12,
+      offset: params.offset || 0,
+    })
+  )
+  .handler(async ({ data: { albumId, limit, offset } }) => {
+    return await galleryApi.getGalleriesByAlbumPaginated(
+      albumId,
+      limit,
+      offset
+    );
+  });
+
 export const getAvailableGalleries = createServerFn({ method: "GET" }).handler(
   async () => {
     return await galleryApi.getAvailableGalleries();

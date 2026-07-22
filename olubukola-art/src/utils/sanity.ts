@@ -68,3 +68,35 @@ export function urlForCrop(
 
   return imageBuilder.url();
 }
+
+/**
+ * Resize an already-resolved Sanity CDN image URL (e.g. from a GROQ
+ * `asset->url` projection) using the same query-param image API that
+ * powers `urlFor`. Use this whenever a query returns a raw asset URL
+ * string instead of the full image reference, so thumbnails/grids don't
+ * ship full-resolution originals to the browser.
+ * @param url - The raw https://cdn.sanity.io/... asset URL
+ * @param options - width/height in pixels and jpeg/webp quality (1-100)
+ */
+export function optimizeImageUrl(
+  url: string | null | undefined,
+  options: { width?: number; height?: number; quality?: number } = {}
+) {
+  if (!url) return url ?? undefined;
+
+  try {
+    const { width, height, quality = 75 } = options;
+    const parsed = new URL(url);
+
+    if (width) parsed.searchParams.set("w", String(Math.round(width)));
+    if (height) parsed.searchParams.set("h", String(Math.round(height)));
+    parsed.searchParams.set("fit", "max");
+    parsed.searchParams.set("auto", "format");
+    parsed.searchParams.set("q", String(quality));
+
+    return parsed.toString();
+  } catch {
+    // Not a valid absolute URL (e.g. a placeholder src) — leave untouched
+    return url;
+  }
+}

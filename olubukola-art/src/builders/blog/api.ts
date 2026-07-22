@@ -20,6 +20,8 @@ import {
   recentPostsQuery,
   postsByCategoryQuery,
   postsByAuthorQuery,
+  postsPaginatedQuery,
+  postsByYearPaginatedQuery,
 } from "./queries";
 
 export const blogApi = {
@@ -29,6 +31,43 @@ export const blogApi = {
       return posts;
     } catch (error) {
       console.error("Error fetching blog posts:", error);
+      throw new Error("Failed to fetch blog posts");
+    }
+  },
+
+  async getPostsPaginated(
+    limit: number = 9,
+    offset: number = 0
+  ): Promise<AllPostsQueryResult> {
+    try {
+      const posts = await sanityClient.fetch(postsPaginatedQuery, {
+        limit,
+        offset,
+      });
+      return posts;
+    } catch (error) {
+      console.error("Error fetching paginated posts:", error);
+      throw new Error("Failed to fetch blog posts");
+    }
+  },
+
+  async getPostsByYearPaginated(
+    year: number,
+    limit: number = 9,
+    offset: number = 0
+  ): Promise<AllPostsQueryResult> {
+    try {
+      const yearStart = `${year}-01-01T00:00:00.000Z`;
+      const yearEnd = `${year + 1}-01-01T00:00:00.000Z`;
+      const posts = await sanityClient.fetch(postsByYearPaginatedQuery, {
+        yearStart,
+        yearEnd,
+        limit,
+        offset,
+      });
+      return posts;
+    } catch (error) {
+      console.error("Error fetching posts by year:", error);
       throw new Error("Failed to fetch blog posts");
     }
   },

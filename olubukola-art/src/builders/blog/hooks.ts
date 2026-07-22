@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   getAllPosts,
   getPostBySlug,
@@ -9,8 +9,11 @@ import {
   getAuthorBySlug,
   getAllCategories,
   getCategoryBySlug,
+  getPostsPaginated,
+  getPostsByYearPaginated,
 } from "./server-fns";
 import { blogPosts, authors, postCategories } from "./placeholder";
+import type { AllPostsQueryResult } from "../sanity.types";
 
 // Blog post hooks
 export const usePosts = () => {
@@ -41,6 +44,54 @@ export const useRecentPosts = (limit: number = 6) => {
     queryKey: ["posts", "recent", limit],
     queryFn: () => getRecentPosts({ data: limit }),
     placeholderData: recentPosts,
+  });
+};
+
+// Types for infinite query responses
+interface InfinitePostsResponse {
+  data: AllPostsQueryResult;
+  hasMore: boolean;
+  nextOffset: number;
+}
+
+// Infinite-scroll pagination for the /blog page ("All" tab)
+export const usePostsInfinite = (limit: number = 9) => {
+  return useInfiniteQuery({
+    queryKey: ["posts", "infinite"],
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      const data = await getPostsPaginated({
+        data: { limit, offset: pageParam },
+      });
+      return {
+        data,
+        hasMore: data.length === limit,
+        nextOffset: pageParam + limit,
+      } as InfinitePostsResponse;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: InfinitePostsResponse) =>
+      lastPage.hasMore ? lastPage.nextOffset : undefined,
+  });
+};
+
+// Infinite-scroll pagination for the /blog page (year tabs)
+export const usePostsByYearInfinite = (year: number, limit: number = 9) => {
+  return useInfiniteQuery({
+    queryKey: ["posts", "year", year, "infinite"],
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      const data = await getPostsByYearPaginated({
+        data: { year, limit, offset: pageParam },
+      });
+      return {
+        data,
+        hasMore: data.length === limit,
+        nextOffset: pageParam + limit,
+      } as InfinitePostsResponse;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: InfinitePostsResponse) =>
+      lastPage.hasMore ? lastPage.nextOffset : undefined,
+    enabled: Number.isFinite(year),
   });
 };
 

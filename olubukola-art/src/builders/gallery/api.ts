@@ -14,6 +14,7 @@ import {
   featuredGalleriesQuery,
   galleryBySlugQuery,
   galleriesByAlbumQuery,
+  galleriesByAlbumPaginatedQuery,
   allGalleryAlbumsQuery,
   galleryAlbumBySlugQuery,
   availableGalleriesQuery,
@@ -64,6 +65,23 @@ export const galleryApi = {
       return galleries;
     } catch (error) {
       console.error("Error fetching galleries by album:", error);
+      throw new Error("Failed to fetch galleries by album");
+    }
+  },
+
+  async getGalleriesByAlbumPaginated(
+    albumId: string,
+    limit: number = 12,
+    offset: number = 0
+  ): Promise<GalleriesByAlbumQueryResult> {
+    try {
+      const galleries = await sanityClient.fetch(
+        galleriesByAlbumPaginatedQuery,
+        { albumId, limit, offset }
+      );
+      return galleries;
+    } catch (error) {
+      console.error("Error fetching paginated galleries by album:", error);
       throw new Error("Failed to fetch galleries by album");
     }
   },

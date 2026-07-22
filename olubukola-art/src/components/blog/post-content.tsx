@@ -9,7 +9,7 @@ import { BreadCrumbs } from "@/components/shared/bread-crumbs";
 import { Markdown } from "@/components/blog/markdown";
 import { Avatar, Badge, Box, Button, Flex } from "@mantine/core";
 
-import { urlFor } from "@/utils/sanity";
+import { optimizeImageUrl, urlForWidth } from "@/utils/sanity";
 import { PortableText } from "@portabletext/react";
 import {
   IconBrandFacebook,
@@ -70,10 +70,12 @@ export function BlogPostContent({ data, shareUrl }: BlogPostContentProps) {
 
   const imageUrl =
     typeof mainImage === "string"
-      ? mainImage
+      ? (optimizeImageUrl(mainImage, { width: 1600 }) ?? "")
       : mainImage
-        ? urlFor(mainImage)
+        ? urlForWidth(mainImage, 1600)
         : "";
+
+  const authorAvatarUrl = optimizeImageUrl(authorImage, { width: 150 });
 
   // WhatsApp supports lightweight formatting: *bold* _italic_ ~strike~ ```mono```
   const shareText = [
@@ -203,7 +205,7 @@ export function BlogPostContent({ data, shareUrl }: BlogPostContentProps) {
           <div className='mb-4 flex items-center gap-3 border-b border-gray-2 pb-4'>
             <Avatar
               name={author}
-              src={authorImage}
+              src={authorAvatarUrl}
               size='40'
               radius='xl'
               color='purple'

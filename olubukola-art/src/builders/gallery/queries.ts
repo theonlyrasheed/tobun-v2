@@ -159,6 +159,30 @@ export const availableGalleriesQuery =
   }
 }`);
 
+export const galleriesByAlbumPaginatedQuery =
+  defineQuery(`*[_type == "gallery" && album._ref == $albumId] | order(_createdAt desc) [$offset...$offset + $limit] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  "availability": coalesce(availability, ""),
+  "featured": coalesce(featured, false),
+  created_at,
+  "size": coalesce(size, ""),
+  "price": coalesce(price, 0),
+  album->{
+    _id,
+    "title": coalesce(title, ""),
+    "slug": coalesce(slug.current, ""),
+    "featured": coalesce(featured, false)
+  },
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
 export const galleriesPaginatedQuery =
   defineQuery(`*[_type == "gallery"] | order(_createdAt desc) [$offset...$offset + $limit] {
   _id,

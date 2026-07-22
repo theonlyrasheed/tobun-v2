@@ -14,6 +14,27 @@ export const getPostBySlug = createServerFn({ method: "GET" })
     return (await blogApi.getPostBySlug(slug)) as any;
   });
 
+export const getPostsPaginated = createServerFn({ method: "GET" })
+  .inputValidator((params: { limit?: number; offset?: number } = {}) => ({
+    limit: params.limit || 9,
+    offset: params.offset || 0,
+  }))
+  .handler(async ({ data: { limit, offset } }) => {
+    return await blogApi.getPostsPaginated(limit, offset);
+  });
+
+export const getPostsByYearPaginated = createServerFn({ method: "GET" })
+  .inputValidator(
+    (params: { year: number; limit?: number; offset?: number }) => ({
+      year: params.year,
+      limit: params.limit || 9,
+      offset: params.offset || 0,
+    })
+  )
+  .handler(async ({ data: { year, limit, offset } }) => {
+    return await blogApi.getPostsByYearPaginated(year, limit, offset);
+  });
+
 export const getRecentPosts = createServerFn({ method: "GET" })
   .inputValidator((limit?: number) => limit || 6)
   .handler(async ({ data: limit }) => {

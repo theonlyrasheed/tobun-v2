@@ -1,0 +1,60 @@
+<svg width="1920" height="520" viewBox="0 0 1920 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="520" fill="#000000"/>
+  <defs>
+    <radialGradient id="glowPurple" cx="30%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#9a56ff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowRed" cx="82%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#D1410C" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dotgrid" width="46" height="46" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#ffffff" fill-opacity="0.10"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="520" fill="url(#glowPurple)"/>
+  <rect width="1920" height="520" fill="url(#glowRed)"/>
+  <rect width="1920" height="520" fill="url(#dotgrid)"/>
+
+  <!-- open book -->
+  <g transform="translate(860,150)">
+    <path d="M100 40 C 40 10, -40 10, -100 40 L -100 260 C -40 230, 40 230, 100 260 Z" fill="#1b1424" stroke="#9a56ff" stroke-width="2"/>
+    <path d="M100 40 C 160 10, 240 10, 300 40 L 300 260 C 240 230, 160 230, 100 260 Z" fill="#1b1424" stroke="#9a56ff" stroke-width="2"/>
+    <path d="M100 40 L 100 260" stroke="#c89eff" stroke-width="2" opacity="0.5"/>
+
+    <path d="M-70 70 C -30 55, 30 55, 70 70" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+    <path d="M-70 100 C -30 85, 30 85, 70 100" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    <path d="M-70 130 C -30 115, 30 115, 70 130" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+
+    <path d="M130 70 C 170 55, 230 55, 270 70" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+    <path d="M130 100 C 170 85, 230 85, 270 100" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    <path d="M130 130 C 170 115, 230 115, 270 130" stroke="#c89eff" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+  </g>
+
+  <!-- quill -->
+  <g transform="translate(700,300) rotate(-28)">
+    <path d="M0 0 C 40 -6, 70 -34, 74 -78 C 40 -70, 10 -46, 0 0 Z" fill="#D1410C" opacity="0.9"/>
+    <line x1="2" y1="4" x2="-34" y2="52" stroke="#D1410C" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- floating pages -->
+  <g opacity="0.9">
+    <rect x="1230" y="110" width="70" height="90" rx="8" fill="#2d0f2e" stroke="#D1410C" stroke-width="2" transform="rotate(14 1265 155)"/>
+    <rect x="1320" y="220" width="56" height="72" rx="6" fill="#2d0f2e" stroke="#9a56ff" stroke-width="2" transform="rotate(-10 1348 256)"/>
+    <rect x="430" y="300" width="50" height="64" rx="6" fill="#2d0f2e" stroke="#9a56ff" stroke-width="2" transform="rotate(18 455 332)"/>
+  </g>
+
+  <!-- confetti dots -->
+  <g>
+    <circle cx="230" cy="120" r="6" fill="#9a56ff"/>
+    <circle cx="300" cy="400" r="5" fill="#D1410C"/>
+    <circle cx="1600" cy="140" r="6" fill="#D1410C"/>
+    <circle cx="1710" cy="380" r="5" fill="#9a56ff"/>
+    <circle cx="1440" cy="90" r="4" fill="#ffffff" fill-opacity="0.8"/>
+    <circle cx="150" cy="320" r="4" fill="#ffffff" fill-opacity="0.7"/>
+    <circle cx="1800" cy="260" r="4" fill="#ffffff" fill-opacity="0.7"/>
+    <circle cx="980" cy="60" r="4" fill="#ffffff" fill-opacity="0.6"/>
+  </g>
+</svg>

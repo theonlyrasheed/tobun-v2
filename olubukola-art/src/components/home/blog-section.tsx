@@ -1,49 +1,33 @@
-import { Container, SimpleGrid, Tabs, Text } from "@mantine/core";
+import { Button, Container, SimpleGrid, Stack } from "@mantine/core";
+import { Link } from "@tanstack/react-router";
 import { SectionTitle } from "@/components/section-title";
-import { SectionTabs } from "@/components/shared/section-tabs";
 import { MAX_WIDTH } from "@/utils/constants";
 import { PAGES } from "@/utils/enums";
 import { BlogPostCard } from "@/components/blog/post-card";
-import { usePostCategories, usePosts } from "@/builders/blog/hooks";
+import { useRecentPosts } from "@/builders/blog/hooks";
 import type { BlogPostProps } from "@/types";
+import { optimizeImageUrl } from "@/utils/sanity";
+
+const LATEST_POSTS_COUNT = 3;
 
 export function BlogSection() {
-  const { data: posts = [], isPlaceholderData } = usePosts();
-  const { data: categories = [] } = usePostCategories();
+  const { data: posts = [], isPlaceholderData } = useRecentPosts(
+    LATEST_POSTS_COUNT
+  );
 
-  const toCard = (p: any, i: number): BlogPostProps => ({
+  const cards: BlogPostProps[] = posts.map((p: any) => ({
     id: p._id,
     slug: p.slug,
     title: p.title,
     authorName: p.author?.name ?? undefined,
-    authorImage: p.author?.image?.url ?? undefined,
+    authorImage: optimizeImageUrl(p.author?.image?.url, { width: 150 }) ?? undefined,
     excerpt: p.excerpt || "",
     image:
-      p.main_image?.url ?? `https://picsum.photos/549/622?random=${i + 10}`,
+      optimizeImageUrl(p.main_image?.url, { width: 700 }) ??
+      `https://picsum.photos/549/622?random=${p._id}`,
     date: p._createdAt,
-    readTime: (p as any).readingTime ?? 1,
-  });
-
-  const categoryTabs = categories
-    .filter((cat) =>
-      posts.some((p) => p.categories?.some((pc) => pc._id === cat._id)),
-    )
-    .map((cat) => ({
-      value: cat._id,
-      label: cat.title || "Category",
-    }));
-
-  const tabs = [{ value: "all", label: "All" }, ...categoryTabs];
-
-  const getCardsForCategory = (categoryId: string) => {
-    const filtered =
-      categoryId === "all"
-        ? posts
-        : posts.filter((p) =>
-            p.categories?.some((pc) => pc._id === categoryId),
-          );
-    return filtered.map(toCard);
-  };
+    readTime: p.readingTime ?? 1,
+  }));
 
   return (
     <Container size='full' maw={MAX_WIDTH} py={100}>
@@ -53,28 +37,27 @@ export function BlogSection() {
         id={PAGES.BLOG}
       />
 
-      <SectionTabs defaultValue='all' mt={30} tabs={tabs}>
-        {tabs.map((tab) => {
-          const categoryCards = getCardsForCategory(tab.value);
-          return (
-            <Tabs.Panel key={tab.value} value={tab.value} pt='xl'>
-              {categoryCards.length ? (
-                <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing='lg'>
-                  {categoryCards.map((post) => (
-                    <BlogPostCard
-                      key={post.id}
-                      post={post}
-                      skeleton={isPlaceholderData}
-                    />
-                  ))}
-                </SimpleGrid>
-              ) : (
-                <Text c='dimmed'>No posts in this category yet.</Text>
-              )}
-            </Tabs.Panel>
-          );
-        })}
-      </SectionTabs>
+      <Stack mt={30} gap={40} align='center'>
+        <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing='lg' w='100%'>
+          {cards.map((post) => (
+            <BlogPostCard
+              key={post.id}
+              post={post}
+              skeleton={isPlaceholderData}
+            />
+          ))}
+        </SimpleGrid>
+
+        <Button
+          component={Link}
+          to='/blog'
+          size='md'
+          color='dark'
+          radius='sm'
+        >
+          View All Posts
+        </Button>
+      </Stack>
     </Container>
   );
 }

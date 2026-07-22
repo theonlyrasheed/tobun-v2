@@ -20,7 +20,10 @@ export interface ArtworkCardProps {
   title: string;
   description: string;
   artist: string;
-  image: string | null;
+  // image: string | null;
+  image: any;
+  /** Larger variant for lightbox/zoom views; falls back to `image` when unset. */
+  fullImage?: string | null;
   size: { height: number; width: number };
   date: string;
   price: { currency: string; amount: number };

@@ -6,6 +6,7 @@ import type { EmblaCarouselType } from "embla-carousel";
 import { useEffect, useMemo, useState } from "react";
 import { useCompanies } from "@/builders";
 import type { AllCompaniesQueryResult } from "@/builders/sanity.types";
+import { optimizeImageUrl } from "@/utils/sanity";
 
 interface CompanyDisplay {
   name: string;
@@ -16,7 +17,9 @@ const transformCompanyApi = (
   company: AllCompaniesQueryResult[0],
 ): CompanyDisplay => ({
   name: company.title,
-  src: company.logo?.url || "/images/companies/default.png",
+  src:
+    optimizeImageUrl(company.logo?.url, { width: 300 }) ||
+    "/images/companies/default.png",
 });
 
 export function TrustedCompaniesSection() {
@@ -87,6 +90,7 @@ export function TrustedCompaniesSection() {
                   fit='contain'
                   h={80}
                   w='auto'
+                  loading='lazy'
                   className='grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition duration-300 cursor-pointer'
                 />
               </Box>

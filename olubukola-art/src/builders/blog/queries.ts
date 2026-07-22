@@ -39,6 +39,84 @@ export const allPostsQuery =
   }
 }`);
 
+export const postsPaginatedQuery =
+  defineQuery(`*[_type == "post"] | order(_createdAt desc) [$offset...$offset + $limit] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
+  _createdAt,
+  _updatedAt,
+  author->{
+    _id,
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
+    "bio": coalesce(bio, ""),
+    image {
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
+    }
+  },
+  "categories": coalesce(
+    categories[]->{
+      _id,
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
+    },
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
+export const postsByYearPaginatedQuery =
+  defineQuery(`*[_type == "post" && _createdAt >= $yearStart && _createdAt < $yearEnd] | order(_createdAt desc) [$offset...$offset + $limit] {
+  _id,
+  _type,
+  "title": coalesce(title, ""),
+  "slug": coalesce(slug.current, ""),
+  "excerpt": coalesce(excerpt, ""),
+  "numberOfCharacters": length(pt::text(coalesce(body, []))),
+  "wordCount": round(length(pt::text(coalesce(body, []))) / 5),
+  "readingTime": select(
+    round(length(pt::text(coalesce(body, []))) / 5 / 180) < 1 => 1,
+    round(length(pt::text(coalesce(body, []))) / 5 / 180)
+  ),
+  _createdAt,
+  _updatedAt,
+  author->{
+    _id,
+    "name": coalesce(name, ""),
+    "slug": coalesce(slug.current, ""),
+    "bio": coalesce(bio, ""),
+    image {
+      "url": coalesce(asset->url, null),
+      "alt": coalesce(alt, "")
+    }
+  },
+  "categories": coalesce(
+    categories[]->{
+      _id,
+      "title": coalesce(title, ""),
+      "slug": coalesce(slug.current, "")
+    },
+    []
+  ),
+  main_image {
+    "url": coalesce(asset->url, null),
+    "alt": coalesce(alt, "")
+  }
+}`);
+
 export const postBySlugQuery =
   defineQuery(`*[_type == "post" && slug.current == $slug][0] {
   _id,

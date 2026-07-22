@@ -28,7 +28,7 @@ function AboutPage() {
 
   return (
     <Stack gap={0}>
-      <Image src="/svgs/about-us-hero.svg" alt="About Hero" />
+      <Image src="/images/about-us-hero.webp" alt="About Hero" loading="eager" />
       <Container size="full" maw={MAX_WIDTH} py={{ base: 30, md: 60 }}>
         {/* Our Little Story */}
         <Box className="relative">

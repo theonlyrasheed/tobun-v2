@@ -12,17 +12,31 @@ import { MAX_WIDTH } from "@/utils/constants";
 import { useServices, useStatsSection } from "@/builders/site/hooks";
 import { PAGES } from "@/utils/enums";
 import { Link } from "@tanstack/react-router";
+import { optimizeImageUrl } from "@/utils/sanity";
+
+// Category tiles render at roughly 140px square (see the auto-fill grid
+// below) — request a resized image instead of the full-resolution original.
+const CATEGORY_IMAGE_WIDTH = 300;
 
 export function HeroSection() {
   const { data: services, isPlaceholderData: isLoading } = useServices();
   const { data: statsData } = useStatsSection();
   const stats = statsData?.stats ?? [];
 
-  const categories =
-    services?.map((service) => ({
+  const categories = (services ?? [])
+    .map((service) => ({
       label: service.title,
-      image: service.hero_image ? service.hero_image.url : service.image.url,
-    })) || [];
+      // Fall back from hero_image -> image; either can be unset in Sanity,
+      // so guard with optional chaining instead of assuming one exists.
+      image: optimizeImageUrl(
+        service.hero_image?.url || service.image?.url || null,
+        { width: CATEGORY_IMAGE_WIDTH }
+      ),
+    }))
+    // Skip categories with no image uploaded in Sanity yet, rather than
+    // rendering an empty tile with just a label (e.g. "Visual Art Paintings"
+    // was showing blank because neither image field had an asset attached).
+    .filter((category) => Boolean(category.image));
 
   return (
     <Box
