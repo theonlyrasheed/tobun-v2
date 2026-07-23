@@ -3,7 +3,7 @@ export enum PAGES {
   ABOUT = "/about",
   SERVICES = "services",
   GALLERY = "/gallery",
-  BLOG = "blog",
+  BLOG = "/blog",
   FAQS = "faqs",
   CONTACT = "contact",
   CORE_VALUES = "core-values",
